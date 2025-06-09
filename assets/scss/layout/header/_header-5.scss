@@ -12,6 +12,36 @@
             }
         }
     }
+    &-top {
+        background-color: var(--tp-green-old);
+        color: var(--tp-common-white);
+        padding: 10px 25px;
+        font-weight: 500;
+        &-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--tp-common-white);
+        }
+    }
+    &-language-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: var(--tp-common-white);
+        padding: 8px 15px;
+        border-radius: 30px;
+        color: var(--tp-green-old);
+    
+        & span {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--tp-green-old);
+        }
+    
+        & svg {
+            color: var(--tp-green-old);
+        }
+    }
     &-btn-cta {
         background-color: var(--tp-green-light);
         color: var(--tp-common-white);
@@ -381,7 +411,7 @@
                                     &:hover{
                                         color: var(--tp-theme-green);
                                     }
-                                }
+                                 }
 
                                 & ul{
                                     padding: 0;
@@ -499,3 +529,4 @@
         }
     }
 }
+

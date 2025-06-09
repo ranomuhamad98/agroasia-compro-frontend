@@ -42,5 +42,5 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({ title: "Shofi Grocery - eCommerce Vue Nuxt 3 Template" });
+useSeoMeta({ title: "Agro Asia Berdikari" });
 </script>

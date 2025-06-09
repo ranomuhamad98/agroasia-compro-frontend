@@ -206,7 +206,7 @@
             }
 
             &.active {
-                background: var(--tp-green-light);
+                background: #000;
             }
         }
     }
@@ -214,6 +214,7 @@
     &-about {
 
         &-container {
+            margin-top: 2rem;
             display: grid;
             padding: 1rem;
             grid-template-columns: repeat(2, minmax(0, 1fr));

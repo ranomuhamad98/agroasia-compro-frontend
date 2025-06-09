@@ -559,7 +559,7 @@
         }
         &-list{
             position: absolute;
-            bottom: 150%;
+            top: 150%;
             right: 0;
             background-color: var(--tp-grey-1);
             z-index: 11;
@@ -573,14 +573,14 @@
                 &.tp-lang-list-open{
                     visibility: visible;
                     opacity: 1;
-                    bottom: 112%;
+                    top: 112%;
                 }
             }
             &.tp-currency-list{
                 &.tp-currency-list-open{
                     visibility: visible;
                     opacity: 1;
-                    bottom: 112%;
+                    top: 112%;
                 }
             }
 

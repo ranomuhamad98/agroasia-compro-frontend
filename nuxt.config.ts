@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   ], "@nuxt/icon"],
   app: {
     head: {
-      title: "Shofi Grocery - eCommerce Vue Nuxt 3 Template",
+      title: "Agro Asia Berdikari",
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       script: [
