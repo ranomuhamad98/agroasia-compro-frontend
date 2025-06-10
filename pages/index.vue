@@ -3,6 +3,7 @@
     <home-hero></home-hero>
     <home-about-us></home-about-us>
     <home-category-list></home-category-list>
+    <home-programs></home-programs>
     <!-- hero area start -->
     <!-- <hero-area></hero-area> -->
     <!-- hero area end -->
