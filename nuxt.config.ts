@@ -10,7 +10,7 @@ export default defineNuxtConfig({
         ['defineStore', 'definePiniaStore'],
       ],
     },
-  ], "@nuxt/icon", "@nuxt/image"],
+  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts"],
   app: {
     head: {
       title: "Agro Asia Berdikari",

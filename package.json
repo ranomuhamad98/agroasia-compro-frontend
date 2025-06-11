@@ -2,6 +2,11 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
+  "pnpm": {
+    "overrides": {
+      "ipx": "^3.0.0"
+    }
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -11,7 +16,8 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.5.0",
-    "nuxt": "^3.8.0",
+    "@nuxt/fonts": "^0.11.4",
+    "nuxt": "^3.6.5",
     "vue": "^3.3.7",
     "vue-router": "^4.2.5"
   },

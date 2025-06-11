@@ -2,13 +2,13 @@
   <header>
     <div class="tp-header-top">
       <div class="container-fluid">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center gap-4">
+        <div class="d-flex align-items-center flex-wrap justify-content-between gap-4">
+          <div class="d-flex align-items-center gap-lg-4 gap-2 flex-row flex-wrap">
             <div class="d-flex align-items-center gap-2">
               <Icon name="material-symbols:location-on-outline" style="color: var(--tp-green-light);" />
               <span class="tp-header-top-text">Tangerang Selatan</span>
             </div>
-            <div class="d-flex align-items-center gap-2 border-start ps-4 pe-4">
+            <div class="d-flex align-items-center gap-2 border-start border-start ps-lg-4 ps-2 pe-lg-4 pe-2">
               <Icon name="material-symbols:mail-outline-rounded" style="color: var(--tp-green-light);" />
               <span class="tp-header-top-text">agroasia119@gmail.com</span>
             </div>
