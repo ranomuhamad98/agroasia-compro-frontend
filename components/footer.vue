@@ -32,9 +32,14 @@
         </div>
         <a class="wa-button" href="https://wa.me/628127733166" target="_blank" rel="noopener noreferrer">
           <Icon name="mdi:whatsapp" class="wa-button-title" />
-          <p class="wa-button-item wa-button__text">+62 812 773 3166</p>
+          <p class="wa-button-item wa-button__text">Hubungi Kami</p>
         </a>
+        <nuxt-img src="/images/footer/rintik.png" alt="decoration" class="decoration-1" width="50" />
       </div>
+
+      <nuxt-img src="/images/footer/daun.png" alt="decoration" class="decoration-2" width="100" />
+      <nuxt-img src="/images/footer/daun-panjang.png" alt="decoration" class="decoration-3" width="130" />
+      <nuxt-img src="/images/footer/daun-lengkap.png" alt="decoration" class="decoration-4" width="100" />
     </div>
     <div class="copyright">
       <p>© Agro Asia Berdikari 2025 All rights reserved.</p>
@@ -52,16 +57,49 @@ defineProps<{ bg_clr?: boolean }>();
 
 footer {
   background-color: map-get($colors, 'black', 'indigo');
+  overflow: hidden;
 
   .container {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
-    padding: 8rem 1rem 2rem 1rem;
+    padding: 8rem 1rem 5rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 5rem;
+    position: relative;
+
+    .decoration-2 {
+      position: absolute;
+      top: 80px;
+      right: -120px;
+
+      @media #{$xs} {
+        right: 0;
+      }
+    }
+
+    .decoration-3 {
+      position: absolute;
+      bottom: 10px;
+      right: -130px;
+
+      @media #{$xs} {
+        right: 0;
+      }
+    }
+
+    .decoration-4 {
+      position: absolute;
+      bottom: 10px;
+      left: -130px;
+
+      @media #{$xs} {
+        left: 0;
+        bottom: 40%;
+      }
+    }
 
     @media #{$xs} {
       flex-direction: column;
@@ -72,6 +110,11 @@ footer {
 
 .about-us {
   max-width: 300px;
+
+  .title {
+    font-weight: bold;
+    font-size: 20px;
+  }
 }
 
 .socials {
@@ -119,19 +162,26 @@ footer p {
   background-color: map-get($colors, 'grey', 'chaorcal');
 
   p {
-  text-align: left;
-  font-size: 14px;
-  color: map-get($colors, 'white', 'pure');
-  max-width: 1200px;
-  margin-bottom: 0;
-  padding: .8rem 1rem;
-  margin: 0 auto;
+    text-align: left;
+    font-size: 14px;
+    color: map-get($colors, 'white', 'pure');
+    max-width: 1200px;
+    margin-bottom: 0;
+    padding: .8rem 1rem;
+    margin: 0 auto;
   }
 }
 
 .contact {
   max-width: 400px;
   width: 100%;
+  position: relative;
+
+  .decoration-1 {
+    position: absolute;
+    bottom: -65px;
+    left: 30px;
+  }
 
   h2 {
     color: map-get($colors, 'white', 'pure');
@@ -181,14 +231,14 @@ footer p {
   border-radius: 5px;
 
   &-title {
-    font-size: 24px;
+    font-size: 30px;
     color: map-get($colors, 'green', 'light');
     margin-left: .8rem;
   }
 
   &-item {
     font-size: 16px;
-    background-color: map-get($colors, 'green', 'light');
+    background-color: map-get($colors, 'green', 'medium-1');
     width: 100%;
     height: 100%;
     margin-bottom: 0;
@@ -197,7 +247,7 @@ footer p {
     border-radius: 10px;
 
     &:hover {
-      background-color: map-get($colors, 'green', 'medium');
+      background-color: map-get($colors, 'green', 'light');
       color: map-get($colors, 'white', 'pure');
     }
   }

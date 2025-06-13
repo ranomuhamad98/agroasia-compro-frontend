@@ -780,6 +780,10 @@
         .content {
             margin-left: 100px;
 
+            @media #{$xs} {
+                margin-left: 0;
+            }
+
             &__item {
                 display: flex;
                 align-items: start;
