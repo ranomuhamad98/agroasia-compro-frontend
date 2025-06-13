@@ -35,10 +35,10 @@ const handleStatusRoute = (status: string) => {
 watch(
   () => route.query,
   (newStatus) => {
-    activeQuery.value = newStatus.status;
+    activeQuery.value = newStatus.status as string || "";
   }
 );
 onMounted(() => {
-  activeQuery.value = route.query.status;
+  activeQuery.value = route.query.status as string || "";
 });
 </script>

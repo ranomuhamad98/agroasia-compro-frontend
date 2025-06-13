@@ -6,6 +6,41 @@
 
 .#{$theme-prifix}-product{
     $self : &;
+
+    &-title-2 {
+        margin-bottom: .5rem!important;
+    }
+
+    &-content-2 {
+        .list-item-pesan-sekarang {
+            width: 15rem;
+            margin: 0;
+
+            @media (max-width: 768px) {
+                width: 100%;
+            }
+        }
+    }
+    &-pesan-sekarang {
+        background-color: #128C7E;
+        color: map-get($colors, 'white', 'pure');
+        border-radius: 8px;
+        padding: .5rem 1rem;
+        width: 80%;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        font-size: .9rem;
+        margin: 0 auto;
+
+        &:hover {
+            background-color: #075E54;
+            color: map-get($colors, 'white', 'pure');
+        }
+    }
     &-item{
         background-color: var(--tp-common-white);
         border: 1px solid var(--tp-border-primary);

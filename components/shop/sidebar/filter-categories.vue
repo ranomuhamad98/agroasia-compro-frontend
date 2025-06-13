@@ -3,18 +3,19 @@
     <div class="tp-shop-widget-categories">
       <ul>
         <li v-for="category in category_data" :key="category.id">
-          <a
-            @click.prevent="handleCategoryRoute(category.parentName)"
-            :class="`pointer ${
-              activeQuery ===
-              category.parentName.toLowerCase().replace('&', '').split(' ').join('-')
-                ? 'active'
-                : ''
-            }`"
-          >
-            {{ category.parentName }}
-            <span>{{ category.products.length }}</span>
-          </a>
+          <div class="filter-item checkbox">
+            <input 
+              type="checkbox"
+              :id="category.parentName"
+              class="filter-checkbox-input"
+              :checked="activeQuery === category.parentName.toLowerCase().replace('&', '').split(' ').join('-')"
+              @change="handleCategoryRoute(category.parentName)"
+            />
+            <label :for="category.parentName">
+              {{ category.parentName }}
+              <span>({{ category.products.length }})</span>
+            </label>
+          </div>
         </li>
       </ul>
     </div>
@@ -36,10 +37,10 @@ const handleCategoryRoute = (value: string) => {
 watch(
   () => route.query,
   (newStatus) => {
-    activeQuery.value = newStatus.category;
+    activeQuery.value = newStatus.category as string || "";
   }
 );
 onMounted(() => {
-  activeQuery.value = route.query.category;
+  activeQuery.value = route.query.category as string || "";
 });
 </script>

@@ -4,77 +4,19 @@
       <nuxt-link :href="`/product-details/${item.id}`" style="height: 310px;background-color: #f2f3f5;">
         <img :src="item.images[0]" alt="product-img" />
       </nuxt-link>
-
-      <!-- product action -->
-      <div class="tp-product-action-2 tp-product-action-blackStyle">
-        <div class="tp-product-action-item-2 d-flex flex-column">
-          <button
-            type="button"
-            class="tp-product-action-btn-2 tp-product-quick-view-btn"
-            data-bs-toggle="modal"
-            :data-bs-target="`#${utilityStore.modalId}`"
-            @click="utilityStore.handleOpenModal(`product-modal-${item.id}`,item)"
-          >
-            <svg-quick-view />
-            <span class="tp-product-tooltip tp-product-tooltip-right">Quick View</span>
-          </button>
-          
-          <button
-            @click="wishlistStore.add_wishlist_product(item)"
-            type="button"
-            :class="`tp-product-action-btn-2 tp-product-add-to-wishlist-btn ${wishlistStore.wishlists.some((prd) => prd.id === item.id) ? 'active': ''}`"
-          >
-            <svg-wishlist />
-            <span class="tp-product-tooltip tp-product-tooltip-right">
-              {{isItemInWishlist(item) ? 'Remove From Wishlist' : 'Add To Wishlist'}}
-            </span>
-          </button>
-
-          <button
-            @click="compareStore.add_compare_product(item)"
-            type="button"
-            :class="`tp-product-action-btn-2 tp-product-add-to-compare-btn ${compareStore.compare_items.some((prd) => prd.id === item.id) ? 'active': ''}`"
-          >
-            <svg-compare-2 />
-            <span class="tp-product-tooltip tp-product-tooltip-right">
-              {{ isItemInCompare(item) ? 'Remove From Compare' : 'Add To Compare' }}
-            </span>
-          </button>
-        </div>
-      </div>
     </div>
     <div class="tp-product-list-content">
       <div class="tp-product-content-2 pt-15">
-        <div class="tp-product-tag-2">
-          <a href="#">{{ item.children }}</a>
-        </div>
         <h3 class="tp-product-title-2">
           <nuxt-link :href="`/product-details/${item.id}`">{{ item.name }}</nuxt-link>
         </h3>
-        <div class="tp-product-rating-icon tp-product-rating-icon-2">
-          <span><i class="fa-solid fa-star"></i></span>
-          <span><i class="fa-solid fa-star"></i></span>
-          <span><i class="fa-solid fa-star"></i></span>
-          <span><i class="fa-solid fa-star"></i></span>
-          <span><i class="fa-solid fa-star"></i></span>
-        </div>
-
-        <div class="tp-product-price-wrapper-2">
-          <div v-if="item.discount > 0">
-            <span class="tp-product-price-2 new-price">${{(Number(item.price) - (Number(item.price) * Number(item.discount)) / 100).toFixed(2)}} {{ " " }}</span>
-            <span class="tp-product-price-2 old-price">
-              ${{ item.price }}
-            </span>
-          </div>
-          <span v-else class="tp-product-price-2 new-price">${{ item.price.toFixed(2) }}</span>
-        </div>
-
         <p>{{ item.description.slice(0, 100) }}</p>
-        <div class="tp-product-list-add-to-cart">
-          <button v-if="!isItemInCart(item)" @click="cartStore.addCartProduct(item)" class="tp-product-list-add-to-cart-btn">Add To Cart</button>
-          <nuxt-link to="/cart" v-if="isItemInCart(item)" class="tp-product-list-add-to-cart-btn">
-            View Cart
-          </nuxt-link>
+        <div>
+          <a :href="`https://wa.me/919826000000?text=Halo, saya ingin memesan produk ${item.name}`"
+            class="tp-product-pesan-sekarang list-item-pesan-sekarang">
+            <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
+            <span>Pesan Sekarang</span>
+          </a>
         </div>
       </div>
     </div>

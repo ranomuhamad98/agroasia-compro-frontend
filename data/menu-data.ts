@@ -8,7 +8,7 @@ export const menu_data:IMenuItem[] = [
   },
   {
     id:2,
-    link:'/product',
+    link:'/products',
     title:'Product',
   },
   {
