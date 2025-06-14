@@ -1,7 +1,7 @@
 <template>
   <div v-if="product">
       <!-- breadcrumb start -->
-      <product-details-breadcrumb :product="product" />
+      <breadcrumb-with-image title="Product Details" :subtitle="['Home', 'Products', product.name]" color="#FFFFFF" />
       <!-- breadcrumb end -->
 
       <!-- product details area start -->

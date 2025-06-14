@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="d-flex align-items-center justify-content-start position-relative tp-shop-top-banner">
+    <breadcrumb-with-image title="Products" :subtitle="['Home', 'Products']" color="#FFFFFF" />
+    <!-- <div class="d-flex align-items-center justify-content-start position-relative tp-shop-top-banner">
       <div class="container">
         <breadcrumb title="Products" subtitle="Home > Products" color="#FFFFFF" />
       </div>
@@ -8,7 +9,7 @@
         <lazy-nuxt-img src="/images/product/list/bg.png" alt="products-banner" width="100%" height="300"
           class="object-fit-cover h-100 w-100" />
       </div>
-    </div>
+    </div> -->
     <!-- breadcrumb start -->
     <!-- breadcrumb end -->
 
