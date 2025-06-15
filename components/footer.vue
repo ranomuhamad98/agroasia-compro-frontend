@@ -2,7 +2,7 @@
   <footer>
     <div class="container">
       <div class="about-us">
-        <p class="title">About Us.</p>
+        <p class="title">Summarize.</p>
         <p class="description">orporate clients and leisure travelers has been relying on Groundlink for dependable
           safe, and professional
           chauffeured car service in major cities across World. Indeed it has been more than one decade and five years
@@ -25,7 +25,9 @@
       <div class="contact">
         <h2>PT Agro Asia Berdikari</h2>
         <a href="mailto:agroasia119@gmail.com" class="contact__mail">agroasia119@gmail.com</a>
-        <p class="contact__phone">+62 812 773 3166 | +62 21 74634590</p>
+        <p class="contact__phone">
+          <a href="https://wa.me/+628127733166" class="contact__phone-item" target="_blank" rel="noopener noreferrer">+62 812 773 3166</a> | <a href="https://wa.me/+622174634590" class="contact__phone-item" target="_blank" rel="noopener noreferrer">+62 21 74634590</a>
+        </p>
         <div class="contact-address">
           <Icon name="mdi:map-marker-outline" class="contact-address-icon" />
           <span>Jl Palapa perum serua barokah Blok D12 serua Tangerang selatan 15414</span>
@@ -54,6 +56,17 @@ defineProps<{ bg_clr?: boolean }>();
 <style lang="scss" scoped>
 @use '@/assets/scss/utils/_colors.scss' as *;
 @use '@/assets/scss/utils/_breakpoints.scss' as *;
+
+.contact__phone-item {
+  color: map-get($colors, 'white', 'pure');
+  text-decoration: none;
+  font-size: 16px;
+  margin-bottom: 0;
+
+  &:hover {
+    color: map-get($colors, 'green', 'light');
+  }
+}
 
 footer {
   background-color: map-get($colors, 'black', 'indigo');

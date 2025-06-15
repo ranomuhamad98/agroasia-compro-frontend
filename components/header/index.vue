@@ -10,7 +10,9 @@
             </div>
             <div class="d-flex align-items-center gap-2 border-start border-start ps-lg-4 ps-2 pe-lg-4 pe-2">
               <Icon name="material-symbols:mail-outline-rounded" style="color: var(--tp-green-light);" />
-              <span class="tp-header-top-text">agroasia119@gmail.com</span>
+              <span class="tp-header-top-text">
+                <a href="mailto:agroasia119@gmail.com" class="tp-header-top-text-link">agroasia119@gmail.com</a>
+              </span>
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
@@ -63,7 +65,7 @@
               </div>
             </div>
             <div class="d-none d-lg-block">
-              <nuxt-link to="/contact" class="tp-header-btn-cta">Contact Us</nuxt-link>
+              <a href="#contact-us" class="tp-header-btn-cta">Contact Us</a>
             </div>
           </div>
         </div>
@@ -121,3 +123,9 @@ watch(() => route.path, () => {
   isActive.value = false;
 })
 </script>
+
+<style scoped>
+.tp-header-top-text-link:hover {
+  text-decoration: underline;
+}
+</style>
