@@ -1,12 +1,11 @@
 <template>
   <div class="tp-product-details-tab-nav tp-tab">
     <nav>
-      <div class="nav nav-tabs justify-content-center p-relative tp-product-tab" id="navPresentationTab" role="tablist">
+      <div class="nav nav-tabs justify-content-start p-relative tp-product-tab" id="navPresentationTab" role="tablist">
         <button @click="handleActiveMarker($event)" class="nav-link" id="nav-description-tab" data-bs-toggle="tab" data-bs-target="#nav-description" type="button" role="tab" aria-controls="nav-description" aria-selected="true">Description</button>
 
         <button @click="handleActiveMarker($event)" class="nav-link active" id="nav-addInfo-tab" data-bs-toggle="tab" data-bs-target="#nav-addInfo" type="button" role="tab" aria-controls="nav-addInfo" aria-selected="false">Additional information</button>
-
-        <button @click="handleActiveMarker($event)" class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review" type="button" role="tab" aria-controls="nav-review" aria-selected="false">Reviews ({{product.reviews?.length}})</button>
+        
         <span id="productTabMarker" class="tp-product-details-tab-line"></span>
       </div>
     </nav>  

@@ -8,6 +8,8 @@
       <product-details-area :product="product" />
       <!-- product details area end -->
 
+      <product-details-gallery :product="product" />
+
       <!-- related products start -->
       <product-related :product-id="product.id" :category="product.parentCategory" />
       <!-- related products end -->
