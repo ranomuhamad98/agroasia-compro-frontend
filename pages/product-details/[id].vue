@@ -1,5 +1,5 @@
 <template>
-  <div v-if="product">
+  <div class="pb-100" v-if="product">
       <!-- breadcrumb start -->
       <breadcrumb-with-image title="Product Details" :subtitle="['Home', 'Products', product.name]" color="#FFFFFF" />
       <!-- breadcrumb end -->
@@ -11,7 +11,7 @@
       <product-details-gallery :product="product" />
 
       <!-- related products start -->
-      <product-related :product-id="product.id" :category="product.parentCategory" />
+      <product-related-v2 :product-id="product.id" :category="product.parentCategory" />
       <!-- related products end -->
   </div>
 </template>

@@ -65,6 +65,10 @@ defineProps<{
     h2, p {
         margin-bottom: 0;
     }
+
+    @media (max-width: 768px) {
+        margin: 0 2rem 2rem 2rem;
+    }
 }
 
 .gallery-nav {
