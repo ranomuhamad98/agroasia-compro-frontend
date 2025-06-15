@@ -13,7 +13,7 @@ export const menu_data:IMenuItem[] = [
   },
   {
     id:3,
-    link:'/about-us',
+    link:'/about',
     title:'About Us',
     
   },

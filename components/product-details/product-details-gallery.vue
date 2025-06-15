@@ -48,7 +48,7 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @use '@/assets/scss/utils/_colors.scss' as *;
 
 .gallery-container {
