@@ -184,6 +184,7 @@ const petanis = [
 
         &:hover {
             background-color: var(--tp-green-light);
+            color: var(--tp-common-white);
         }
     }
 }

@@ -8,6 +8,8 @@
 
     <about-petani-kami />
 
+    <about-galleries />
+
   </div>
 </template>
 
