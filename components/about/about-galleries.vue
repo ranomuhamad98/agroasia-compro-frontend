@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery-container">
+    <div class="gallery-container mb-100 mt-100">
         <div class="gallery-wrapper container">
             <div class="gallery-title">
                 <h2>Galleries</h2>

@@ -54,6 +54,7 @@
     }
 
     &__title {
+        font-family: Nunito;
         color: var(--tp-green-light);
         font-size: 1rem;
         font-weight: normal;
@@ -61,6 +62,7 @@
     }
 
     &__subtitle {
+        font-family: Inter;
         font-size: 2.3rem;
         font-weight: 600;
         color: var(--tp-common-black);
@@ -71,6 +73,7 @@
     }
 
     &__description {
+        font-family: Nunito;
         width: 100%;
 
         p {
@@ -103,11 +106,13 @@
         }
 
         &__name {
+            font-family: Inter;
             font-weight: 600;
             color: var(--tp-common-black);
         }
 
         &__subtitle {
+            font-family: Nunito;
             color: var(--tp-blue-slate);
             font-weight: lighter;
         }
