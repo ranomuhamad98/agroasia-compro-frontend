@@ -1,23 +1,26 @@
-# Gunakan image Node.js berbasis Alpine (ringan)
-FROM node:18-alpine
+# Ganti ke image yang lebih kompatibel (glibc-based)
+FROM node:18-slim
 
-# Set direktori kerja di dalam container
+# Opsional: install curl dan hapus cache apt agar image tetap ringan
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Set direktori kerja
 WORKDIR /app
 
-# Install pnpm secara global
+# Install pnpm global
 RUN npm install -g pnpm
 
-# Salin semua file project ke dalam container
+# Salin seluruh file project
 COPY . .
 
-# Install dependencies
+# Install dependencies Nuxt
 RUN pnpm install
 
-# Build Nuxt app
+# Build Nuxt app untuk production
 RUN pnpm build
 
-# Ekspose port 
+# Ekspose port (default: 3000)
 EXPOSE 3000
 
-# Jalankan Nuxt di mode preview (production)
+# Jalankan Nuxt dengan host terbuka di port 3000
 CMD ["pnpm", "preview", "--host"]
