@@ -1,20 +1,23 @@
-# Gunakan base image node
+# Gunakan image Node.js berbasis Alpine (ringan)
 FROM node:18-alpine
 
-# Set direktori kerja
+# Set direktori kerja di dalam container
 WORKDIR /app
 
-# Install pnpm
+# Install pnpm secara global
 RUN npm install -g pnpm
 
-# Salin file project
+# Salin semua file project ke dalam container
 COPY . .
 
 # Install dependencies
 RUN pnpm install
 
-# Build Nuxt 3
+# Build Nuxt app
 RUN pnpm build
 
-# Jalankan Nuxt
+# Ekspose port (untuk 'pnpm preview' default-nya 3000)
+EXPOSE 3000
+
+# Jalankan Nuxt di mode preview (production)
 CMD ["pnpm", "preview", "--host"]
