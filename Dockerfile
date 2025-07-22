@@ -16,6 +16,8 @@ COPY . .
 # Install dependencies Nuxt
 RUN pnpm install
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 # Build Nuxt app untuk production
 RUN pnpm build
 
