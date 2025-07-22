@@ -6,9 +6,9 @@ RUN npm install -g pnpm
 
 COPY . .
 
-ENV NODE_OPTIONS="--max-old-space-size=2048 --openssl-legacy-provider"
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
-RUN pnpm install --frozen-lockfile && pnpm rebuild
+RUN pnpm install --no-frozen-lockfile && pnpm rebuild
 
 RUN pnpm build
 
