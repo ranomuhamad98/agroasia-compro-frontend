@@ -6,15 +6,10 @@ RUN npm install -g pnpm
 
 COPY . .
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
+ENV NODE_OPTIONS="--max-old-space-size=2048 --openssl-legacy-provider"
 
-# Bersihkan cache pnpm
-RUN pnpm store prune
+RUN pnpm install --frozen-lockfile && pnpm rebuild
 
-# Install dependencies dan rebuild native modules
-RUN pnpm install --force && pnpm rebuild
-
-# Build project
 RUN pnpm build
 
 EXPOSE 3000
