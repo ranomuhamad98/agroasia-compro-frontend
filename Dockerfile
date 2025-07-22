@@ -16,7 +16,7 @@ RUN pnpm install
 # Build Nuxt app
 RUN pnpm build
 
-# Ekspose port (untuk 'pnpm preview' default-nya 3000)
+# Ekspose port 
 EXPOSE 3000
 
 # Jalankan Nuxt di mode preview (production)
