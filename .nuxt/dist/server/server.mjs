@@ -1,0 +1,1 @@
+export { default } from "file:///C:/Users/DataOn-User/my_project/agro-asia-admin-panel-green-vue/node_modules/@nuxt/vite-builder/dist/runtime/vite-node.mjs"
