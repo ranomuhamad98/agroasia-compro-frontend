@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery-container mb-100 mt-100">
+    <div v-if="props.gallery.length > 0" class="gallery-container mb-100 mt-100">
         <div class="gallery-wrapper container">
             <div class="gallery-title">
                 <h2>Galleries</h2>
@@ -24,6 +24,10 @@
 
 <script setup lang="ts">
 import { useKeenSlider } from 'keen-slider/vue';
+
+const props = defineProps<{
+    gallery: readonly any[]
+}>()
 
 const [container, slider] = useKeenSlider({
     slides: {

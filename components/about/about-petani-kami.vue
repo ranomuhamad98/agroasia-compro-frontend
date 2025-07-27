@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-100">
+    <div v-if="props.ourPeople.length > 0" class="pb-100">
         <div class="container">
             <div class="pk-header">
                 <h2 class="pk-header__title">Petani Kami</h2>
@@ -48,8 +48,12 @@
         </div>
     </div>
 </template>
-
 <script setup lang="ts">
+
+const props = defineProps<{
+    ourPeople: readonly any[]
+}>()
+
 const petanis = [
     {
         name: 'Pak Slamet',
@@ -112,6 +116,7 @@ const petanis = [
     @media #{$md} {
         gap: 3rem;
     }
+
 }
 
 .pk-content__items {

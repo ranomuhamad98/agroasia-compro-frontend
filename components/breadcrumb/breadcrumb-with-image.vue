@@ -20,7 +20,7 @@
     </div>
     <div class="min-h-300 w-100 position-absolute top-0 start-0 w-100 h-100"
       style="background-color: rgba(0, 0, 0, 0.5);">
-      <lazy-nuxt-img src="/images/product/list/bg.png" alt="products-banner" width="100%" height="300"
+      <lazy-nuxt-img :src="image || '/images/product/list/bg.png'" alt="products-banner" width="100%" height="300"
         class="object-fit-cover h-100 w-100" />
     </div>
   </div>
@@ -33,6 +33,7 @@ defineProps<{
   bg_clr?: boolean;
   center?: boolean;
   color?: string;
+  image?: string;
 }>();
 </script>
 

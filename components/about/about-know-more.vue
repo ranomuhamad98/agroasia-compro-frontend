@@ -2,42 +2,66 @@
     <div class="know-more-area-wrapper">
         <div class="know-more-area container">
             <div class="know-more-content">
-                <h2 class="know-more-area__title">Know More About Shop</h2>
-                <p class="know-more-area__subtitle">Trusted Organic Food Store For People</p>
+                <h2 class="know-more-area__title">{{ activeMilestones?.title }}</h2>
+                <p class="know-more-area__subtitle">{{ activeMilestones?.sub_title }}</p>
                 <div class="know-more-area__description">
-                    <p>PT. Agro Asia Berdikari is an agribusiness company headquartered in South Tangerang, Indonesia.
-                        We
-                        specialize in agricultural management, crop production, and the export of agricultural products.
-                    </p>
-                    <p>Our comprehensive agricultural and livestock management programs span from upstream to downstream
-                        processes, ensuring the highest quality of agricultural outputs. This integrated approach
-                        benefits
-                        farmers and all stakeholders involved.</p>
+                    <p>{{ activeMilestones?.content }}</p>
                 </div>
-                <div class="know-more-area-author">
+                <!-- <div class="know-more-area-author">
                     <p class="know-more-area-author__name">Rano Muhammad</p>
                     <p class="know-more-area-author__subtitle">/ Pemilik Kafe</p>
-                </div>
+                </div> -->
             </div>
             <div class="know-more-area-image">
-                <nuxt-img src="/images/about/image.png" alt="about-img" width="542" />
+                <nuxt-img :src="activeMilestones?.media_link" alt="about-img" width="542" />
             </div>
         </div>
         <div class="know-more-history container">
             <div class="history-startpoint">
-                <span>2019</span>
+                <span>{{ activeMilestones?.tahun }}</span>
             </div>
             <div class="history-endpoint">
-                <span>2020</span>
-                <span>2021</span>
-                <span>2022</span>
-                <span>2023</span>
-                <span>2024</span>
-                <span>2025</span>
+                <span
+                    v-for="milestone in milestones"
+                    :key="milestone.id"
+                    @click="handleMilestoneClick(milestone)"
+                >{{ milestone.tahun }}</span>
             </div>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import type { AboutMilestone } from '@/types/about-api-type';
+
+const props = defineProps<{
+    milestones: readonly AboutMilestone[]
+}>()
+
+const activeMilestones = ref<AboutMilestone | undefined>(props.milestones[0])
+
+const setActiveMilestone = (selectedMilestone: AboutMilestone) => {
+    activeMilestones.value = props.milestones.find((milestone: AboutMilestone) => milestone.position === selectedMilestone.position)
+}
+
+const milestones = computed(() => {
+    return props.milestones
+        .filter((milestone: AboutMilestone) => milestone.position !== activeMilestones.value?.position)
+        .map((milestone: AboutMilestone) => ({
+            title: milestone.title,
+            sub_title: milestone.sub_title,
+            content: milestone.content,
+            media_link: milestone.media_link,
+            tahun: milestone.tahun,
+            position: milestone.position,
+            id: milestone.id
+        }))
+})
+
+const handleMilestoneClick = (milestone: AboutMilestone) => {
+    setActiveMilestone(milestone)
+}
+</script>
 
 <style scoped lang="scss">
 @use '@/assets/scss/utils/_colors.scss' as *;
@@ -75,6 +99,8 @@
     &__description {
         font-family: Nunito;
         width: 100%;
+        max-width: 55vw;
+        min-height: 250px;
 
         p {
             font-size: 1rem;
@@ -138,6 +164,7 @@
                 color: var(--tp-green-light);
                 font-weight: 600;
                 opacity: 0.3;
+                transition: all 0.3s ease;
             }
         }
 
@@ -157,6 +184,8 @@
                 font-weight: normal;
                 color: var(--tp-green-light);
                 position: relative;
+                cursor: pointer;
+                transition: all 0.3s ease;
 
                 &:last-child {
                     color: var(--tp-green-moss);
@@ -174,6 +203,17 @@
                     background-color: var(--tp-green-light);
                     height: 1rem;
                     width: 1rem;
+                }
+
+                &:hover {
+                    color: var(--tp-common-white);
+                    background-color: var(--tp-green-moss);
+                    padding: 0 1rem;
+                    border-radius: 0.3rem;
+                    &::before {
+                        background-color: var(--tp-common-white);
+                        outline: 2px solid var(--tp-green-moss);
+                    }
                 }
             }
         }
