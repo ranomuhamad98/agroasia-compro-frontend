@@ -2,7 +2,7 @@
     <div class="tp-home-about-base">
         <div class="tp-home-about-container">
             <div class="tp-home-about-image">
-                <img src="/images/home/about/image.png" alt="about-us" />
+                <img :src="props.aboutUs.media_link" alt="about-us" />
             </div>
             <div class="tp-home-about-content">
                 <div class="tp-home-about-title">
@@ -10,16 +10,16 @@
                     <h3>About Us</h3>
                 </div>
                 <div class="tp-home-about-content-container">
-                    <p class="tp-home-title">Trusted Export Solutions, Directly from the Source</p>
-                    <p class="tp-home-text-base">Delivering quality agricultural goods through efficient, professional export and sales services.</p>
+                    <p class="tp-home-title">{{ props.aboutUs.title }}</p>
+                    <p class="tp-home-text-base">{{ props.aboutUs.sub_title }}</p>
 
-                    <div v-for="item in aboutUs" :key="item.title" class="tp-home-about-content-list">
+                    <div v-for="item in props.aboutUs.list" :key="item.title" class="tp-home-about-content-list">
                         <div class="tp-home-about-content-list-header">
                             <img src="/images/home/about/check.png" alt="check" />
                             <p class="tp-home-subtitle">{{ item.title }}</p>
                         </div>
                         <div class="tp-home-about-content-list-description">
-                            <p>{{ item.description }}</p>
+                            <p>{{ item.content }}</p>
                         </div>
                     </div>
                 </div>
@@ -29,18 +29,23 @@
 </template>
 
 <script setup lang="ts">
-const aboutUs = [
-    {
-        title: 'Supporting Export from Farm to Global Market',
-        description: 'Delivering quality agricultural goods through efficient, professional export and sales services.',
-    },
-    {
-        title: 'Seamless Export and Direct Sales Solutions',
-        description: 'Experience hassle-free export processes and a reliable supply of quality goods, managed with professionalism, efficiency, and an integrated system that supports your business every step of the way.',
-    },
-    {
-        title: 'Empowering Farmers, Driving Economic Growth',
-        description: 'We support farmers from the earliest stages of cultivation to the purchase of their harvests—fostering globally competitive agriculture and uplifting rural economies through sustainable practices.',
-    }
-]
+import type { DeepReadonly } from 'vue';
+import type { AboutUs } from '../../types/home-api-type';
+
+const props = defineProps<{
+    aboutUs: DeepReadonly<AboutUs>
+}>()
+
+// Array of available color classes
+const colorClasses = ['color-green-medium', 'color-green-moss', 'color-green-light'];
+
+// Computed property to generate random colors for each list item
+const randomColors = computed(() => {
+    if (!props.aboutUs?.list) return [];
+    
+    return props.aboutUs.list.map(() => {
+        const randomIndex = Math.floor(Math.random() * colorClasses.length);
+        return colorClasses[randomIndex];
+    });
+});
 </script>

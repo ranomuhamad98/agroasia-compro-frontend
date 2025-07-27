@@ -18,23 +18,24 @@
                         </div>
                     </div>
                 </div>
-                <nuxt-img class="thumbnail" src="/images/home/product/thumbnail.png" alt="thumbnail" width="400"
+                <nuxt-img class="thumbnail" :src="props.topProductSection.image" alt="thumbnail" width="400"
                     height="100%" />
             </div>
             <div class="container__right">
                 <div class="title">
-                    <p class="title__sub">More Discover Our Top Selling and Top Rated Products</p>
+                    <p class="title__sub">{{ props.topProductSection.title }}</p>
                     <p class="title__main">Top Products</p>
                 </div>
                 <div class="content">
-                    <div v-for="item in products" :key="item.title" class="content__item">
+                    <div v-for="item in topProducts" :key="item.id" class="content__item">
                         <div class="item__header">
-                            <nuxt-img class="image" :src="item.image" alt="check" width="90" height="90" />
+                            <nuxt-img class="image" :src="item.image" alt="check"
+                                width="90" height="90" />
                         </div>
                         <div class="item__content">
-                            <p class="item__title">{{ item.title }}</p>
-                            <p class="item__description">{{ item.description }}</p>
-                            <a href="https://wa.me?text=I'm interested in {{ item.title }}" target="_blank"
+                            <p class="item__title">{{ item.name }}</p>
+                            <p class="item__description">{{ item.summary.slice(0, 100) }}...</p>
+                            <a :href="`https://wa.me?text=I'm interested in ${item.name}`" target="_blank"
                                 rel="noopener" class="item__button">
                                 <icon name="mdi:whatsapp" class="item__button-icon" />
                                 <span>Pesan Sekarang!</span>
@@ -48,6 +49,13 @@
 </template>
 
 <script setup lang="ts">
+import type { TopProductSection } from '../../types/home-api-type';
+
+const props = defineProps<{
+    topProducts: readonly any[]
+    topProductSection: Readonly<TopProductSection>
+}>()
+
 const services = [
     {
         title: 'Export Management',

@@ -7,23 +7,31 @@
                     <h3 class="title__main">FAQ</h3>
                 </div>
                 <div class="content">
-                    <div class="content__item" v-for="faq in faqs" :key="faq.question">
+                    <div class="content__item" v-for="(faq, index) in props.faq" :key="`faq-${index}`">
                         <p class="question__icon">?</p>
                         <div class="question">
-                            <h4 class="question__title">{{ faq.question }}</h4>
-                            <p class="question__answer">{{ faq.answer }}</p>
+                            <h4 class="question__title">{{ faq.title }}</h4>
+                            <p class="question__answer">{{ faq.content }}</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="wrapper">
-                <home-contact-us />
+                <home-contact-us :header="props.header" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import type { DeepReadonly } from 'vue';
+import type { FAQ, Header } from '../../types/home-api-type';
+
+const props = defineProps<{
+    faq: DeepReadonly<FAQ[]>
+    header: DeepReadonly<Header>
+}>()
+
 const faqs = [
     {
         question: 'How do i place an order?',

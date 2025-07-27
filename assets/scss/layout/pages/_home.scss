@@ -57,15 +57,15 @@
             justify-content: center;
             padding: 2rem 3rem;
 
-            &:nth-child(1) {
+            &.color-green-medium {
                 background-color: var(--tp-green-medium);
             }
 
-            &:nth-child(2) {
+            &.color-green-moss {
                 background-color: var(--tp-green-moss);
             }
 
-            &:nth-child(3) {
+            &.color-green-light {
                 background-color: var(--tp-green-light);
             }
 
@@ -500,6 +500,7 @@
                                 margin-bottom: 0;
                                 color: var(--tp-common-black);
                                 margin-bottom: .5rem;
+                                max-width: 300px;
                             }
 
                             &__button {

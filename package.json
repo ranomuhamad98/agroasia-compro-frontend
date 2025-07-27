@@ -12,12 +12,27 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest run test/unit",
+    "test:unit": "vitest run test/unit --reporter=verbose",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:coverage": "vitest run test/unit --coverage",
+    "test:watch": "vitest test/unit --watch"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.5.0",
     "@nuxt/fonts": "^0.11.4",
+    "@nuxt/test-utils": "^3.8.0",
+    "@playwright/test": "^1.45.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitest/coverage-v8": "^1.6.0",
+    "@vue/test-utils": "^2.4.0",
+    "happy-dom": "^14.12.0",
+    "msw": "^2.3.0",
     "nuxt": "^3.6.5",
+    "vitest": "^1.6.0",
     "vue": "^3.3.7",
     "vue-router": "^4.2.5"
   },

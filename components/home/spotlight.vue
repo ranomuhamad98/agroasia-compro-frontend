@@ -1,18 +1,25 @@
 <template>
     <div class="tp-home-spotlight">
-        <div v-for="item in spotlight" :key="item.title" class="content__item">
+        <div v-for="item in props.featured" :key="item.title" class="content__item">
             <div class="item__header">
                 <nuxt-img class="image" :src="item.icon" :alt="item.title" height="90" />
             </div>
             <div class="item__content">
-                <p class="item__title">{{ item.title }}</p>
-                <p class="item__description">{{ item.description }}</p>
+                <p class="item__title capitalize">{{ item.title }}</p>
+                <p class="item__description capitalize">{{ item.content }}</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import type { DeepReadonly } from 'vue';
+import type { Featured } from '../../types/home-api-type';
+
+const props = defineProps<{
+    featured: DeepReadonly<Featured[]>
+}>()
+
 const spotlight = [
     {
         title: '100% Natural',

@@ -1,5 +1,5 @@
 <template>
-    <div class="tp-home-testimoni">
+    <div v-if="props.testimonials.length > 0" class="tp-home-testimoni">
         <div class="container">
             <div class="title">
                 <p class="title__main">Let's Hear What They Say About Agro</p>
@@ -7,7 +7,7 @@
             </div>
             <div class="content" style="perspective: 1000px">
                 <div ref="sliderRef" class="keen-slider">
-                    <div v-for="item in testimoni" :key="item.name" class="keen-slider__slide content__item">
+                    <div v-for="item in props.testimonials" :key="item.name" class="keen-slider__slide content__item">
                         <div class="item__header">
                             <nuxt-img class="image" :src="item.avatar" :alt="item.name" width="70" height="70" />
                         </div>
@@ -40,6 +40,11 @@
 <script setup lang="ts">
 import { useKeenSlider } from 'keen-slider/vue'
 import { ref } from 'vue'
+import type { DeepReadonly } from 'vue';
+
+const props = defineProps<{
+    testimonials: DeepReadonly<any[]>
+}>()
 
 const currentSlide = ref(0)
 const [sliderRef, slider] = useKeenSlider({
