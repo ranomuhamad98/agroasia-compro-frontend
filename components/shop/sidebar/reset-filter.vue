@@ -1,5 +1,5 @@
 <template>
-   <div class="tp-shop-widget mb-50">
+   <div class="tp-shop-widget mb-10">
       <h3 class="tp-shop-widget-title">Reset Filter</h3>
       <button
         @click="handleFilterReset"
@@ -44,7 +44,7 @@ const handleFilterReset = () => {
     router.push('/shop-1600')
   }
   else {
-    router.push('/shop')
+    router.push('/products')
   }
 }
 
