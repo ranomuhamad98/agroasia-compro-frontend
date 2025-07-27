@@ -20,15 +20,38 @@ export function useProductsApi(
     maxAge = 300 // 5 minutes for useAsyncData
   } = cacheOptions;
 
-  // Make params reactive
-  const reactiveParams = computed(() => {
-    const p = unref(params);
-    return {
-      page: p.page || 1,
-      limit: p.limit || 12,
-      category: p.category
-    };
+  // Create internal reactive params
+  const internalParams = ref<ProductsApiParams>({
+    page: unref(params).page || 1,
+    limit: unref(params).limit || 12,
+    category: unref(params).category
   });
+
+  // Watch for external params changes and sync with internal params (initial sync only)
+  let hasInitialized = false;
+  watch(
+    () => unref(params),
+    (newParams) => {
+      // Only sync on initial setup, afterwards internal params take control
+      if (!hasInitialized && newParams) {
+        const updatedParams = {
+          page: newParams.page || 1,
+          limit: newParams.limit || 12,
+          category: newParams.category
+        };
+        internalParams.value = updatedParams;
+        hasInitialized = true;
+      }
+    },
+    { immediate: true }
+  );
+
+  // Make params reactive
+  const reactiveParams = computed(() => ({
+    page: internalParams.value.page || 1,
+    limit: internalParams.value.limit || 12,
+    category: internalParams.value.category
+  }));
 
   // Build query string reactively
   const queryString = computed(() => {
@@ -119,8 +142,9 @@ export function useProductsApi(
     {
       default: () => null,
       server: false, // Only fetch on client side for better performance
-      lazy: true,
-      transform: (data: ProductsApiResponse) => data
+      lazy: false, // Auto fetch when key changes
+      transform: (data: ProductsApiResponse) => data,
+      watch: [cacheKey] // Explicitly watch cacheKey changes
     }
   );
 
@@ -158,23 +182,143 @@ export function useProductsApi(
     await refreshProducts();
   };
 
+  // Function to update params and fetch new data (with internal smart caching)
+  const updateParams = async (newParams: Partial<ProductsApiParams>) => {
+    const updatedParams = {
+      ...internalParams.value,
+      ...newParams
+    };
+    
+    // Update the reactive params (this will trigger useAsyncData automatically)
+    internalParams.value = updatedParams;
+  };
+
+  // Function to fetch with completely new query (with internal smart caching)
+  const fetchWithNewQuery = async (newParams: ProductsApiParams) => {
+    // Replace all params (this will trigger useAsyncData automatically)
+    internalParams.value = newParams;
+  };
+
+  // Function to set specific param and fetch (with internal smart caching)
+  const setParams = async (newParams: Partial<ProductsApiParams>) => {
+    const updatedParams = { ...internalParams.value };
+    
+    // Update params
+    if (newParams.page !== undefined) {
+      updatedParams.page = newParams.page;
+    }
+    if (newParams.limit !== undefined) {
+      updatedParams.limit = newParams.limit;
+    }
+    if (newParams.category !== undefined) {
+      updatedParams.category = newParams.category;
+    }
+    
+    // Update params (this will trigger useAsyncData automatically)
+    internalParams.value = updatedParams;
+  };
+
+  // Function to go to next page (with internal smart caching)
+  const nextPage = async () => {
+    const current = internalParams.value;
+    const newPage = (current.page || 1) + 1;
+    await updateParams({ page: newPage });
+  };
+
+  // Function to go to previous page (with internal smart caching)
+  const previousPage = async () => {
+    const current = internalParams.value;
+    const currentPage = current.page || 1;
+    if (currentPage > 1) {
+      await updateParams({ page: currentPage - 1 });
+    }
+  };
+
+  // Function to go to specific page (with internal smart caching)
+  const goToPage = async (page: number) => {
+    await updateParams({ page });
+  };
+
+  // Function to change category (with internal smart caching)
+  const changeCategory = async (category: string | undefined) => {
+    await updateParams({ category, page: 1 }); // Reset to page 1 when changing category
+  };
+
+  // Function to change limit per page (with internal smart caching)
+  const changeLimit = async (limit: number) => {
+    await updateParams({ limit, page: 1 }); // Reset to page 1 when changing limit
+  };
+
+  // Debug function to check current state
+  const debugState = () => {
+    return {
+      internalParams: internalParams.value,
+      reactiveParams: reactiveParams.value,
+      cacheKey: cacheKey.value,
+      queryString: queryString.value,
+      pending: productsPending.value,
+      hasData: !!productsData.value,
+      dataLength: productsData.value?.data?.products?.length || 0
+    };
+  };
+
+    // Manual refresh function that ensures fresh data
+  const manualRefresh = async () => {
+    await refreshProducts();
+  };
+
+  // Add watchers for debugging (development only)
+  if (process.env.NODE_ENV === 'development') {
+    watch(internalParams, (newParams, oldParams) => {
+      console.log('🔄 Internal params changed:', { old: oldParams, new: newParams });
+    }, { deep: true });
+
+    watch(cacheKey, (newKey, oldKey) => {
+      console.log('🔑 Cache key changed:', { old: oldKey, new: newKey });
+    });
+
+    watch(productsData, (newData, oldData) => {
+      console.log('📦 Products data changed:', { 
+        hadData: !!oldData, 
+        hasData: !!newData,
+        newLength: newData?.data?.products?.length || 0
+      });
+    });
+
+    watch(productsPending, (pending, wasPending) => {
+      if (pending && !wasPending) {
+        console.log('⏳ Fetch started...');
+      }
+      if (!pending && wasPending) {
+        console.log('✅ Fetch completed');
+      }
+    });
+  }
+
   return {
+    // Core data
     productsData,
     productsError,
     productsPending,
     refreshProducts,
-    // Return reactive params for external use
+    // Current parameters (read-only)
     currentParams: reactiveParams,
-    // Cache management
-    clearCache,
-    clearAllProductsCache,
+    // Query management functions (with internal smart caching)
+    updateParams,
+    fetchWithNewQuery,
+    setParams,
+    // Pagination helpers
+    nextPage,
+    previousPage,
+    goToPage,
+    // Filter helpers
+    changeCategory,
+    changeLimit,
+    // Force refresh when needed (bypasses cache completely)
     forceRefresh,
-    // Cache info
-    cacheInfo: computed(() => ({
-      key: cacheKey.value,
-      ttl,
-      persistent,
-      maxAge
-    }))
+    // Manual refresh function
+    manualRefresh,
+    // Debug utilities (for development)
+    debugState
   };
 }

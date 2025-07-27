@@ -50,7 +50,9 @@ const handleCategoryRoute = (categoryId: string, e: Event) => {
   router.push({
     path: '/products', 
     query: {
-      category: currentCategories
+      ...route.query,
+      category: currentCategories,
+      page: 1
     }
   });
 };
