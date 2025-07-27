@@ -1,3 +1,5 @@
+import type { GlobalApiFooter, GlobalApiHeader } from "./global-api-type";
+
 export interface AboutMilestone {
   title: string;
   sub_title: string;
@@ -29,29 +31,6 @@ export interface AboutJumbotron {
   title: string;
 }
 
-export interface AboutHeader {
-  option_language_active: boolean;
-  logo: string;
-  city: string;
-  email: string;
-}
-
-export interface AboutFooter {
-  about_us: string;
-  whatsapp_prerequisite_text: string;
-  copyright_text: string;
-  sosmed_linkedin: string;
-  email: string;
-  phone_number: string;
-  pt_name: string;
-  whatsapp_number: string;
-  address: string;
-  about_us_text: string;
-  sosmed_facebook: string;
-  sosmed_twitter: string;
-  sosmed_youtube: string;
-}
-
 export interface AboutApiData {
   jumbotron: AboutJumbotron;
   milestones: AboutMilestone[];
@@ -59,8 +38,8 @@ export interface AboutApiData {
   our_people: any[];
   our_value: AboutValueSection;
   gallery: any[];
-  header: AboutHeader;
-  footer: AboutFooter;
+  header: GlobalApiHeader;
+  footer: GlobalApiFooter;
 }
 
 export interface AboutApiResponse {

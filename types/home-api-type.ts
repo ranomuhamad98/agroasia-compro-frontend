@@ -1,3 +1,5 @@
+import type { GlobalApiFooter, GlobalApiHeader } from "./global-api-type";
+
 export interface AboutUs {
   media_link: string;
   title: string;
@@ -82,8 +84,8 @@ export interface HomeApiResponse {
   featured: Featured[];
   testimonials: any[];
   faq: FAQ[];
-  header: Header;
-  footer: Footer;
+  header: GlobalApiHeader;
+  footer: GlobalApiFooter;
 }
 
 export interface ApiError {
