@@ -116,10 +116,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import product_data from "@/data/product-data";
-import { useProductFilterStore } from "@/pinia/useProductFilterStore";
-import { type IProduct } from "@/types/product-d-t";
+import { ref, watch, onMounted } from "vue";
+import { useProductFilterStore } from "../../pinia/useProductFilterStore";
+import { type IProduct } from "../../types/product-d-t";
+import { useProductsApi } from "../../composables/useProductsApi";
+import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
