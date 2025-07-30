@@ -86,14 +86,6 @@ const {
 
 // Debug current state on mount
 onMounted(() => {
-  console.log('🏠 Home page mounted');
-  console.log('📊 Current state:', {
-    isPending: isPending.value,
-    isLoading: isLoading.value,
-    hasData: hasData.value,
-    error: error.value,
-    homeData: homeData.value
-  });
   
   // Force refresh if no data after mount
   nextTick(() => {
@@ -102,30 +94,5 @@ onMounted(() => {
       refresh();
     }
   });
-});
-
-// Log success message when data is loaded
-watch(hasData, (newValue) => {
-  if (newValue) {
-    console.log('✅ Home data loaded successfully');
-    console.log('📄 Data summary:', {
-      categoriesCount: categories.value.length,
-      productsCount: topProducts.value.length,
-      faqCount: faq.value.length,
-      status: homeData.value?.status
-    });
-  }
-});
-
-// Watch for errors and provide user feedback
-watch(error, (newError) => {
-  if (newError) {
-    console.error('❌ Home page error:', newError);
-  }
-});
-
-// Watch pending state
-watch(isPending, (newValue) => {
-  console.log(`⏳ API call ${newValue ? 'started' : 'finished'}`);
 });
 </script>

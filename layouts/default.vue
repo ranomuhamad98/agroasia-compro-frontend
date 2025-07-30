@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!$route.meta.layout">
     <Header></Header>
     <main>
       <slot />
@@ -7,6 +7,9 @@
     <Footer></Footer>
     <modal-product/>
     <back-to-top />
+  </div>
+  <div v-else>
+    <slot />
   </div>
 </template>
 

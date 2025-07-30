@@ -10,7 +10,7 @@ export default defineNuxtConfig({
         ['defineStore', 'definePiniaStore'],
       ],
     },
-  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts"],
+  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts", "@nuxtjs/tailwindcss"],
   app: {
     head: {
       title: "Agro Asia Berdikari",
@@ -28,6 +28,17 @@ export default defineNuxtConfig({
     "swiper/css/bundle",
     "@/assets/css/font-awesome-pro.css",
     "@/assets/css/flaticon_shofy.css",
-    "@/assets/scss/main.scss",
+    "@/assets/scss/main.scss"
   ],
+  // Tambahan untuk jsPDF fix:
+  vite: {
+    optimizeDeps: {
+      include: ['jspdf'],
+    },
+  },
+
+  // Tambahan opsional agar warning compatibilityDate hilang:
+  nitro: {
+    compatibilityDate: '2025-07-16',
+  },
 })
