@@ -1,0 +1,142 @@
+# Shofi Grocery Environment Configuration Template
+# Copy content yang diperlukan ke file .env.local untuk development
+
+# ========================================
+# Application Settings
+# ========================================
+
+# Application Environment
+NODE_ENV=development
+NUXT_PORT=3000
+NUXT_HOST=0.0.0.0
+
+# Application URL
+BASE_URL=http://localhost:3000
+APP_NAME="Agro Asia Berdikari"
+
+# ========================================
+# Database Configuration
+# ========================================
+
+# Database URL (if using database)
+# DATABASE_URL=postgresql://username:password@localhost:5432/shofi_grocery
+# DATABASE_HOST=localhost
+# DATABASE_PORT=5432
+# DATABASE_NAME=shofi_grocery
+# DATABASE_USER=postgres
+# DATABASE_PASSWORD=your_password
+
+# ========================================
+# API Configuration
+# ========================================
+
+# External API endpoints
+# API_BASE_URL=https://api.example.com
+# API_KEY=your_api_key_here
+# API_SECRET=your_api_secret_here
+
+# ========================================
+# Authentication & Security
+# ========================================
+
+# JWT Secret (generate with: openssl rand -hex 32)
+# JWT_SECRET=your_jwt_secret_here
+# JWT_EXPIRES_IN=7d
+
+# Session Secret
+# SESSION_SECRET=your_session_secret_here
+
+# CORS Settings
+# CORS_ORIGIN=http://localhost:3000
+
+# ========================================
+# File Storage
+# ========================================
+
+# File upload settings
+# UPLOAD_MAX_SIZE=10485760
+# UPLOAD_ALLOWED_TYPES=image/jpeg,image/png,image/gif
+
+# Cloud storage (if using)
+# AWS_ACCESS_KEY_ID=your_aws_access_key
+# AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+# AWS_REGION=us-east-1
+# AWS_S3_BUCKET=your-bucket-name
+
+# ========================================
+# Email Configuration
+# ========================================
+
+# SMTP settings
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_SECURE=false
+# SMTP_USER=your_email@gmail.com
+# SMTP_PASS=your_app_password
+
+# Email from
+# EMAIL_FROM=noreply@yourdomain.com
+
+# ========================================
+# Payment Integration
+# ========================================
+
+# Payment gateway settings
+# PAYMENT_GATEWAY=midtrans
+# MIDTRANS_SERVER_KEY=your_midtrans_server_key
+# MIDTRANS_CLIENT_KEY=your_midtrans_client_key
+# MIDTRANS_IS_PRODUCTION=false
+
+# ========================================
+# Monitoring & Analytics
+# ========================================
+
+# Google Analytics
+# GA_TRACKING_ID=GA-XXXXXXXXX
+
+# Sentry (Error tracking)
+# SENTRY_DSN=https://your-sentry-dsn
+
+# ========================================
+# Development Settings
+# ========================================
+
+# Debug mode
+DEBUG=true
+
+# Log level (error, warn, info, debug)
+LOG_LEVEL=info
+
+# Hot module replacement
+HMR=true
+
+# ========================================
+# Production Settings
+# ========================================
+
+# SSL/HTTPS settings
+# SSL_ENABLED=false
+# SSL_CERT_PATH=/path/to/certificate.crt
+# SSL_KEY_PATH=/path/to/private.key
+
+# Caching
+# CACHE_ENABLED=true
+# CACHE_TTL=3600
+
+# CDN settings
+# CDN_URL=https://your-cdn-url.com
+
+# ========================================
+# Docker Specific
+# ========================================
+
+# Docker compose profiles
+# COMPOSE_PROFILES=prod
+
+# Docker registry
+# DOCKER_REGISTRY=your-registry.com
+# DOCKER_IMAGE_TAG=latest
+
+# Resource limits
+# DOCKER_MEMORY_LIMIT=512m
+# DOCKER_CPU_LIMIT=0.5 
