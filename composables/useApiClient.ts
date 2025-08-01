@@ -54,6 +54,7 @@ export function useApiClient(options: UseApiClientOptions = {}) {
           body,
           headers: {
             'Content-Type': 'application/json',
+            credentials: 'include',
             ...headers,
           },
           timeout,

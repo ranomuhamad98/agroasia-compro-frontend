@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
     <!-- Login Form -->
-    <LoginForm v-if="!isAuthenticated" />
+    <LoginForm v-if="!beenAuthenticated" @authenticated="handleAuthentication" />
 
     <!-- Admin Dashboard -->
     <div v-else>
@@ -12,15 +12,41 @@
             <div>
               <h1 class="text-3xl font-bold text-white">Admin Panel - Agro Asia Berdikari</h1>
               <p class="text-green-100 mt-1">Content Management System</p>
-              <p v-if="user?.email" class="text-green-200 text-sm mt-1">Welcome, {{ user.email }}</p>
+              <div v-if="profile || user?.email" class="text-green-200 text-sm mt-1">
+                <div class="flex items-center gap-2">
+                  <p v-if="profile?.name">Welcome, {{ profile.name }}</p>
+                  <p v-else-if="user?.email">Welcome, {{ user.email }}</p>
+                  <div v-if="isProfileLoading" class="flex items-center gap-1">
+                    <div class="animate-spin rounded-full h-3 w-3 border-b border-green-200"></div>
+                    <span class="text-xs">Loading profile...</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <p v-if="profile?.role" class="text-green-100 text-xs capitalize">{{ profile.role }}</p>
+                  <p v-if="profile?.email" class="text-green-100 text-xs">{{ profile.email }}</p>
+                  <button 
+                    v-if="isAuthenticated && !isProfileLoading"
+                    @click="fetchProfile"
+                    class="text-green-200 hover:text-white text-xs underline"
+                    title="Refresh profile"
+                  >
+                    Refresh
+                  </button>
+                </div>
+                <p v-if="profileError" class="text-red-200 text-xs mt-1">
+                  Profile error: {{ profileError }}
+                </p>
+              </div>
             </div>
-            <button
-              @click="handleLogout"
-              class="border border-green-200 text-white hover:bg-green-700 hover:border-green-300 bg-transparent px-4 py-2 rounded-md transition-colors flex items-center gap-2"
-            >
-              <LogOutIcon class="w-4 h-4" />
-              Logout
-            </button>
+            <div class="flex items-center gap-3">
+              <button
+                @click="handleLogout"
+                class="border border-green-200 text-white hover:bg-green-700 hover:border-green-300 bg-transparent px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+              >
+                <LogOutIcon class="w-4 h-4" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -29,7 +55,7 @@
       <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Tab Navigation -->
         <div class="bg-white shadow-md border border-green-200 p-1 rounded-lg mb-6">
-          <div class="grid grid-cols-5 gap-1">
+          <div class="grid grid-cols-6 gap-1">
             <button
               v-for="tab in tabs"
               :key="tab.id"
@@ -49,6 +75,157 @@
 
         <!-- Tab Content -->
         <div class="space-y-6">
+          <!-- Profile Tab -->
+          <div v-if="adminStore.activeTab === 'profile'">
+            <div class="mb-6">
+              <h2 class="page-title">My Profile</h2>
+              <p class="page-subtitle">View and manage your profile information.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Profile Information Card -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-green-800 font-semibold flex items-center gap-2">
+                      <UserIcon class="w-5 h-5" />
+                      Profile Information
+                    </h3>
+                    <button 
+                      @click="fetchProfile"
+                      :disabled="isProfileLoading"
+                      class="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 transition-colors flex items-center gap-1"
+                    >
+                      <RefreshCwIcon class="w-3 h-3" :class="{ 'animate-spin': isProfileLoading }" />
+                      Refresh
+                    </button>
+                  </div>
+                </div>
+                <div class="p-6">
+                  <!-- Loading State -->
+                  <div v-if="isProfileLoading" class="flex items-center justify-center py-8">
+                    <div class="flex items-center gap-2">
+                      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
+                      <span class="text-gray-600">Loading profile...</span>
+                    </div>
+                  </div>
+
+                  <!-- Error State -->
+                  <div v-else-if="profileError" class="bg-red-50 border border-red-200 rounded-md p-4">
+                    <p class="text-red-800 text-sm">
+                      <strong>Error:</strong> {{ profileError }}
+                    </p>
+                    <button 
+                      @click="fetchProfile"
+                      class="mt-2 text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
+                    >
+                      Retry
+                    </button>
+                  </div>
+
+                  <!-- Profile Data -->
+                  <div v-else-if="profile" class="space-y-4">
+                    <div class="grid grid-cols-1 gap-4">
+                      <div class="flex items-center justify-center mb-4">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                          <img 
+                            v-if="profile.avatar" 
+                            :src="profile.avatar" 
+                            :alt="profile.name || profile.email"
+                            class="w-20 h-20 rounded-full object-cover"
+                          />
+                          <UserIcon v-else class="w-8 h-8 text-green-600" />
+                        </div>
+                      </div>
+                      
+                      <div class="grid grid-cols-1 gap-3">
+                        <div class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">ID</label>
+                          <p class="text-gray-900">{{ profile.id }}</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Email</label>
+                          <p class="text-gray-900">{{ profile.email }}</p>
+                        </div>
+                        <div v-if="profile.name" class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Name</label>
+                          <p class="text-gray-900">{{ profile.name }}</p>
+                        </div>
+                        <div v-if="profile.role" class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Role</label>
+                          <p class="text-gray-900 capitalize">{{ profile.role }}</p>
+                        </div>
+                        <div v-if="profile.phone" class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Phone</label>
+                          <p class="text-gray-900">{{ profile.phone }}</p>
+                        </div>
+                        <div v-if="profile.address" class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Address</label>
+                          <p class="text-gray-900">{{ profile.address }}</p>
+                        </div>
+                        <div v-if="profile.created_at" class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Member Since</label>
+                          <p class="text-gray-900">{{ formatDate(profile.created_at) }}</p>
+                        </div>
+                        <div v-if="profile.updated_at" class="border-b border-gray-200 pb-2">
+                          <label class="text-sm font-medium text-gray-700">Last Updated</label>
+                          <p class="text-gray-900">{{ formatDate(profile.updated_at) }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- No Profile State -->
+                  <div v-else class="text-center py-8">
+                    <UserIcon class="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p class="text-gray-600 mb-4">No profile data available</p>
+                    <button 
+                      @click="fetchProfile"
+                      :disabled="isProfileLoading"
+                      class="text-sm bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    >
+                      Load Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Authentication Info Card -->
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="text-green-800 font-semibold">Authentication Status</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="text-green-700 font-medium">Authenticated</span>
+                  </div>
+                  
+                  <div class="space-y-2">
+                    <div class="border-b border-gray-200 pb-2">
+                      <label class="text-sm font-medium text-gray-700">Login Status</label>
+                      <p class="text-gray-900">{{ isAuthenticated ? 'Logged In' : 'Not Logged In' }}</p>
+                    </div>
+                    <div v-if="user?.email" class="border-b border-gray-200 pb-2">
+                      <label class="text-sm font-medium text-gray-700">Session Email</label>
+                      <p class="text-gray-900">{{ user.email }}</p>
+                    </div>
+                  </div>
+
+                  <div class="pt-4 border-t border-gray-200">
+                    <button 
+                      @click="handleLogout"
+                      class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <LogOutIcon class="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Products Tab -->
           <div v-if="adminStore.activeTab === 'products'">
             <div class="flex justify-between items-center mb-6">
@@ -362,7 +539,10 @@ import {
   StarIcon,
   SaveIcon,
   EyeIcon,
-  EyeOffIcon
+  EyeOffIcon,
+  ClipboardListIcon,
+  RefreshCwIcon,
+  UserIcon
 } from 'lucide-vue-next'
 import { useAdminStore } from '@/stores/admin.js'
 import { useFileUpload } from '@/composables/useFileUpload.js'
@@ -371,7 +551,7 @@ import ProductForm from '@/components/admin/ProductForm.vue'
 import TestimonialForm from '@/components/admin/TestimonialForm.vue'
 import HeroBannerForm from '@/components/admin/HeroBannerForm.vue'
 import FormSubmissions from '@/components/admin/FormSubmissions.vue'
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useHead } from '#imports'
 
 useHead({
@@ -381,7 +561,9 @@ useHead({
   ]
 })
 
-const { isAuthenticated, logout, user } = useLoginApi();
+const { isAuthenticated, logout, user, login } = useLoginApi();
+const { profile, fetchProfile, isLoading: isProfileLoading, error: profileError } = useMyProfile();
+const beenAuthenticated = ref(isAuthenticated.value);
 const adminStore = useAdminStore();
 
 // Handle logout function
@@ -391,12 +573,37 @@ const handleLogout = async () => {
   await navigateTo('/login'); // Redirect to login page
 };
 
+const handleAuthentication = async (status) => {
+  isAuthenticated.value = status;
+  beenAuthenticated.value = status;
+  
+  // Fetch profile when user is authenticated
+  if (status) {
+    await fetchProfile();
+  }
+}
+
+// Watch for authentication changes and fetch profile
+watch(isAuthenticated, async (newValue) => {
+  if (newValue && !profile.value) {
+    await fetchProfile();
+  }
+})
+
+// Fetch profile on page load if user is already authenticated
+onMounted(async () => {
+  if (isAuthenticated.value && !profile.value) {
+    await fetchProfile();
+  }
+})
+
 const tabs = [
+  { id: 'profile', label: 'Profile', icon: UsersIcon },
   { id: 'products', label: 'Products', icon: PackageIcon },
   { id: 'home', label: 'Home', icon: HomeIcon },
-  { id: 'testimonials', label: 'Testimonials', icon: UsersIcon },
+  { id: 'testimonials', label: 'Testimonials', icon: MessageSquareIcon },
   { id: 'about', label: 'About Us', icon: InfoIcon },
-  { id: 'forms', label: 'Form Submissions', icon: MessageSquareIcon }
+  { id: 'forms', label: 'Form Submissions', icon: ClipboardListIcon }
 ]
 
 // Product dialog
@@ -455,5 +662,20 @@ const selectGalleryImage = async () => {
 // Save functions
 const saveVideo = () => {
   alert('Video URL updated successfully!')
+}
+
+// Date formatting helper
+const formatDate = (dateString) => {
+  try {
+    return new Date(dateString).toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch {
+    return dateString;
+  }
 }
 </script>

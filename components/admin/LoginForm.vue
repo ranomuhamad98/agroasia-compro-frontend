@@ -46,6 +46,13 @@
 <script setup>
 import { ref } from 'vue';
 
+const props = defineProps({
+  onAuthenticated: {
+    type: Function,
+    required: true
+  }
+})
+
 const form = ref({
   email: '',
   password: ''
@@ -59,9 +66,10 @@ const loginUser = async () => {
       email: form.value.email,
       password: form.value.password
     });
-    
+
     if (result) {
       console.log('Admin login successful!', result);
+      props.onAuthenticated(true);
       // Clear form on success
       form.value.email = '';
       form.value.password = '';

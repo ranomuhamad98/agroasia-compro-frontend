@@ -94,6 +94,7 @@ const onSubmit = handleSubmit(async (values) => {
     });
     
     if (result) {
+      console.log('result', result);
       // Login successful - redirect or update UI
       await navigateTo('/profile'); // or wherever you want to redirect
       resetForm();

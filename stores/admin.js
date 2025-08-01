@@ -3,7 +3,7 @@ import { defineStore } from "pinia"
 export const useAdminStore = defineStore("admin", {
   state: () => ({
     isLoggedIn: false,
-    activeTab: "products",
+    activeTab: "profile",
 
     // Products
     products: [
