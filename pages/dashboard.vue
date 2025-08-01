@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
     <!-- Login Form -->
-    <LoginForm v-if="!adminStore.isLoggedIn" />
+    <LoginForm v-if="!isAuthenticated" />
 
     <!-- Admin Dashboard -->
     <div v-else>
@@ -12,9 +12,10 @@
             <div>
               <h1 class="text-3xl font-bold text-white">Admin Panel - Agro Asia Berdikari</h1>
               <p class="text-green-100 mt-1">Content Management System</p>
+              <p v-if="user?.email" class="text-green-200 text-sm mt-1">Welcome, {{ user.email }}</p>
             </div>
             <button
-              @click="adminStore.logout"
+              @click="handleLogout"
               class="border border-green-200 text-white hover:bg-green-700 hover:border-green-300 bg-transparent px-4 py-2 rounded-md transition-colors flex items-center gap-2"
             >
               <LogOutIcon class="w-4 h-4" />
@@ -371,10 +372,24 @@ import TestimonialForm from '@/components/admin/TestimonialForm.vue'
 import HeroBannerForm from '@/components/admin/HeroBannerForm.vue'
 import FormSubmissions from '@/components/admin/FormSubmissions.vue'
 import { ref } from 'vue'
-// import { ClientOnly } from '../.nuxt/components'
+import { useHead } from '#imports'
 
-const adminStore = useAdminStore()
-const { uploadFile, selectFile } = useFileUpload()
+useHead({
+  title: 'Admin Dashboard - Agro Asia Berdikari',
+  meta: [
+    { name: 'description', content: 'Admin dashboard for managing products, home page, testimonials, and more.' }
+  ]
+})
+
+const { isAuthenticated, logout, user } = useLoginApi();
+const adminStore = useAdminStore();
+
+// Handle logout function
+const handleLogout = async () => {
+  logout(); // Clear auth data from login API
+  adminStore.logout(); // Reset admin store state
+  await navigateTo('/login'); // Redirect to login page
+};
 
 const tabs = [
   { id: 'products', label: 'Products', icon: PackageIcon },

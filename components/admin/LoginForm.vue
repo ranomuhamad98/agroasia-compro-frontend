@@ -6,13 +6,13 @@
         <p class="text-green-100 mt-1">Sign in to manage agroasiaberdikari.id content</p>
       </div>
       <div class="p-6">
-        <form @submit.prevent="handleLogin" class="space-y-4">
+        <form @submit.prevent="loginUser" class="space-y-4">
           <div class="space-y-2">
-            <label for="username" class="text-green-700 font-medium block">Username</label>
+            <label for="email" class="text-green-700 font-medium block">Email</label>
             <input
-              id="username"
-              v-model="form.username"
-              type="text"
+              id="email"
+              v-model="form.email"
+              type="email"
               class="input-field"
               required
             />
@@ -27,15 +27,16 @@
               required
             />
           </div>
-          <div v-if="error" class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded">
-            {{ error }}
+          <div v-if="loginError" class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded">
+            {{ loginError }}
           </div>
-          <button type="submit" class="btn-primary w-full">
-            Sign In
+          <button type="submit" class="btn-primary w-full" :disabled="isLoading">
+            <span v-if="isLoading">Signing In...</span>
+            <span v-else>Sign In</span>
           </button>
         </form>
         <div class="mt-4 text-sm text-green-600 text-center font-medium">
-          Demo credentials: admin / admin123
+          Use your registered email and password to sign in
         </div>
       </div>
     </div>
@@ -43,21 +44,31 @@
 </template>
 
 <script setup>
-const adminStore = useAdminStore()
+import { ref } from 'vue';
 
 const form = ref({
-  username: '',
+  email: '',
   password: ''
 })
+const { login, isLoading, error: loginError } = useLoginApi();
 
-const error = ref('')
-
-const handleLogin = () => {
-  const success = adminStore.login(form.value.username, form.value.password)
-  if (!success) {
-    error.value = 'Invalid username or password'
-  } else {
-    error.value = ''
+// Login
+const loginUser = async () => {
+  if (form.value.email && form.value.password) {
+    const result = await login({
+      email: form.value.email,
+      password: form.value.password
+    });
+    
+    if (result) {
+      console.log('Admin login successful!', result);
+      // Clear form on success
+      form.value.email = '';
+      form.value.password = '';
+    }
+    // Error is handled automatically by the login composable
   }
-}
+};
+
+
 </script>

@@ -54,8 +54,14 @@
         <nuxt-link href="/forgot">Forgot Password?</nuxt-link>
       </div>
     </div>
+    <div v-if="loginError" class="tp-login-error mb-20">
+      <div class="alert alert-danger">{{ loginError }}</div>
+    </div>
     <div class="tp-login-bottom">
-      <button type="submit" class="tp-login-btn w-100">Login</button>
+      <button type="submit" class="tp-login-btn w-100" :disabled="isLoading">
+        <span v-if="isLoading">Logging in...</span>
+        <span v-else>Login</span>
+      </button>
     </div>
   </form>
 </template>
@@ -78,9 +84,22 @@ const { errors, handleSubmit, defineInputBinds, resetForm } =
     }),
   });
 
-const onSubmit = handleSubmit((values) => {
-  alert(JSON.stringify(values, null, 2));
-  resetForm();
+const { login, isLoading, error: loginError } = useLoginApi();
+
+const onSubmit = handleSubmit(async (values) => {
+  if (values.email && values.password) {
+    const result = await login({
+      email: values.email,
+      password: values.password
+    });
+    
+    if (result) {
+      // Login successful - redirect or update UI
+      await navigateTo('/profile'); // or wherever you want to redirect
+      resetForm();
+    }
+    // Error is handled automatically by the composable
+  }
 });
 
 const togglePasswordVisibility = () => {
