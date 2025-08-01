@@ -11,7 +11,7 @@
             <div class="d-flex align-items-center gap-2 border-start border-start ps-lg-4 ps-2 pe-lg-4 pe-2">
               <Icon name="material-symbols:mail-outline-rounded" style="color: var(--tp-green-light);" />
               <span class="tp-header-top-text">
-                <a href="mailto:agroasia119@gmail.com" class="tp-header-top-text-link">agroasia119@gmail.com</a>
+                <a href="mailto:agroasia119@gmail.com" class="tp-header-top-text-link text-white">agroasia119@gmail.com</a>
               </span>
             </div>
           </div>
