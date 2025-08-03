@@ -54,7 +54,6 @@ export function useApiClient(options: UseApiClientOptions = {}) {
           body,
           headers: {
             'Content-Type': 'application/json',
-            credentials: 'include',
             ...headers,
           },
           timeout,
@@ -68,7 +67,7 @@ export function useApiClient(options: UseApiClientOptions = {}) {
         });
 
         console.log(`✅ API request successful for ${url}`);
-        return response;
+        return response as T;
       } catch (error: any) {
         lastError = error;
         console.warn(`⚠️ API request failed (attempt ${attempt + 1}):`, error.message || error);

@@ -49,7 +49,8 @@ import { ref } from 'vue';
 const props = defineProps({
   onAuthenticated: {
     type: Function,
-    required: true
+    required: false,
+    default: null
   }
 })
 
@@ -57,24 +58,34 @@ const form = ref({
   email: '',
   password: ''
 })
-const { login, isLoading, error: loginError } = useLoginApi();
+const { login, isLoading, user } = useAuth();
+const loginError = ref('');
 
 // Login
 const loginUser = async () => {
   if (form.value.email && form.value.password) {
-    const result = await login({
-      email: form.value.email,
-      password: form.value.password
-    });
+    try {
+      loginError.value = ''; // Clear previous errors
+      
+      const result = await login({
+        email: form.value.email,
+        password: form.value.password
+      });
 
-    if (result) {
-      console.log('Admin login successful!', result);
-      props.onAuthenticated(true);
-      // Clear form on success
-      form.value.email = '';
-      form.value.password = '';
+      if (result && result.success) {
+        console.log('Admin login successful!', result);
+        // Clear form on success
+        form.value.email = '';
+        form.value.password = '';
+        // Notify parent if callback is provided
+        if (props.onAuthenticated) {
+          props.onAuthenticated(true);
+        }
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      loginError.value = error.message || 'Login failed. Please try again.';
     }
-    // Error is handled automatically by the login composable
   }
 };
 

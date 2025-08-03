@@ -10,21 +10,13 @@ export function useMyProfile() {
     // Get current user profile
     const fetchProfile = async (): Promise<ProfileResponse | null> => {
         try {
-            console.log('🚀 Fetching user profile from API...');
+            console.log('🚀 Fetching user profile from proxy API...');
             isLoading.value = true;
             error.value = null;
 
-            // Get token from cookie for authentication
-            const tokenCookie = useCookie<string | null>('auth-token');
-            
-            if (!tokenCookie.value) {
-                throw new Error('No authentication token found');
-            }
-
-            const response = await apiClient.get<ProfileResponse>('/auth/me', {
-                headers: {
-                    'Authorization': `Bearer ${tokenCookie.value}`
-                }
+            // Use proxy endpoint instead of direct API call
+            const response = await $fetch<ProfileResponse>('/api/auth/me', {
+                credentials: 'include' // Include cookies for session-based auth
             });
 
             console.log('📡 Profile API Response received:', response);
@@ -41,15 +33,6 @@ export function useMyProfile() {
             // Store profile data
             if (response.data?.user) {
                 profile.value = response.data.user;
-                
-                // Update user cookie with fresh data
-                const userCookie = useCookie<ProfileResponse['data']['user'] | null>('auth-user', {
-                    default: () => null,
-                    maxAge: 60 * 60 * 24 * 7, // 7 days
-                    sameSite: 'strict',
-                    secure: true
-                });
-                userCookie.value = response.data.user;
             }
 
             console.log('✅ Profile fetch successful');
@@ -80,21 +63,8 @@ export function useMyProfile() {
         return await fetchProfile();
     };
 
-    // Initialize profile from existing user cookie
-    const initializeProfile = () => {
-        const userCookie = useCookie<ProfileResponse['data']['user'] | null>('auth-user');
-        
-        if (userCookie.value) {
-            profile.value = userCookie.value;
-            console.log('🔄 Profile initialized from cookie');
-        }
-    };
-
     // Check if profile is loaded
     const hasProfile = computed(() => !!profile.value);
-
-    // Initialize profile on composable creation
-    initializeProfile();
 
     return {
         // State
@@ -105,7 +75,6 @@ export function useMyProfile() {
         
         // Methods
         fetchProfile,
-        refreshProfile,
-        initializeProfile
+        refreshProfile
     };
 }
