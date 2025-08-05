@@ -1,4 +1,4 @@
-import type { MediaItem, MediaUploadRequest, MediaUploadResponse, MediaListResponse, MediaQueryParams } from '~/types/media-api-type';
+import type { MediaItem, MediaUploadRequest, MediaUploadResponse, MediaListResponse, MediaQueryParams } from '@/types/media-api-type';
 
 export function useMedia() {
   const mediaItems = ref<MediaItem[]>([]);

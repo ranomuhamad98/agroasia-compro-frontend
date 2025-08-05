@@ -339,7 +339,7 @@
                         <EditIcon class="w-4 h-4" />
                       </button>
                       <button
-                        @click="deleteSlider(slider)"
+                        @click="handleDeleteSlider(slider)"
                         class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
                         title="Delete Slider"
                       >
@@ -534,11 +534,12 @@
       @close="closeTestimonialDialog"
     />
 
-    <HeroBannerForm
-      :show="showHeroBannerDialog"
-      :banner="editingHeroBanner"
-      @close="closeHeroBannerDialog"
-    />
+            <HeroBannerForm
+          :show="showHeroBannerDialog"
+          :banner="editingHeroBanner"
+          @close="closeHeroBannerDialog"
+          @save="handleSliderSave"
+        />
   </div>
 </template>
 
@@ -593,6 +594,8 @@ const {
   isLoading: slidersLoading, 
   error: slidersError, 
   getSliders, 
+  updateSlider,
+  deleteSlider,
   refreshSliders 
 } = useSlider();
 
@@ -725,8 +728,13 @@ const closeHeroBannerDialog = () => {
   }
 }
 
+const handleSliderSave = (action) => {
+  console.log(`🎉 Slider ${action} successfully!`)
+  // The slider list will be refreshed automatically by the form's API calls
+}
+
 // Slider management functions
-const deleteSlider = async (slider) => {
+const handleDeleteSlider = async (slider) => {
   // Check if we should allow deletion
   if (adminStore.activeTab !== 'home') {
     console.log('📂 Not on home tab, delete operation not allowed')
@@ -742,13 +750,11 @@ const deleteSlider = async (slider) => {
   if (confirm(`Are you sure you want to delete the slider "${slider.title}"?`)) {
     try {
       console.log('🗑️ Deleting slider:', slider.id)
-      // TODO: Implement delete slider API when available
-      // For now, just refresh the list to reflect server state
-      await loadSliders()
-      console.log('✅ Slider list refreshed after delete request')
+      await deleteSlider(slider.id)
+      console.log('✅ Slider deleted successfully')
     } catch (error) {
-      console.error('❌ Failed to refresh slider list:', error)
-      alert('Failed to refresh slider list. Please try again.')
+      console.error('❌ Failed to delete slider:', error)
+      alert('Failed to delete slider. Please try again.')
     }
   }
 }

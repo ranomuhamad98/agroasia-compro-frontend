@@ -108,6 +108,95 @@ export function useSlider() {
   };
 
   /**
+   * Update existing slider
+   */
+  const updateSlider = async (id: string, sliderData: SliderData) => {
+    try {
+      isLoading.value = true;
+      error.value = null;
+      console.log('🎨 Updating slider...', { id, sliderData });
+
+      const response = await $fetch<SliderResponse>(`/api/sliders/${id}`, {
+        method: 'PUT',
+        body: sliderData,
+        credentials: 'include'
+      });
+
+      if (response.success) {
+        console.log('✅ Slider updated successfully');
+        // Refresh sliders list
+        await getSliders();
+        return response.data;
+      }
+
+      throw new Error(response.message || 'Failed to update slider');
+
+    } catch (error: any) {
+      console.error('❌ Update slider error:', error);
+      error.value = error.data?.message || error.message || 'Failed to update slider';
+      
+      // Handle specific error cases
+      if (error.statusCode === 401) {
+        throw new Error('Authentication required to update slider');
+      }
+      
+      if (error.statusCode === 404) {
+        throw new Error('Slider not found');
+      }
+      
+      if (error.statusCode === 422) {
+        throw new Error('Please check your slider data');
+      }
+      
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  /**
+   * Delete slider
+   */
+  const deleteSlider = async (id: string) => {
+    try {
+      isLoading.value = true;
+      error.value = null;
+      console.log('🗑️ Deleting slider...', { id });
+
+      const response = await $fetch<SliderResponse>(`/api/sliders/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (response.success) {
+        console.log('✅ Slider deleted successfully');
+        // Refresh sliders list
+        await getSliders();
+        return response.data;
+      }
+
+      throw new Error(response.message || 'Failed to delete slider');
+
+    } catch (error: any) {
+      console.error('❌ Delete slider error:', error);
+      error.value = error.data?.message || error.message || 'Failed to delete slider';
+      
+      // Handle specific error cases
+      if (error.statusCode === 401) {
+        throw new Error('Authentication required to delete slider');
+      }
+      
+      if (error.statusCode === 404) {
+        throw new Error('Slider not found');
+      }
+      
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  /**
    * Refresh sliders data
    */
   const refreshSliders = async () => {
@@ -123,6 +212,8 @@ export function useSlider() {
     // Methods
     getSliders,
     createSlider,
+    updateSlider,
+    deleteSlider,
     refreshSliders
   };
 }

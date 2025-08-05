@@ -9,7 +9,7 @@
         <h3 class="text-green-800 text-xl font-semibold">
           {{ banner ? 'Edit Slider' : 'Add New Slider' }}
         </h3>
-        <p class="text-green-600 mt-1">Fill in the slider information below.</p>
+        <p class="text-green-600 mt-1">Fill in the slider information below. {{ banner ? `Editing: ${banner.title}` : '' }}</p>
       </div>
       <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
         <div class="space-y-2">
@@ -120,28 +120,16 @@
           />
         </div>
         
-        <div class="flex items-center space-x-2">
-          <input
-            id="bannerIsActive"
-            v-model="form.isActive"
-            type="checkbox"
-            class="w-4 h-4 text-green-600 border-green-300 rounded focus:ring-green-500"
-          />
-          <label for="bannerIsActive" class="text-green-700 font-medium">
-            Active (Display on website)
-          </label>
-        </div>
-        
         <div class="flex justify-end space-x-2 pt-4">
           <button type="button" @click="$emit('close')" class="btn-secondary">
             Cancel
           </button>
-          <button type="submit" class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!form.image || isUploading || isSubmitting || (!form.serverImageUrl && !props.banner)">
+          <button type="submit" class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!form.image || isUploading || isSubmitting || (!form.serverImageUrl && !props.banner && !form.image)">
             <span v-if="isSubmitting" class="flex items-center gap-2">
               <div class="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
               {{ props.banner ? 'Updating...' : 'Creating...' }}
             </span>
-            <span v-else>{{ props.banner ? 'Update' : 'Create' }} Slider</span>
+            <span v-else>{{ props.banner ? 'Update Slider' : 'Create Slider' }}</span>
           </button>
         </div>
       </form>
@@ -152,7 +140,7 @@
 <script setup>
 import { XIcon, ImageIcon, UploadIcon } from 'lucide-vue-next'
 import { ref, watch, nextTick, onUnmounted } from 'vue'
-import { useAdminStore } from '@/stores/admin'
+// import { useAdminStore } from '@/stores/admin'
 import { useMedia } from '@/composables/useMedia'
 import { useSlider } from '@/composables/useSlider'
 
@@ -161,11 +149,12 @@ const props = defineProps({
   banner: Object
 })
 
-const { createSlider, refreshSliders } = useSlider()
+const { createSlider, updateSlider, refreshSliders } = useSlider()
 
 const emit = defineEmits(['close', 'save'])
 
-const adminStore = useAdminStore()
+// Remove adminStore since we're using the API directly
+// const adminStore = useAdminStore()
 const { uploadMedia, isUploading, error: mediaError } = useMedia()
 
 const uploadError = ref('')
@@ -233,7 +222,7 @@ const selectImage = async () => {
     form.value.previousObjectUrl = previewUrl
     
     // Generate alt text from title or use default
-    const altText = form.value.title || 'Slider image'
+    const altText = form.value.title || (props.banner ? `${props.banner.title} image` : 'Slider image')
     
     console.log('🔄 Starting background media upload:', { 
       fileName: file.name, 
@@ -367,10 +356,16 @@ const handleSubmit = async () => {
     isSubmitting.value = true
     uploadError.value = ''
     
-    // Check if we have a server image URL for new uploads
+    // Check if we have a server image URL for new uploads (only required for new sliders)
     if (!form.value.serverImageUrl && !props.banner) {
       uploadError.value = 'Please wait for image upload to complete'
       return
+    }
+    
+    // For updates, if no new image was uploaded, use the existing image
+    if (props.banner && !form.value.serverImageUrl) {
+      form.value.serverImageUrl = props.banner.image_link || props.banner.image
+      console.log('🔄 Using existing image for update:', form.value.serverImageUrl)
     }
     
     // Prepare slider data according to SliderData interface
@@ -383,18 +378,19 @@ const handleSubmit = async () => {
       position: form.value.position || 0
     }
     
+    console.log('📋 Prepared slider data:', sliderData)
+    
     console.log('🎨 Submitting slider data:', sliderData)
     
     // Create or update slider
     if (props.banner) {
-      // TODO: Implement update slider functionality when available
-      console.log('📝 Updating existing slider...')
-      await createSlider(sliderData) // For now, create a new one
-      adminStore.updateHeroBanner(props.banner.id, form.value)
+      console.log('📝 Updating existing slider with ID:', props.banner.id)
+      await updateSlider(props.banner.id, sliderData)
+      console.log('✅ Slider updated successfully')
     } else {
       console.log('➕ Creating new slider...')
       await createSlider(sliderData)
-      adminStore.addHeroBanner(form.value)
+      console.log('✅ Slider created successfully')
     }
     
     console.log('✅ Slider created/updated successfully')
@@ -406,9 +402,12 @@ const handleSubmit = async () => {
       
       // Small delay to ensure form is cleared before closing
       await nextTick()
+    } else {
+      console.log('📝 Update completed, keeping form data for potential further edits')
     }
     
     emit('close')
+    emit('save', props.banner ? 'updated' : 'created')
     
   } catch (error) {
     console.error('❌ Submit error:', error)
