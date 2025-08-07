@@ -237,8 +237,8 @@ const selectImage = async () => {
       
       // Store the server URL for form submission
       let serverUrl = null;
-      if (mediaItem && mediaItem.media[0]) {
-        serverUrl = mediaItem.media[0].image_original
+      if (mediaItem && mediaItem[0]) {
+        serverUrl = mediaItem[0].image_original
       }
       
       if (serverUrl) {

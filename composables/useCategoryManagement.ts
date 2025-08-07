@@ -60,14 +60,14 @@ export function useCategoryManagement() {
     }
   };
 
-  // Update category (if needed in the future)
-  const updateCategory = async (id: string, categoryData: Partial<Category>) => {
+  // Update category
+  const updateCategory = async (id: string, categoryData: { name: string; image_link: string }) => {
     try {
       console.log('📝 Updating category:', id, categoryData);
       isLoading.value = true;
       error.value = null;
 
-      const response = await $fetch(`/api/product/category/${id}`, {
+      const response = await $fetch<{ success: boolean; data: any; message: string }>(`/api/product/category/${id}`, {
         method: 'PUT',
         body: categoryData
       });
@@ -88,14 +88,14 @@ export function useCategoryManagement() {
     }
   };
 
-  // Delete category (if needed in the future)
+  // Delete category
   const deleteCategory = async (id: string) => {
     try {
       console.log('🗑️ Deleting category:', id);
       isLoading.value = true;
       error.value = null;
 
-      const response = await $fetch(`/api/product/category/${id}`, {
+      const response = await $fetch<{ success: boolean; data: any; message: string }>(`/api/product/category/${id}`, {
         method: 'DELETE'
       });
 

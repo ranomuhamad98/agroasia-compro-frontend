@@ -274,8 +274,6 @@ const validateForm = () => {
   
   if (!form.value.image_link?.trim()) {
     errors.value.image_link = 'Image is required';
-  } else if (!isValidUrl(form.value.image_link) && !isImageFromServer.value) {
-    errors.value.image_link = 'Please enter a valid image URL';
   }
   
   return Object.keys(errors.value).length === 0;

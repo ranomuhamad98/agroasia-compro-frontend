@@ -721,6 +721,8 @@ const {
   error: categoriesError, 
   fetchCategories, 
   createCategory,
+  updateCategory,
+  deleteCategory,
   clearError: clearCategoryError 
 } = useCategoryManagement();
 
@@ -909,9 +911,17 @@ const handleSliderSave = (action) => {
 
 const handleCategorySave = async (categoryData) => {
   try {
-    console.log('💾 Saving category:', categoryData)
-    await createCategory(categoryData)
-    console.log('✅ Category saved successfully!')
+    if (editingCategory.value) {
+      // Update existing category
+      console.log('📝 Updating category:', editingCategory.value.id, categoryData)
+      await updateCategory(editingCategory.value.id, categoryData)
+      console.log('✅ Category updated successfully!')
+    } else {
+      // Create new category
+      console.log('💾 Creating new category:', categoryData)
+      await createCategory(categoryData)
+      console.log('✅ Category created successfully!')
+    }
     
     // Close dialog after successful save
     closeCategoryDialog()
@@ -964,8 +974,8 @@ const handleDeleteCategory = async (category) => {
   if (confirm(`Are you sure you want to delete the category "${category.name}"?`)) {
     try {
       console.log('🗑️ Deleting category:', category.id)
-      // Note: Delete functionality not implemented in API yet
-      alert('Delete functionality not yet implemented in the API')
+      await deleteCategory(category.id)
+      console.log('✅ Category deleted successfully')
     } catch (error) {
       console.error('❌ Failed to delete category:', error)
       alert('Failed to delete category. Please try again.')
