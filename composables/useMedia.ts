@@ -64,13 +64,15 @@ export function useMedia() {
         credentials: 'include'
       });
 
-      if (response.success && response.data) {
-        console.log('✅ Media uploaded successfully:', response.data);
+      console.log('🔄 Response upload media:', response);
+
+      if (response.success && response.data.media) {
+        console.log('✅ Media uploaded successfully:', response.data.media);
         
         // Add the new media item to the list
-        mediaItems.value.unshift(response.data);
+        mediaItems.value.unshift(response.data.media);
         
-        return response.data;
+        return response.data.media;
       } else {
         throw new Error(response.message || 'Failed to upload media');
       }
@@ -132,8 +134,10 @@ export function useMedia() {
       credentials: 'include'
     });
 
-    if (response.success && response.data) {
-      return response.data;
+    console.log('🔄 Response upload media single:', response);
+
+    if (response.success && response.data.media) {
+      return response.data.media;
     } else {
       throw new Error(response.message || 'Failed to upload media');
     }

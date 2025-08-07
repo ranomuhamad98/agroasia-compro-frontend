@@ -14,7 +14,7 @@ export function useCategoriesApi() {
                 isLoading.value = true;
                 error.value = null;
 
-                const response = await apiClient.get<CategoriesApiResponse>('/categories');
+                const response = await apiClient.get<{ success: boolean; data: CategoriesApiResponse; message: string }>('/api/product/category/get');
 
                 console.log('📡 API Response received:', response);
 
@@ -23,12 +23,13 @@ export function useCategoriesApi() {
                     throw new Error('Invalid response format');
                 }
 
-                if (response.status !== 200) {
+                // Handle proxy response structure
+                if (response.success && response.data) {
+                    console.log('✅ Categories data fetched successfully');
+                    return response.data as CategoriesApiResponse;
+                } else {
                     throw new Error(response.message || 'API request failed');
                 }
-
-                console.log('✅ Categories data fetched successfully');
-                return response;
             } catch (err: any) {
                 console.error('❌ Failed to fetch categories data:', err);
                 error.value = 'Failed to fetch categories data';

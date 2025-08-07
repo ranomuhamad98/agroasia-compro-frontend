@@ -40,7 +40,7 @@
       <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Tab Navigation -->
         <div class="bg-white shadow-md border border-green-200 p-1 rounded-lg mb-6">
-          <div class="grid grid-cols-6 gap-1">
+          <div class="grid grid-cols-7 gap-1">
             <button
               v-for="tab in tabs"
               :key="tab.id"
@@ -247,6 +247,111 @@
                   </span>
                   <p class="text-sm text-green-600 mt-2 mb-2">{{ product.description }}</p>
                   <p v-if="product.additionalInfo" class="text-xs text-green-500">{{ product.additionalInfo }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories Tab -->
+          <div v-if="adminStore.activeTab === 'categories'">
+            <div class="flex justify-between items-center mb-6">
+              <div>
+                <h2 class="page-title">Category Management</h2>
+                <p class="page-subtitle">Manage product categories for your store.</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <button 
+                  @click="loadCategories()" 
+                  :disabled="categoriesLoading || !isLoggedIn"
+                  class="btn-secondary flex items-center gap-2 disabled:opacity-50"
+                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh category list'"
+                >
+                  <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': categoriesLoading }" />
+                  {{ categoriesLoading ? 'Loading...' : 'Refresh' }}
+                </button>
+                <button @click="openCategoryDialog()" class="btn-primary flex items-center gap-2">
+                  <PlusIcon class="w-4 h-4" />
+                  Add Category
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading State -->
+            <div v-if="categoriesLoading" class="flex items-center justify-center py-12">
+              <div class="text-center">
+                <div class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3"></div>
+                <p class="text-green-600">Loading categories...</p>
+              </div>
+            </div>
+
+            <!-- Error State -->
+            <div v-else-if="categoriesError" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div class="flex items-center gap-2">
+                <AlertCircleIcon class="w-5 h-5 text-red-500" />
+                <p class="text-red-700">{{ categoriesError }}</p>
+                <button 
+                  @click="loadCategories()" 
+                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+
+            <!-- Not Loaded Yet State -->
+            <div v-else-if="categoryData.length === 0 && !categoriesError && !categoriesLoading" class="text-center py-12">
+              <FolderIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 class="text-lg font-medium text-gray-900 mb-2">Welcome to Category Management</h3>
+              <p class="text-gray-500 mb-4">Click "Refresh" to load existing categories or create your first one.</p>
+              <div class="flex justify-center gap-3">
+                <button @click="loadCategories()" class="btn-secondary">
+                  Load Categories
+                </button>
+                <button @click="openCategoryDialog()" class="btn-primary">
+                  Add First Category
+                </button>
+              </div>
+            </div>
+
+            <!-- Categories Grid -->
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div v-for="category in categoryData" :key="category.id" class="card">
+                <div class="p-4 border-b border-green-100">
+                  <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                      <h3 class="text-lg font-semibold text-green-800 mb-2">{{ category.name }}</h3>
+                      <div class="flex items-center gap-1 text-xs text-gray-500">
+                        <span>ID: {{ category.id }}</span>
+                      </div>
+                    </div>
+                    <div class="flex space-x-1 ml-3">
+                      <button @click="openCategoryDialog(category)" class="btn-secondary p-2" title="Edit Category">
+                        <EditIcon class="w-4 h-4" />
+                      </button>
+                      <button
+                        @click="handleDeleteCategory(category)"
+                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
+                        title="Delete Category"
+                      >
+                        <Trash2Icon class="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="relative">
+                    <img
+                      :src="category.image_link || '/placeholder.svg?height=200&width=200'"
+                      :alt="category.name"
+                      class="w-full h-32 object-cover rounded-md mb-3 border border-green-200"
+                    />
+                  </div>
+                  <div class="flex justify-between items-center text-xs text-gray-500">
+                    <span>Created: {{ formatDate(category.input_time) }}</span>
+                    <span v-if="category.update_time !== category.input_time">
+                      Updated: {{ formatDate(category.update_time) }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -540,6 +645,13 @@
           @close="closeHeroBannerDialog"
           @save="handleSliderSave"
         />
+
+    <CategoryForm
+      :show="showCategoryDialog"
+      :category="editingCategory"
+      @close="closeCategoryDialog"
+      @save="handleCategorySave"
+    />
   </div>
 </template>
 
@@ -566,7 +678,8 @@ import {
   UserIcon,
   AlertCircleIcon,
   ImageIcon,
-  LinkIcon
+  LinkIcon,
+  FolderIcon
 } from 'lucide-vue-next'
 import { useAdminStore } from '@/stores/admin.js'
 import { useFileUpload } from '@/composables/useFileUpload.js'
@@ -574,7 +687,9 @@ import LoginForm from '@/components/admin/LoginForm.vue'
 import ProductForm from '@/components/admin/ProductForm.vue'
 import TestimonialForm from '@/components/admin/TestimonialForm.vue'
 import HeroBannerForm from '@/components/admin/HeroBannerForm.vue'
+import CategoryForm from '@/components/admin/CategoryForm.vue'
 import { useSlider } from '@/composables/useSlider'
+import { useCategoryManagement } from '@/composables/useCategoryManagement'
 import FormSubmissions from '@/components/admin/FormSubmissions.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useHead } from '#imports'
@@ -598,6 +713,16 @@ const {
   deleteSlider,
   refreshSliders 
 } = useSlider();
+
+// Category management
+const { 
+  categories: categoryData, 
+  isLoading: categoriesLoading, 
+  error: categoriesError, 
+  fetchCategories, 
+  createCategory,
+  clearError: clearCategoryError 
+} = useCategoryManagement();
 
 // Load sliders only when on home tab and authenticated
 const loadSliders = async () => {
@@ -626,13 +751,39 @@ const loadSliders = async () => {
   }
 }
 
-// Watch for tab changes to load sliders when home tab is activated
+// Load categories only when on categories tab and authenticated
+const loadCategories = async () => {
+  // Check if we should load categories
+  if (adminStore.activeTab !== 'categories') {
+    console.log('📂 Not on categories tab, skipping category load')
+    return
+  }
+  
+  if (!isLoggedIn.value) {
+    console.log('🔒 Not authenticated, skipping category load')
+    return
+  }
+  
+  try {
+    console.log('📥 Loading categories for categories tab...')
+    await fetchCategories()
+    console.log('✅ Categories loaded successfully:', categoryData.value.length)
+  } catch (error) {
+    console.error('❌ Failed to load categories:', error)
+    // Don't show alert, just log - the UI will show the error state
+  }
+}
+
+// Watch for tab changes to load data when specific tabs are activated
 watch(() => adminStore.activeTab, (newTab, oldTab) => {
   if (newTab === 'home' && oldTab !== 'home' && isLoggedIn.value) {
     console.log('🏠 Home tab activated, loading sliders...')
     loadSliders()
-  } else if (newTab !== 'home') {
-    console.log('📂 Left home tab, sliders will not auto-refresh')
+  } else if (newTab === 'categories' && oldTab !== 'categories' && isLoggedIn.value) {
+    console.log('📁 Categories tab activated, loading categories...')
+    loadCategories()
+  } else if (newTab !== 'home' && newTab !== 'categories') {
+    console.log('📂 Left data-dependent tab, data will not auto-refresh')
   }
 })
 
@@ -672,6 +823,7 @@ onMounted(async () => {
 const tabs = [
   { id: 'profile', label: 'Profile', icon: UsersIcon },
   { id: 'products', label: 'Products', icon: PackageIcon },
+  { id: 'categories', label: 'Categories', icon: FolderIcon },
   { id: 'home', label: 'Home', icon: HomeIcon },
   { id: 'testimonials', label: 'Testimonials', icon: MessageSquareIcon },
   { id: 'about', label: 'About Us', icon: InfoIcon },
@@ -728,9 +880,45 @@ const closeHeroBannerDialog = () => {
   }
 }
 
+// Category dialog
+const showCategoryDialog = ref(false)
+const editingCategory = ref(null)
+
+const openCategoryDialog = (category = null) => {
+  editingCategory.value = category
+  showCategoryDialog.value = true
+}
+
+const closeCategoryDialog = () => {
+  showCategoryDialog.value = false
+  editingCategory.value = null
+  
+  // Only refresh categories if we're still on the categories tab and authenticated
+  if (adminStore.activeTab === 'categories' && isLoggedIn.value) {
+    console.log('🔄 Refreshing categories after dialog close...')
+    loadCategories()
+  } else {
+    console.log('📂 Not on categories tab or not authenticated, skipping category refresh')
+  }
+}
+
 const handleSliderSave = (action) => {
   console.log(`🎉 Slider ${action} successfully!`)
   // The slider list will be refreshed automatically by the form's API calls
+}
+
+const handleCategorySave = async (categoryData) => {
+  try {
+    console.log('💾 Saving category:', categoryData)
+    await createCategory(categoryData)
+    console.log('✅ Category saved successfully!')
+    
+    // Close dialog after successful save
+    closeCategoryDialog()
+  } catch (error) {
+    console.error('❌ Failed to save category:', error)
+    throw error // Re-throw to let the form handle the error
+  }
 }
 
 // Slider management functions
@@ -755,6 +943,32 @@ const handleDeleteSlider = async (slider) => {
     } catch (error) {
       console.error('❌ Failed to delete slider:', error)
       alert('Failed to delete slider. Please try again.')
+    }
+  }
+}
+
+// Category management functions
+const handleDeleteCategory = async (category) => {
+  // Check if we should allow deletion
+  if (adminStore.activeTab !== 'categories') {
+    console.log('📂 Not on categories tab, delete operation not allowed')
+    return
+  }
+  
+  if (!isLoggedIn.value) {
+    console.log('🔒 Not authenticated, delete operation not allowed')
+    alert('Please authenticate first')
+    return
+  }
+  
+  if (confirm(`Are you sure you want to delete the category "${category.name}"?`)) {
+    try {
+      console.log('🗑️ Deleting category:', category.id)
+      // Note: Delete functionality not implemented in API yet
+      alert('Delete functionality not yet implemented in the API')
+    } catch (error) {
+      console.error('❌ Failed to delete category:', error)
+      alert('Failed to delete category. Please try again.')
     }
   }
 }

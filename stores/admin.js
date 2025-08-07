@@ -27,6 +27,9 @@ export const useAdminStore = defineStore("admin", {
       },
     ],
 
+    // Categories
+    categories: [],
+
     // Testimonials
     testimonials: [
       {
@@ -222,6 +225,26 @@ export const useAdminStore = defineStore("admin", {
       if (submission) {
         submission.status = status
       }
+    },
+
+    // Category actions
+    setCategories(categories) {
+      this.categories = categories
+    },
+
+    addCategory(category) {
+      this.categories.push(category)
+    },
+
+    updateCategory(id, category) {
+      const index = this.categories.findIndex((c) => c.id === id)
+      if (index !== -1) {
+        this.categories[index] = { ...category, id }
+      }
+    },
+
+    deleteCategory(id) {
+      this.categories = this.categories.filter((c) => c.id !== id)
     },
   },
 })

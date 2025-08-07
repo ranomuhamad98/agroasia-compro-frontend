@@ -8,6 +8,7 @@ export interface MediaItem {
   url: string;
   created_at: string;
   updated_at: string;
+  image_original: string;
 }
 
 export interface MediaUploadRequest {
@@ -15,9 +16,15 @@ export interface MediaUploadRequest {
   alt: string;
 }
 
+interface MediaUploadResponseData {
+  success: boolean;
+  media: MediaItem[];
+  message: string;
+}
+
 export interface MediaUploadResponse {
   success: boolean;
-  data: MediaItem;
+  data: MediaUploadResponseData;
   message: string;
 }
 
