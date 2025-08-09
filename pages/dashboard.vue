@@ -4,7 +4,8 @@
     <!-- Loading State -->
     <div v-if="isInitializing" class="min-h-screen flex items-center justify-center">
       <div class="text-center">
-        <div class="w-16 h-16 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+        <div class="w-16 h-16 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4">
+        </div>
         <h2 class="text-xl font-semibold text-green-800 mb-2">Loading...</h2>
         <p class="text-green-600">Checking authentication status</p>
       </div>
@@ -24,10 +25,8 @@
               <p class="text-green-100 mt-1">Content Management System</p>
             </div>
             <div class="flex items-center gap-3">
-              <button
-                @click="handleLogout"
-                class="border border-green-200 text-white hover:bg-green-700 hover:border-green-300 bg-transparent px-4 py-2 rounded-md transition-colors flex items-center gap-2"
-              >
+              <button @click="handleLogout"
+                class="border border-green-200 text-white hover:bg-green-700 hover:border-green-300 bg-transparent px-4 py-2 rounded-md transition-colors flex items-center gap-2">
                 <LogOutIcon class="w-4 h-4" />
                 Logout
               </button>
@@ -41,17 +40,12 @@
         <!-- Tab Navigation -->
         <div class="bg-white shadow-md border border-green-200 p-1 rounded-lg mb-6">
           <div class="grid grid-cols-7 gap-1">
-            <button
-              v-for="tab in tabs"
-              :key="tab.id"
-              @click="adminStore.setActiveTab(tab.id)"
-              :class="[
-                'flex items-center justify-center gap-2 px-4 py-3 rounded-md transition-colors font-medium',
-                adminStore.activeTab === tab.id
-                  ? 'bg-green-600 text-white'
-                  : 'text-green-700 hover:bg-green-50'
-              ]"
-            >
+            <button v-for="tab in tabs" :key="tab.id" @click="adminStore.setActiveTab(tab.id)" :class="[
+              'flex items-center justify-center gap-2 px-4 py-3 rounded-md transition-colors font-medium',
+              adminStore.activeTab === tab.id
+                ? 'bg-green-600 text-white'
+                : 'text-green-700 hover:bg-green-50'
+            ]">
               <component :is="tab.icon" class="w-4 h-4" />
               {{ tab.label }}
             </button>
@@ -76,11 +70,8 @@
                       <UserIcon class="w-5 h-5" />
                       Profile Information
                     </h3>
-                    <button 
-                      @click="checkAuth"
-                      :disabled="isLoading"
-                      class="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 transition-colors flex items-center gap-1"
-                    >
+                    <button @click="checkAuth" :disabled="isLoading"
+                      class="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 transition-colors flex items-center gap-1">
                       <RefreshCwIcon class="w-3 h-3" :class="{ 'animate-spin': isLoading }" />
                       Refresh
                     </button>
@@ -100,16 +91,12 @@
                     <div class="grid grid-cols-1 gap-4">
                       <div class="flex items-center justify-center mb-4">
                         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                          <img 
-                            v-if="user.avatar" 
-                            :src="user.avatar" 
-                            :alt="user.full_name || user.email"
-                            class="w-20 h-20 rounded-full object-cover"
-                          />
+                          <img v-if="user.avatar" :src="user.avatar" :alt="user.full_name || user.email"
+                            class="w-20 h-20 rounded-full object-cover" />
                           <UserIcon v-else class="w-8 h-8 text-green-600" />
                         </div>
                       </div>
-                      
+
                       <div class="grid grid-cols-1 gap-3">
                         <div class="border-b border-gray-200 pb-2">
                           <label class="text-sm font-medium text-gray-700">Full Name</label>
@@ -147,11 +134,8 @@
                   <div v-else class="text-center py-8">
                     <UserIcon class="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p class="text-gray-600 mb-4">No user data available</p>
-                    <button 
-                      @click="checkAuth"
-                      :disabled="isLoading"
-                      class="text-sm bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 transition-colors"
-                    >
+                    <button @click="checkAuth" :disabled="isLoading"
+                      class="text-sm bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 transition-colors">
                       Load User Data
                     </button>
                   </div>
@@ -168,7 +152,7 @@
                     <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                     <span class="text-green-700 font-medium">Authenticated</span>
                   </div>
-                  
+
                   <div class="space-y-2">
                     <div class="border-b border-gray-200 pb-2">
                       <label class="text-sm font-medium text-gray-700">Login Status</label>
@@ -181,10 +165,8 @@
                   </div>
 
                   <div class="pt-4 border-t border-gray-200">
-                    <button 
-                      @click="handleLogout"
-                      class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-                    >
+                    <button @click="handleLogout"
+                      class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
                       <LogOutIcon class="w-4 h-4" />
                       Logout
                     </button>
@@ -195,12 +177,14 @@
           </div>
 
           <!-- Products Tab -->
-          <div v-if="adminStore.activeTab === 'products'">
+          <ProductTab v-if="adminStore.activeTab === 'products'" />
+          <!-- <div v-if="adminStore.activeTab === 'products'">
             <div class="flex justify-between items-center mb-6">
               <div>
                 <h2 class="page-title">Product Management</h2>
                 <p class="page-subtitle">
-                  Manage your products. Top products ({{ adminStore.topProductsCount }}/4) will be displayed on the home page.
+                  Manage your products. Top products ({{ adminStore.topProductsCount }}/4) will be displayed on the home
+                  page.
                 </p>
               </div>
               <button @click="openProductDialog()" class="btn-primary flex items-center gap-2">
@@ -215,10 +199,8 @@
                   <div class="flex justify-between items-start">
                     <div class="flex items-center gap-2">
                       <h3 class="text-lg font-semibold text-green-800">{{ product.name }}</h3>
-                      <span
-                        v-if="product.isTop"
-                        class="text-xs bg-green-100 text-green-700 border border-green-300 px-2 py-1 rounded-full flex items-center gap-1"
-                      >
+                      <span v-if="product.isTop"
+                        class="text-xs bg-green-100 text-green-700 border border-green-300 px-2 py-1 rounded-full flex items-center gap-1">
                         <StarIcon class="w-3 h-3" />
                         Top
                       </span>
@@ -227,21 +209,16 @@
                       <button @click="openProductDialog(product)" class="btn-secondary p-2">
                         <EditIcon class="w-4 h-4" />
                       </button>
-                      <button
-                        @click="adminStore.deleteProduct(product.id)"
-                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                      >
+                      <button @click="adminStore.deleteProduct(product.id)"
+                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors">
                         <Trash2Icon class="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 </div>
                 <div class="p-4">
-                  <img
-                    :src="product.image || '/placeholder.svg?height=200&width=200'"
-                    :alt="product.name"
-                    class="w-full h-32 object-cover rounded-md mb-3 border border-green-200"
-                  />
+                  <img :src="product.image || '/placeholder.svg?height=200&width=200'" :alt="product.name"
+                    class="w-full h-32 object-cover rounded-md mb-3 border border-green-200" />
                   <span class="border border-green-300 text-green-700 text-xs px-2 py-1 rounded-full">
                     {{ product.category }}
                   </span>
@@ -250,7 +227,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Categories Tab -->
           <div v-if="adminStore.activeTab === 'categories'">
@@ -260,12 +237,9 @@
                 <p class="page-subtitle">Manage product categories for your store.</p>
               </div>
               <div class="flex items-center gap-3">
-                <button 
-                  @click="loadCategories()" 
-                  :disabled="categoriesLoading || !isLoggedIn"
+                <button @click="loadCategories()" :disabled="categoriesLoading || !isLoggedIn"
                   class="btn-secondary flex items-center gap-2 disabled:opacity-50"
-                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh category list'"
-                >
+                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh category list'">
                   <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': categoriesLoading }" />
                   {{ categoriesLoading ? 'Loading...' : 'Refresh' }}
                 </button>
@@ -279,7 +253,9 @@
             <!-- Loading State -->
             <div v-if="categoriesLoading" class="flex items-center justify-center py-12">
               <div class="text-center">
-                <div class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3"></div>
+                <div
+                  class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3">
+                </div>
                 <p class="text-green-600">Loading categories...</p>
               </div>
             </div>
@@ -289,17 +265,16 @@
               <div class="flex items-center gap-2">
                 <AlertCircleIcon class="w-5 h-5 text-red-500" />
                 <p class="text-red-700">{{ categoriesError }}</p>
-                <button 
-                  @click="loadCategories()" 
-                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100"
-                >
+                <button @click="loadCategories()"
+                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100">
                   Try Again
                 </button>
               </div>
             </div>
 
             <!-- Not Loaded Yet State -->
-            <div v-else-if="categoryData.length === 0 && !categoriesError && !categoriesLoading" class="text-center py-12">
+            <div v-else-if="categoryData.length === 0 && !categoriesError && !categoriesLoading"
+              class="text-center py-12">
               <FolderIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 class="text-lg font-medium text-gray-900 mb-2">Welcome to Category Management</h3>
               <p class="text-gray-500 mb-4">Click "Refresh" to load existing categories or create your first one.</p>
@@ -328,11 +303,9 @@
                       <button @click="openCategoryDialog(category)" class="btn-secondary p-2" title="Edit Category">
                         <EditIcon class="w-4 h-4" />
                       </button>
-                      <button
-                        @click="handleDeleteCategory(category)"
+                      <button @click="handleDeleteCategory(category)"
                         class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                        title="Delete Category"
-                      >
+                        title="Delete Category">
                         <Trash2Icon class="w-4 h-4" />
                       </button>
                     </div>
@@ -340,11 +313,8 @@
                 </div>
                 <div class="p-4">
                   <div class="relative">
-                    <img
-                      :src="category.image_link || '/placeholder.svg?height=200&width=200'"
-                      :alt="category.name"
-                      class="w-full h-32 object-cover rounded-md mb-3 border border-green-200"
-                    />
+                    <img :src="category.image_link || '/placeholder.svg?height=200&width=200'" :alt="category.name"
+                      class="w-full h-32 object-cover rounded-md mb-3 border border-green-200" />
                   </div>
                   <div class="flex justify-between items-center text-xs text-gray-500">
                     <span>Created: {{ formatDate(category.input_time) }}</span>
@@ -365,12 +335,9 @@
                 <p class="page-subtitle">Manage hero banners for your home page.</p>
               </div>
               <div class="flex items-center gap-3">
-                <button 
-                  @click="loadSliders()" 
-                  :disabled="slidersLoading || !isLoggedIn"
+                <button @click="loadSliders()" :disabled="slidersLoading || !isLoggedIn"
                   class="btn-secondary flex items-center gap-2 disabled:opacity-50"
-                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh slider list'"
-                >
+                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh slider list'">
                   <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': slidersLoading }" />
                   {{ slidersLoading ? 'Loading...' : 'Refresh' }}
                 </button>
@@ -384,7 +351,9 @@
             <!-- Loading State -->
             <div v-if="slidersLoading" class="flex items-center justify-center py-12">
               <div class="text-center">
-                <div class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3"></div>
+                <div
+                  class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3">
+                </div>
                 <p class="text-green-600">Loading sliders...</p>
               </div>
             </div>
@@ -394,10 +363,8 @@
               <div class="flex items-center gap-2">
                 <AlertCircleIcon class="w-5 h-5 text-red-500" />
                 <p class="text-red-700">{{ slidersError }}</p>
-                <button 
-                  @click="loadSliders()" 
-                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100"
-                >
+                <button @click="loadSliders()"
+                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100">
                   Try Again
                 </button>
               </div>
@@ -443,11 +410,9 @@
                       <button @click="openHeroBannerDialog(slider)" class="btn-secondary p-2" title="Edit Slider">
                         <EditIcon class="w-4 h-4" />
                       </button>
-                      <button
-                        @click="handleDeleteSlider(slider)"
+                      <button @click="handleDeleteSlider(slider)"
                         class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                        title="Delete Slider"
-                      >
+                        title="Delete Slider">
                         <Trash2Icon class="w-4 h-4" />
                       </button>
                     </div>
@@ -457,11 +422,10 @@
                   <div class="relative">
                     <NuxtImg
                       :src="failedImages.has(slider.image_link) ? '/placeholder.svg?height=400&width=800' : (slider.image_link || '/placeholder.svg?height=400&width=800')"
-                      :alt="slider.title"
-                      class="w-full h-32 object-cover rounded-md mb-3 border border-green-200"
-                      :class="{ 'opacity-75': failedImages.has(slider.image_link) }"
-                    />
-                    <div v-if="failedImages.has(slider.image_link)" class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                      :alt="slider.title" class="w-full h-32 object-cover rounded-md mb-3 border border-green-200"
+                      :class="{ 'opacity-75': failedImages.has(slider.image_link) }" />
+                    <div v-if="failedImages.has(slider.image_link)"
+                      class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
                       Image Failed
                     </div>
                   </div>
@@ -495,14 +459,12 @@
                   <div class="flex justify-between items-start">
                     <div class="flex items-center gap-2">
                       <h3 class="text-lg font-semibold text-green-800">{{ testimonial.name }}</h3>
-                      <span
-                        :class="[
-                          'text-xs px-2 py-1 rounded-full',
-                          testimonial.flag === 'home'
-                            ? 'bg-green-600 text-white'
-                            : 'bg-green-100 text-green-700 border border-green-300'
-                        ]"
-                      >
+                      <span :class="[
+                        'text-xs px-2 py-1 rounded-full',
+                        testimonial.flag === 'home'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-green-100 text-green-700 border border-green-300'
+                      ]">
                         {{ testimonial.flag === 'home' ? 'Home' : 'About Us' }}
                       </span>
                     </div>
@@ -510,10 +472,8 @@
                       <button @click="openTestimonialDialog(testimonial)" class="btn-secondary p-2">
                         <EditIcon class="w-4 h-4" />
                       </button>
-                      <button
-                        @click="adminStore.deleteTestimonial(testimonial.id)"
-                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                      >
+                      <button @click="adminStore.deleteTestimonial(testimonial.id)"
+                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors">
                         <Trash2Icon class="w-4 h-4" />
                       </button>
                     </div>
@@ -521,11 +481,8 @@
                 </div>
                 <div class="p-4">
                   <div class="flex items-start space-x-4">
-                    <img
-                      :src="testimonial.image || '/placeholder.svg?height=100&width=100'"
-                      :alt="testimonial.name"
-                      class="w-16 h-16 rounded-full object-cover border-2 border-green-200"
-                    />
+                    <img :src="testimonial.image || '/placeholder.svg?height=100&width=100'" :alt="testimonial.name"
+                      class="w-16 h-16 rounded-full object-cover border-2 border-green-200" />
                     <div class="flex-1">
                       <p class="text-sm font-medium text-green-700">{{ testimonial.personInfo }}</p>
                       <p class="text-sm text-green-600 mt-2">{{ testimonial.description }}</p>
@@ -552,24 +509,15 @@
                 <div class="p-6 space-y-4">
                   <div class="space-y-2">
                     <label for="videoUrl" class="text-green-700 font-medium block">Video URL (YouTube Embed)</label>
-                    <input
-                      id="videoUrl"
-                      v-model="adminStore.videoUrl"
-                      type="url"
-                      placeholder="https://www.youtube.com/embed/VIDEO_ID"
-                      class="input-field"
-                    />
+                    <input id="videoUrl" v-model="adminStore.videoUrl" type="url"
+                      placeholder="https://www.youtube.com/embed/VIDEO_ID" class="input-field" />
                   </div>
                   <div class="space-y-2">
                     <label class="text-green-700 font-medium block">Video Preview</label>
                     <div class="aspect-video border-2 border-green-200 rounded-lg overflow-hidden">
-                      <iframe
-                        :src="adminStore.videoUrl"
-                        class="w-full h-full"
-                        frameborder="0"
+                      <iframe :src="adminStore.videoUrl" class="w-full h-full" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                      ></iframe>
+                        allowfullscreen></iframe>
                     </div>
                   </div>
                   <button @click="saveVideo" class="btn-primary w-full flex items-center justify-center gap-2">
@@ -592,20 +540,11 @@
                     </button>
                   </div>
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div
-                      v-for="(imageUrl, index) in adminStore.galleries"
-                      :key="index"
-                      class="relative group"
-                    >
-                      <img
-                        :src="imageUrl || '/placeholder.svg?height=200&width=300'"
-                        :alt="`Gallery ${index + 1}`"
-                        class="w-full h-48 object-cover rounded-lg border-2 border-green-200"
-                      />
-                      <button
-                        @click="adminStore.removeGalleryImage(index)"
-                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 hover:bg-red-700 text-white p-2 rounded-md"
-                      >
+                    <div v-for="(imageUrl, index) in adminStore.galleries" :key="index" class="relative group">
+                      <img :src="imageUrl || '/placeholder.svg?height=200&width=300'" :alt="`Gallery ${index + 1}`"
+                        class="w-full h-48 object-cover rounded-lg border-2 border-green-200" />
+                      <button @click="adminStore.removeGalleryImage(index)"
+                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 hover:bg-red-700 text-white p-2 rounded-md">
                         <Trash2Icon class="w-4 h-4" />
                       </button>
                     </div>
@@ -627,31 +566,15 @@
     </div>
 
     <!-- Dialogs -->
-    <ProductForm
-      :show="showProductDialog"
-      :product="editingProduct"
-      @close="closeProductDialog"
-    />
+    <ProductForm :show="showProductDialog" :product="editingProduct" @close="closeProductDialog" />
 
-    <TestimonialForm
-      :show="showTestimonialDialog"
-      :testimonial="editingTestimonial"
-      @close="closeTestimonialDialog"
-    />
+    <TestimonialForm :show="showTestimonialDialog" :testimonial="editingTestimonial" @close="closeTestimonialDialog" />
 
-            <HeroBannerForm
-          :show="showHeroBannerDialog"
-          :banner="editingHeroBanner"
-          @close="closeHeroBannerDialog"
-          @save="handleSliderSave"
-        />
+    <HeroBannerForm :show="showHeroBannerDialog" :banner="editingHeroBanner" @close="closeHeroBannerDialog"
+      @save="handleSliderSave" />
 
-    <CategoryForm
-      :show="showCategoryDialog"
-      :category="editingCategory"
-      @close="closeCategoryDialog"
-      @save="handleCategorySave"
-    />
+    <CategoryForm :show="showCategoryDialog" :category="editingCategory" @close="closeCategoryDialog"
+      @save="handleCategorySave" />
   </div>
 </template>
 
@@ -685,6 +608,7 @@ import { useAdminStore } from '@/stores/admin.js'
 import { useFileUpload } from '@/composables/useFileUpload.js'
 import LoginForm from '@/components/admin/LoginForm.vue'
 import ProductForm from '@/components/admin/ProductForm.vue'
+import ProductTab from '@/components/admin/ProductTab.vue'
 import TestimonialForm from '@/components/admin/TestimonialForm.vue'
 import HeroBannerForm from '@/components/admin/HeroBannerForm.vue'
 import CategoryForm from '@/components/admin/CategoryForm.vue'
@@ -704,26 +628,26 @@ useHead({
 const { isLoggedIn, logout, user, checkAuth, isInitializing, isLoading } = useAuth();
 const beenAuthenticated = ref(isLoggedIn.value);
 const adminStore = useAdminStore();
-const { 
-  sliders, 
-  isLoading: slidersLoading, 
-  error: slidersError, 
-  getSliders, 
+const {
+  sliders,
+  isLoading: slidersLoading,
+  error: slidersError,
+  getSliders,
   updateSlider,
   deleteSlider,
-  refreshSliders 
+  refreshSliders
 } = useSlider();
 
 // Category management
-const { 
-  categories: categoryData, 
-  isLoading: categoriesLoading, 
-  error: categoriesError, 
-  fetchCategories, 
+const {
+  categories: categoryData,
+  isLoading: categoriesLoading,
+  error: categoriesError,
+  fetchCategories,
   createCategory,
   updateCategory,
   deleteCategory,
-  clearError: clearCategoryError 
+  clearError: clearCategoryError
 } = useCategoryManagement();
 
 // Load sliders only when on home tab and authenticated
@@ -733,17 +657,17 @@ const loadSliders = async () => {
     console.log('📂 Not on home tab, skipping slider load')
     return
   }
-  
+
   if (!isLoggedIn.value) {
     console.log('🔒 Not authenticated, skipping slider load')
     return
   }
-  
+
   try {
     console.log('📥 Loading sliders for home tab...')
     await getSliders()
     console.log('✅ Sliders loaded successfully:', sliders.value.length)
-    
+
     // Clear failed images cache when successfully loading new data
     failedImages.value.clear()
     console.log('🧹 Cleared failed images cache')
@@ -760,12 +684,12 @@ const loadCategories = async () => {
     console.log('📂 Not on categories tab, skipping category load')
     return
   }
-  
+
   if (!isLoggedIn.value) {
     console.log('🔒 Not authenticated, skipping category load')
     return
   }
-  
+
   try {
     console.log('📥 Loading categories for categories tab...')
     await fetchCategories()
@@ -798,7 +722,7 @@ const handleLogout = async () => {
 
 const handleAuthentication = async (status) => {
   beenAuthenticated.value = status;
-  
+
   // Check auth when user is authenticated
   if (status && isLoggedIn.value) {
     await checkAuth();
@@ -817,7 +741,7 @@ watch(isLoggedIn, async (newValue) => {
 onMounted(async () => {
   await checkAuth();
   beenAuthenticated.value = isLoggedIn.value;
-  
+
   // Don't auto-load sliders on mount
   // They will be loaded when user activates the home tab
 })
@@ -872,7 +796,7 @@ const openHeroBannerDialog = (banner = null) => {
 const closeHeroBannerDialog = () => {
   showHeroBannerDialog.value = false
   editingHeroBanner.value = null
-  
+
   // Only refresh sliders if we're still on the home tab and authenticated
   if (adminStore.activeTab === 'home' && isLoggedIn.value) {
     console.log('🔄 Refreshing sliders after dialog close...')
@@ -894,7 +818,7 @@ const openCategoryDialog = (category = null) => {
 const closeCategoryDialog = () => {
   showCategoryDialog.value = false
   editingCategory.value = null
-  
+
   // Only refresh categories if we're still on the categories tab and authenticated
   if (adminStore.activeTab === 'categories' && isLoggedIn.value) {
     console.log('🔄 Refreshing categories after dialog close...')
@@ -922,7 +846,7 @@ const handleCategorySave = async (categoryData) => {
       await createCategory(categoryData)
       console.log('✅ Category created successfully!')
     }
-    
+
     // Close dialog after successful save
     closeCategoryDialog()
   } catch (error) {
@@ -938,13 +862,13 @@ const handleDeleteSlider = async (slider) => {
     console.log('📂 Not on home tab, delete operation not allowed')
     return
   }
-  
+
   if (!isLoggedIn.value) {
     console.log('🔒 Not authenticated, delete operation not allowed')
     alert('Please authenticate first')
     return
   }
-  
+
   if (confirm(`Are you sure you want to delete the slider "${slider.title}"?`)) {
     try {
       console.log('🗑️ Deleting slider:', slider.id)
@@ -964,13 +888,13 @@ const handleDeleteCategory = async (category) => {
     console.log('📂 Not on categories tab, delete operation not allowed')
     return
   }
-  
+
   if (!isLoggedIn.value) {
     console.log('🔒 Not authenticated, delete operation not allowed')
     alert('Please authenticate first')
     return
   }
-  
+
   if (confirm(`Are you sure you want to delete the category "${category.name}"?`)) {
     try {
       console.log('🗑️ Deleting category:', category.id)
@@ -990,16 +914,16 @@ const failedImages = ref(new Set())
 const handleImageError = (event) => {
   const originalSrc = event.target.src
   console.warn('🖼️ Image failed to load:', originalSrc)
-  
+
   // Mark this image as failed to prevent retries
   failedImages.value.add(originalSrc)
-  
+
   // Set placeholder image
   event.target.src = '/placeholder.svg?height=400&width=800'
-  
+
   // Remove error handler to prevent infinite loops
   event.target.onerror = null
-  
+
   console.log('🔄 Replaced with placeholder image, no retry will be attempted')
 }
 
@@ -1007,9 +931,9 @@ const formatDate = (dateString) => {
   if (!dateString) return 'Unknown'
   try {
     const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -1038,4 +962,3 @@ const saveVideo = () => {
 
 // Date formatting helper removed (duplicate)
 </script>
-
