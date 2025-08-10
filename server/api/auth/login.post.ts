@@ -2,8 +2,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
     
-    console.log('🔐 Login proxy request received:', { email: body.email });
-    
     // Use proxy utility for login
     const response = await proxyToExternalApi(event, {
       endpoint: '/auth/login',
@@ -14,8 +12,6 @@ export default defineEventHandler(async (event) => {
       },
       requireAuth: false // Login tidak perlu auth
     });
-
-    console.log('✅ Login successful, forwarding response');
     
     return {
       success: true,
@@ -24,7 +20,6 @@ export default defineEventHandler(async (event) => {
     };
     
   } catch (error: any) {
-    console.error('❌ Login proxy error:', error);
     throw error; // Re-throw error sudah dihandle di proxy utility
   }
 });

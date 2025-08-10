@@ -1,4 +1,5 @@
 import type { HomeApiResponse } from '../types/home-api-type'
+import { toast } from 'vue3-toastify';
 
 export function useHomeApi() {
   const apiClient = useApiClient();
@@ -12,13 +13,10 @@ export function useHomeApi() {
     'home-api-data',
     async () => {
       try {
-        console.log('🚀 Fetching home data from API...');
         isLoading.value = true;
         error.value = null;
         
         const response = await apiClient.get<HomeApiResponse>('/home');
-        
-        console.log('📡 API Response received:', response);
         
         // Validate response structure
         if (!response || typeof response !== 'object') {
@@ -29,11 +27,11 @@ export function useHomeApi() {
           throw new Error(response.message || 'API request failed');
         }
 
-        console.log('✅ Home data fetched successfully');
         return response;
       } catch (err: any) {
-        console.error('❌ Failed to fetch home data:', err);
-        error.value = err.statusMessage || err.message || 'Failed to fetch home data';
+        const errorMessage = err.statusMessage || err.message || 'Failed to fetch home data';
+        error.value = errorMessage;
+        toast.error(errorMessage);
         throw err;
       } finally {
         isLoading.value = false;
@@ -60,7 +58,6 @@ export function useHomeApi() {
 
   // Manual refresh function
   const refreshData = async () => {
-    console.log('🔄 Refreshing home data...');
     await refresh();
   };
 

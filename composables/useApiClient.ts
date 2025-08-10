@@ -41,14 +41,10 @@ export function useApiClient(options: UseApiClientOptions = {}) {
 
     const url = `${defaultOptions.baseURL}${endpoint}`;
     
-    console.log(`🌐 Making ${method} request to: ${url}`);
-    
     let lastError: any;
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        console.log(`📡 Attempt ${attempt + 1}/${retries + 1} for ${url}`);
-        
         const response = await $fetch<T>(url, {
           method,
           body,
@@ -66,15 +62,12 @@ export function useApiClient(options: UseApiClientOptions = {}) {
           },
         });
 
-        console.log(`✅ API request successful for ${url}`);
         return response as T;
       } catch (error: any) {
         lastError = error;
-        console.warn(`⚠️ API request failed (attempt ${attempt + 1}):`, error.message || error);
         
         // Don't retry on client errors (4xx)
         if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
-          console.error(`❌ Client error (${error.statusCode}), not retrying`);
           break;
         }
 
@@ -85,7 +78,6 @@ export function useApiClient(options: UseApiClientOptions = {}) {
 
         // Wait before retrying with exponential backoff
         const delay = defaultOptions.retryDelay * Math.pow(2, attempt);
-        console.log(`⏳ Waiting ${delay}ms before retry...`);
         await sleep(delay);
       }
     }
@@ -96,8 +88,6 @@ export function useApiClient(options: UseApiClientOptions = {}) {
       message: lastError?.statusMessage || lastError?.message || 'Unknown API Error',
       data: lastError?.data,
     };
-
-    console.error(`❌ All retry attempts failed for ${url}:`, apiError);
 
     throw createError({
       statusCode: apiError.status,

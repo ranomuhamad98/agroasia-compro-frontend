@@ -211,19 +211,12 @@ onMounted(() => {
   }
 });
 
-// Debug watcher to track form changes
-watch(() => form.value.image_link, (newValue, oldValue) => {
-  console.log('🔄 Image link changed:', { oldValue, newValue });
-});
-
 // Handle file selection
 const handleFileSelect = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
   try {
-    console.log('📁 Starting file upload, form state:', form.value);
-    
     // Show preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -234,14 +227,11 @@ const handleFileSelect = async (event) => {
     // Generate alt text for the image
     const categoryName = form.value.name?.trim() || 'Untitled Category';
     const altText = `Category image: ${categoryName}`;
-    
-    console.log('📝 Generated alt text:', altText);
 
     // Upload file using media composable
     const mediaItemRaw = await uploadMedia(file, altText);
     const mediaItem = mediaItemRaw[0];
 
-    console.log('🔄 Media item:', mediaItem);
     isImageFromServer.value = true;
     
     // Update form with the uploaded image URL
@@ -253,12 +243,15 @@ const handleFileSelect = async (event) => {
     // Small delay to ensure DOM updates
     await nextTick();
     
-    console.log('✅ Image uploaded successfully via media system:', mediaItem);
-    console.log('📝 Updated form state:', form.value);
+    // Show success toast
+    toast.success('Image uploaded successfully!');
   } catch (err) {
-    console.error('❌ Failed to upload image:', err);
-    error.value = err.message || 'Failed to upload image. Please try again.';
+    const errorMessage = err.message || 'Failed to upload image. Please try again.';
+    error.value = errorMessage;
     imagePreview.value = '';
+    
+    // Show error toast
+    toast.error(errorMessage);
   }
 };
 
@@ -269,8 +262,6 @@ const validateForm = () => {
   if (!form.value.name?.trim()) {
     errors.value.name = 'Category name is required';
   }
-
-  console.log('🔄 Image link:', form.value.image_link);
   
   if (!form.value.image_link?.trim()) {
     errors.value.image_link = 'Image is required';
@@ -292,6 +283,7 @@ const isValidUrl = (string) => {
 // Handle form submission
 const handleSubmit = async () => {
   if (!validateForm()) {
+    toast.error('Please fix the validation errors before submitting.');
     return;
   }
 
@@ -308,8 +300,11 @@ const handleSubmit = async () => {
     
     // Don't close form here - let parent handle it after successful save
   } catch (err) {
-    console.error('❌ Form submission error:', err);
-    error.value = err.message || 'Failed to save category';
+    const errorMessage = err.message || 'Failed to save category';
+    error.value = errorMessage;
+    
+    // Show error toast
+    toast.error(errorMessage);
   } finally {
     isSubmitting.value = false;
   }

@@ -1,7 +1,5 @@
 export default defineEventHandler(async (event) => {
   try {
-    console.log('👤 Checking user authentication status');
-    
     // Check if user has cookies (basic auth check)
     if (!isAuthenticated(event)) {
       throw createError({
@@ -17,8 +15,6 @@ export default defineEventHandler(async (event) => {
       requireAuth: true
     });
     
-    console.log('✅ User authentication check successful');
-    
     return {
       success: true,
       data: response,
@@ -26,7 +22,6 @@ export default defineEventHandler(async (event) => {
     };
     
   } catch (error: any) {
-    console.error('❌ Authentication check failed:', error);
     throw error; // Re-throw error sudah dihandle di proxy utility
   }
 });

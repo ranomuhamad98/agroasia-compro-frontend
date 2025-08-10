@@ -86,7 +86,8 @@ export async function proxyToExternalApi(event: any, options: ProxyOptions) {
     // Handle other errors
     throw createError({
       statusCode: error.status || 500,
-      statusMessage: error.message || 'Proxy request failed'
+      statusMessage: 'request failed',
+      data: error.data
     });
   }
 }

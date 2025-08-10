@@ -18,7 +18,6 @@ export function useTestimonialManagement() {
   // Create new testimonial
   const createTestimonial = async (testimonialData: CreateTestimonialRequest): Promise<Testimonial | null> => {
     try {
-      console.log('📝 Creating new testimonial:', testimonialData)
       isLoading.value = true
       error.value = null
       successMessage.value = null
@@ -43,8 +42,6 @@ export function useTestimonialManagement() {
         credentials: 'include' // Include cookies for authentication
       })
 
-      console.log('✅ Testimonial created successfully:', response)
-
       if (response.status === 200 || response.status === 201) {
         const successMsg = 'Testimonial created successfully!'
         successMessage.value = successMsg
@@ -56,7 +53,6 @@ export function useTestimonialManagement() {
         throw new Error(errorMsg)
       }
     } catch (err: any) {
-      console.error('❌ Failed to create testimonial:', err)
       const errorMsg = err.message || 'An error occurred while creating testimonial'
       error.value = errorMsg
       toast.error(errorMsg)
@@ -69,7 +65,6 @@ export function useTestimonialManagement() {
   // Get all testimonials
   const getTestimonials = async (activeOnly?: boolean): Promise<Testimonial[]> => {
     try {
-      console.log('📋 Fetching testimonials...', { activeOnly })
       isLoading.value = true
       error.value = null
 
@@ -86,8 +81,6 @@ export function useTestimonialManagement() {
         credentials: 'include' // Include cookies for authentication
       })
 
-      console.log('✅ Testimonials fetched successfully:', response)
-
       if (response.status === 200 && response.testimonials) {
         testimonials.value = response.testimonials
         return testimonials.value
@@ -97,7 +90,6 @@ export function useTestimonialManagement() {
         throw new Error(errorMsg)
       }
     } catch (err: any) {
-      console.error('❌ Failed to fetch testimonials:', err)
       const errorMsg = err.message || 'An error occurred while fetching testimonials'
       error.value = errorMsg
       toast.error(errorMsg)
@@ -110,15 +102,12 @@ export function useTestimonialManagement() {
   // Get testimonial by ID
   const getTestimonialById = async (id: string): Promise<Testimonial | null> => {
     try {
-      console.log(`📋 Fetching testimonial with ID: ${id}`)
       isLoading.value = true
       error.value = null
 
       const response = await $fetch<CreateTestimonialResponse>(`/api/testimonials/${id}`, {
         credentials: 'include' // Include cookies for authentication
       })
-
-      console.log('✅ Testimonial fetched successfully:', response)
 
       if (response.status === 200) {
         return response.testimonial || null
@@ -128,7 +117,6 @@ export function useTestimonialManagement() {
         throw new Error(errorMsg)
       }
     } catch (err: any) {
-      console.error('❌ Failed to fetch testimonial:', err)
       const errorMsg = err.message || 'An error occurred while fetching testimonial'
       error.value = errorMsg
       toast.error(errorMsg)
@@ -141,7 +129,6 @@ export function useTestimonialManagement() {
   // Update testimonial
   const updateTestimonial = async (id: string, testimonialData: Partial<CreateTestimonialRequest>): Promise<Testimonial | null> => {
     try {
-      console.log(`📝 Updating testimonial with ID: ${id}`, testimonialData)
       isLoading.value = true
       error.value = null
       successMessage.value = null
@@ -151,8 +138,6 @@ export function useTestimonialManagement() {
         body: testimonialData,
         credentials: 'include' // Include cookies for authentication
       })
-
-      console.log('✅ Testimonial updated successfully:', response)
 
       if (response.status === 200) {
         const successMsg = 'Testimonial updated successfully!'
@@ -165,7 +150,6 @@ export function useTestimonialManagement() {
         throw new Error(errorMsg)
       }
     } catch (err: any) {
-      console.error('❌ Failed to update testimonial:', err)
       const errorMsg = err.message || 'An error occurred while updating testimonial'
       error.value = errorMsg
       toast.error(errorMsg)
@@ -178,7 +162,6 @@ export function useTestimonialManagement() {
   // Delete testimonial
   const deleteTestimonial = async (id: string): Promise<boolean> => {
     try {
-      console.log(`🗑️ Deleting testimonial with ID: ${id}`)
       isLoading.value = true
       error.value = null
       successMessage.value = null
@@ -187,8 +170,6 @@ export function useTestimonialManagement() {
         method: 'DELETE',
         credentials: 'include' // Include cookies for authentication
       })
-
-      console.log('✅ Testimonial deleted successfully:', response)
 
       if (response.success) {
         const successMsg = 'Testimonial deleted successfully!'
@@ -201,7 +182,6 @@ export function useTestimonialManagement() {
         throw new Error(errorMsg)
       }
     } catch (err: any) {
-      console.error('❌ Failed to delete testimonial:', err)
       const errorMsg = err.message || 'An error occurred while deleting testimonial'
       error.value = errorMsg
       toast.error(errorMsg)

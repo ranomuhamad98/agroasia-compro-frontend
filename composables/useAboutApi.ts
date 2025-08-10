@@ -1,3 +1,4 @@
+import { toast } from 'vue3-toastify';
 import type { AboutApiResponse } from '../types/about-api-type'
 
 export function useAboutApi() {
@@ -12,13 +13,10 @@ export function useAboutApi() {
     'about-api-data',
     async () => {
       try {
-        console.log('🚀 Fetching about data from API...');
         isLoading.value = true;
         error.value = null;
         
         const response = await apiClient.get<AboutApiResponse>('/about-us');
-        
-        console.log('📡 About API Response received:', response);
         
         // Validate response structure
         if (!response || typeof response !== 'object') {
@@ -29,11 +27,11 @@ export function useAboutApi() {
           throw new Error(response.message || 'API request failed');
         }
 
-        console.log('✅ About data fetched successfully');
         return response;
       } catch (err: any) {
-        console.error('❌ Failed to fetch about data:', err);
-        error.value = err.statusMessage || err.message || 'Failed to fetch about data';
+        const errorMessage = err.statusMessage || err.message || 'Failed to fetch about data';
+        error.value = errorMessage;
+        toast.error(errorMessage);
         throw err;
       } finally {
         isLoading.value = false;

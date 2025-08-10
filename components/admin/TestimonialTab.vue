@@ -14,7 +14,6 @@
                         class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">All Testimonials</option>
                         <option value="active">Active Only</option>
-                        <option value="inactive">Inactive Only</option>
                     </select>
                 </div>
 
@@ -67,7 +66,7 @@
 
 <script setup>
 import HeaderLayout from './HeaderLayout.vue';
-import { PlusIcon, EditIcon, Trash2Icon } from 'lucide-vue-next';
+import { PlusIcon } from 'lucide-vue-next';
 import TestimonialForm from './TestimonialForm.vue';
 import TestimonialCard from './TestimonialCard.vue';
 
@@ -79,8 +78,6 @@ const {
     testimonialsPending,
     testimonialsError,
     getTestimonials,
-    getActiveTestimonials,
-    getInactiveTestimonials,
     deleteTestimonial
 } = useTestimonialManagement();
 
@@ -96,10 +93,7 @@ const handleFilterChange = async () => {
     try {
         switch (filterType.value) {
             case 'active':
-                await getActiveTestimonials()
-                break
-            case 'inactive':
-                await getInactiveTestimonials()
+                await getTestimonials(true)
                 break
             default:
                 await getTestimonials()
@@ -128,7 +122,6 @@ const handleDeleteTestimonial = async (testimonial) => {
 
 // Open testimonial dialog (placeholder - implement based on your modal system)
 const openTestimonialDialog = (testimonial = null) => {
-    console.log('👻 Open testimonial dialog:', testimonial)
     showTestimonialForm.value = true
     selectedTestimonial.value = testimonial
 }
@@ -139,13 +132,11 @@ const handleCloseTestimonialDialog = () => {
 }
 
 const handleSaveTestimonial = (testimonial) => {
-    console.log('👻 Save testimonial:', testimonial)
     handleCloseTestimonialDialog()
     handleRefresh()
 }
 
 const handleEditTestimonial = (testimonial) => {
-    console.log('👻 Edit testimonial:', testimonial)
     openTestimonialDialog(testimonial)
 }
 </script>

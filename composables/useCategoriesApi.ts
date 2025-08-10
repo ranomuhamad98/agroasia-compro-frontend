@@ -1,4 +1,5 @@
 import type { CategoriesApiResponse, Category } from '@/types/categories-api-types';
+import { toast } from 'vue3-toastify';
 
 export function useCategoriesApi() {
     const apiClient = useApiClient();
@@ -10,13 +11,10 @@ export function useCategoriesApi() {
         'categories',
         async () => {
             try {
-                console.log('🚀 Fetching categories data from API...');
                 isLoading.value = true;
                 error.value = null;
 
                 const response = await apiClient.get<{ success: boolean; data: CategoriesApiResponse; message: string }>('/api/product/category/get');
-
-                console.log('📡 API Response received:', response);
 
                 // Validate response structure
                 if (!response || typeof response !== 'object') {
@@ -25,14 +23,14 @@ export function useCategoriesApi() {
 
                 // Handle proxy response structure
                 if (response.success && response.data) {
-                    console.log('✅ Categories data fetched successfully');
                     return response.data as CategoriesApiResponse;
                 } else {
                     throw new Error(response.message || 'API request failed');
                 }
             } catch (err: any) {
-                console.error('❌ Failed to fetch categories data:', err);
-                error.value = 'Failed to fetch categories data';
+                const errorMessage = 'Failed to fetch categories data';
+                error.value = errorMessage;
+                toast.error(errorMessage);
                 throw err;
             } finally {
                 isLoading.value = false;
@@ -45,7 +43,6 @@ export function useCategoriesApi() {
     const categoriesData = computed(() => (categories.value?.categories as Category[]) || []);
 
     const refreshData = async () => {
-        console.log('🔄 Refreshing categories data...');
         await refresh();
     };
 

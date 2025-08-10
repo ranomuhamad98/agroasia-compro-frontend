@@ -264,16 +264,16 @@
             <div v-else-if="categoriesError" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
               <div class="flex items-center gap-2">
                 <AlertCircleIcon class="w-5 h-5 text-red-500" />
-                <p class="text-red-700">{{ categoriesError }}</p>
-                <button @click="loadCategories()"
+                <p class="text-red-700 mb-0">{{ categoriesError }}</p>
+                <!-- <button @click="loadCategories()"
                   class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100">
                   Try Again
-                </button>
+                </button> -->
               </div>
             </div>
 
             <!-- Not Loaded Yet State -->
-            <div v-else-if="categoryData.length === 0 && !categoriesError && !categoriesLoading"
+            <div v-if="categoryData.length === 0 && !categoriesError && !categoriesLoading"
               class="text-center py-12">
               <FolderIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 class="text-lg font-medium text-gray-900 mb-2">Welcome to Category Management</h3>
@@ -532,6 +532,7 @@
 definePageMeta({
   layout: 'admin',
 })
+import { toast } from 'vue3-toastify'
 import {
   LogOutIcon,
   PackageIcon,
@@ -605,26 +606,20 @@ const {
 const loadSliders = async () => {
   // Check if we should load sliders
   if (adminStore.activeTab !== 'home') {
-    console.log('📂 Not on home tab, skipping slider load')
     return
   }
 
   if (!isLoggedIn.value) {
-    console.log('🔒 Not authenticated, skipping slider load')
     return
   }
 
   try {
-    console.log('📥 Loading sliders for home tab...')
     await getSliders()
-    console.log('✅ Sliders loaded successfully:', sliders.value.length)
 
     // Clear failed images cache when successfully loading new data
     failedImages.value.clear()
-    console.log('🧹 Cleared failed images cache')
   } catch (error) {
-    console.error('❌ Failed to load sliders:', error)
-    // Don't show alert, just log - the UI will show the error state
+    // Error handling is done by the composable with toast notifications
   }
 }
 
@@ -632,35 +627,26 @@ const loadSliders = async () => {
 const loadCategories = async () => {
   // Check if we should load categories
   if (adminStore.activeTab !== 'categories') {
-    console.log('📂 Not on categories tab, skipping category load')
     return
   }
 
   if (!isLoggedIn.value) {
-    console.log('🔒 Not authenticated, skipping category load')
     return
   }
 
   try {
-    console.log('📥 Loading categories for categories tab...')
     await fetchCategories()
-    console.log('✅ Categories loaded successfully:', categoryData.value.length)
   } catch (error) {
-    console.error('❌ Failed to load categories:', error)
-    // Don't show alert, just log - the UI will show the error state
+    // Error handling is done by the composable with toast notifications
   }
 }
 
 // Watch for tab changes to load data when specific tabs are activated
 watch(() => adminStore.activeTab, (newTab, oldTab) => {
   if (newTab === 'home' && oldTab !== 'home' && isLoggedIn.value) {
-    console.log('🏠 Home tab activated, loading sliders...')
     loadSliders()
   } else if (newTab === 'categories' && oldTab !== 'categories' && isLoggedIn.value) {
-    console.log('📁 Categories tab activated, loading categories...')
     loadCategories()
-  } else if (newTab !== 'home' && newTab !== 'categories') {
-    console.log('📂 Left data-dependent tab, data will not auto-refresh')
   }
 })
 
@@ -750,10 +736,7 @@ const closeHeroBannerDialog = () => {
 
   // Only refresh sliders if we're still on the home tab and authenticated
   if (adminStore.activeTab === 'home' && isLoggedIn.value) {
-    console.log('🔄 Refreshing sliders after dialog close...')
     loadSliders()
-  } else {
-    console.log('📂 Not on home tab or not authenticated, skipping slider refresh')
   }
 }
 
@@ -772,15 +755,11 @@ const closeCategoryDialog = () => {
 
   // Only refresh categories if we're still on the categories tab and authenticated
   if (adminStore.activeTab === 'categories' && isLoggedIn.value) {
-    console.log('🔄 Refreshing categories after dialog close...')
     loadCategories()
-  } else {
-    console.log('📂 Not on categories tab or not authenticated, skipping category refresh')
   }
 }
 
 const handleSliderSave = (action) => {
-  console.log(`🎉 Slider ${action} successfully!`)
   // The slider list will be refreshed automatically by the form's API calls
 }
 
@@ -788,20 +767,15 @@ const handleCategorySave = async (categoryData) => {
   try {
     if (editingCategory.value) {
       // Update existing category
-      console.log('📝 Updating category:', editingCategory.value.id, categoryData)
       await updateCategory(editingCategory.value.id, categoryData)
-      console.log('✅ Category updated successfully!')
     } else {
       // Create new category
-      console.log('💾 Creating new category:', categoryData)
       await createCategory(categoryData)
-      console.log('✅ Category created successfully!')
     }
 
     // Close dialog after successful save
     closeCategoryDialog()
   } catch (error) {
-    console.error('❌ Failed to save category:', error)
     throw error // Re-throw to let the form handle the error
   }
 }
@@ -810,24 +784,19 @@ const handleCategorySave = async (categoryData) => {
 const handleDeleteSlider = async (slider) => {
   // Check if we should allow deletion
   if (adminStore.activeTab !== 'home') {
-    console.log('📂 Not on home tab, delete operation not allowed')
     return
   }
 
   if (!isLoggedIn.value) {
-    console.log('🔒 Not authenticated, delete operation not allowed')
-    alert('Please authenticate first')
+    toast.error('Please authenticate first')
     return
   }
 
   if (confirm(`Are you sure you want to delete the slider "${slider.title}"?`)) {
     try {
-      console.log('🗑️ Deleting slider:', slider.id)
       await deleteSlider(slider.id)
-      console.log('✅ Slider deleted successfully')
     } catch (error) {
-      console.error('❌ Failed to delete slider:', error)
-      alert('Failed to delete slider. Please try again.')
+      toast.error('Failed to delete slider. Please try again.')
     }
   }
 }
@@ -836,24 +805,19 @@ const handleDeleteSlider = async (slider) => {
 const handleDeleteCategory = async (category) => {
   // Check if we should allow deletion
   if (adminStore.activeTab !== 'categories') {
-    console.log('📂 Not on categories tab, delete operation not allowed')
     return
   }
 
   if (!isLoggedIn.value) {
-    console.log('🔒 Not authenticated, delete operation not allowed')
-    alert('Please authenticate first')
+    toast.error('Please authenticate first')
     return
   }
 
   if (confirm(`Are you sure you want to delete the category "${category.name}"?`)) {
     try {
-      console.log('🗑️ Deleting category:', category.id)
       await deleteCategory(category.id)
-      console.log('✅ Category deleted successfully')
     } catch (error) {
-      console.error('❌ Failed to delete category:', error)
-      alert('Failed to delete category. Please try again.')
+      toast.error('Failed to delete category. Please try again.')
     }
   }
 }
@@ -864,7 +828,6 @@ const failedImages = ref(new Set())
 // Utility functions
 const handleImageError = (event) => {
   const originalSrc = event.target.src
-  console.warn('🖼️ Image failed to load:', originalSrc)
 
   // Mark this image as failed to prevent retries
   failedImages.value.add(originalSrc)
@@ -874,8 +837,6 @@ const handleImageError = (event) => {
 
   // Remove error handler to prevent infinite loops
   event.target.onerror = null
-
-  console.log('🔄 Replaced with placeholder image, no retry will be attempted')
 }
 
 const formatDate = (dateString) => {
@@ -890,7 +851,6 @@ const formatDate = (dateString) => {
       minute: '2-digit'
     })
   } catch (error) {
-    console.error('Date formatting error:', error)
     return 'Invalid date'
   }
 }
@@ -902,13 +862,13 @@ const selectGalleryImage = async () => {
     const imageUrl = await uploadFile(file)
     adminStore.addGalleryImage(imageUrl)
   } catch (error) {
-    alert(error.message)
+    toast.error(error.message)
   }
 }
 
 // Save functions
 const saveVideo = () => {
-  alert('Video URL updated successfully!')
+  toast.success('Video URL updated successfully!')
 }
 
 // Date formatting helper removed (duplicate)

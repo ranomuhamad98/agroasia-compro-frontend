@@ -107,8 +107,8 @@ export function useCategoryManagement() {
         throw new Error(response.message || 'Failed to delete category');
       }
     } catch (err: any) {
-      console.error('❌ Failed to delete category:', err);
-      error.value = err.message || 'Failed to delete category';
+      console.error('❌ Failed to delete category:', err.data.data.message);
+      error.value = err.data.data.message || 'Failed to delete category';
       throw err;
     } finally {
       isLoading.value = false;

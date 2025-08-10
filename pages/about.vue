@@ -58,7 +58,6 @@ const pageTitle = computed(() => {
 onMounted(() => {
   nextTick(() => {
     if (!hasData.value && !pending.value && !error.value) {
-      console.log('🔄 No data found, forcing refresh...');
       refreshAboutData();
     }
   });

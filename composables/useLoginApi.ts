@@ -1,4 +1,5 @@
 import type { LoginRequest, LoginResponse, LoginError } from '@/types/login-api-type';
+import { toast } from 'vue3-toastify';
 
 export function useLoginApi() {
     const apiClient = useApiClient();
@@ -11,13 +12,10 @@ export function useLoginApi() {
     // Login function
     const login = async (credentials: LoginRequest): Promise<LoginResponse | null> => {
         try {
-            console.log('🚀 Attempting login with API...');
             isLoading.value = true;
             error.value = null;
 
             const response = await apiClient.post<LoginResponse>('/auth/login', credentials);
-
-            console.log('📡 Login API Response received:', response);
 
             // Validate response structure
             if (!response || typeof response !== 'object') {
@@ -52,19 +50,20 @@ export function useLoginApi() {
                 userCookie.value = response.data.user;
             }
 
-            console.log('✅ Login successful');
+            toast.success('Login successful!');
             return response;
         } catch (err: any) {
-            console.error('❌ Login failed:', err);
-            
             // Handle specific error messages from the API
+            let errorMessage = 'Login failed. Please check your credentials.';
+            
             if (err.data?.message) {
-                error.value = err.data.message;
+                errorMessage = err.data.message;
             } else if (err.statusMessage) {
-                error.value = err.statusMessage;
-            } else {
-                error.value = 'Login failed. Please check your credentials.';
+                errorMessage = err.statusMessage;
             }
+            
+            error.value = errorMessage;
+            toast.error(errorMessage);
             
             // Clear any existing auth data on error
             user.value = null;
@@ -78,8 +77,6 @@ export function useLoginApi() {
 
     // Logout function
     const logout = () => {
-        console.log('🚪 Logging out user...');
-        
         user.value = null;
         token.value = null;
         
@@ -89,7 +86,7 @@ export function useLoginApi() {
         tokenCookie.value = null;
         userCookie.value = null;
         
-        console.log('✅ Logout successful');
+        toast.success('Logout successful!');
     };
 
     // Initialize from cookies on composable creation
@@ -100,7 +97,6 @@ export function useLoginApi() {
         if (tokenCookie.value && userCookie.value) {
             token.value = tokenCookie.value;
             user.value = userCookie.value;
-            console.log('🔄 Authentication restored from cookies');
         }
     };
 

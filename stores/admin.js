@@ -123,7 +123,6 @@ export const useAdminStore = defineStore("admin", {
   actions: {
     async fetchProducts() {
       const response = useProductsApi()
-      console.log(response, 'ini data produks')
       const data = await response.data
       this.products = data.products
     },

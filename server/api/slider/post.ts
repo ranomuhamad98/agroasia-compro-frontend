@@ -2,11 +2,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
     
-    console.log('🎨 Slider creation proxy request received:', {
-      title: body.title,
-      position: body.position
-    });
-    
     // Validate required fields
     if (!body.title || !body.sub_title || !body.image_link) {
       throw createError({
@@ -29,8 +24,6 @@ export default defineEventHandler(async (event) => {
       },
       requireAuth: true // Slider creation requires authentication
     });
-
-    console.log('✅ Slider created successfully, forwarding response');
     
     return {
       success: true,
@@ -39,7 +32,6 @@ export default defineEventHandler(async (event) => {
     };
     
   } catch (error: any) {
-    console.error('❌ Slider creation proxy error:', error);
     throw error; // Re-throw error sudah dihandle di proxy utility
   }
 });

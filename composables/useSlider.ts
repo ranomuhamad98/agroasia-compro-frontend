@@ -1,3 +1,5 @@
+import { toast } from 'vue3-toastify';
+
 interface SliderData {
   image_link: string;
   sub_title: string;
@@ -40,7 +42,6 @@ export function useSlider() {
     try {
       isLoading.value = true;
       error.value = null;
-      console.log('🎨 Fetching sliders...');
 
       const response = await $fetch<SliderResponse>('/api/slider/get', {
         method: 'GET',
@@ -49,15 +50,15 @@ export function useSlider() {
 
       if (response.success && response.data.sliders) {
         sliders.value = response.data.sliders;
-        console.log('✅ Sliders fetched successfully:', response.data.sliders.length);
         return response.data.sliders;
       }
 
       throw new Error(response.message || 'Failed to fetch sliders');
 
     } catch (error: any) {
-      console.error('❌ Get sliders error:', error);
-      error.value = error.data?.message || error.message || 'Failed to fetch sliders';
+      const errorMessage = error.data?.message || error.message || 'Failed to fetch sliders';
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw error;
     } finally {
       isLoading.value = false;
@@ -71,7 +72,6 @@ export function useSlider() {
     try {
       isLoading.value = true;
       error.value = null;
-      console.log('🎨 Creating slider...', sliderData);
 
       const response = await $fetch<SliderResponse>('/api/slider/post', {
         method: 'POST',
@@ -80,27 +80,26 @@ export function useSlider() {
       });
 
       if (response.success) {
-        console.log('✅ Slider created successfully');
         // Refresh sliders list
         await getSliders();
+        toast.success('Slider created successfully!');
         return response.data;
       }
 
       throw new Error(response.message || 'Failed to create slider');
 
     } catch (error: any) {
-      console.error('❌ Create slider error:', error);
-      error.value = error.data?.message || error.message || 'Failed to create slider';
+      let errorMessage = error.data?.message || error.message || 'Failed to create slider';
       
       // Handle specific error cases
       if (error.statusCode === 401) {
-        throw new Error('Authentication required to create slider');
+        errorMessage = 'Authentication required to create slider';
+      } else if (error.statusCode === 422) {
+        errorMessage = 'Please check your slider data';
       }
       
-      if (error.statusCode === 422) {
-        throw new Error('Please check your slider data');
-      }
-      
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw error;
     } finally {
       isLoading.value = false;
@@ -114,7 +113,6 @@ export function useSlider() {
     try {
       isLoading.value = true;
       error.value = null;
-      console.log('🎨 Updating slider...', { id, sliderData });
 
       const response = await $fetch<SliderResponse>(`/api/sliders/${id}`, {
         method: 'PUT',
@@ -123,31 +121,28 @@ export function useSlider() {
       });
 
       if (response.success) {
-        console.log('✅ Slider updated successfully');
         // Refresh sliders list
         await getSliders();
+        toast.success('Slider updated successfully!');
         return response.data;
       }
 
       throw new Error(response.message || 'Failed to update slider');
 
     } catch (error: any) {
-      console.error('❌ Update slider error:', error);
-      error.value = error.data?.message || error.message || 'Failed to update slider';
+      let errorMessage = error.data?.message || error.message || 'Failed to update slider';
       
       // Handle specific error cases
       if (error.statusCode === 401) {
-        throw new Error('Authentication required to update slider');
+        errorMessage = 'Authentication required to update slider';
+      } else if (error.statusCode === 404) {
+        errorMessage = 'Slider not found';
+      } else if (error.statusCode === 422) {
+        errorMessage = 'Please check your slider data';
       }
       
-      if (error.statusCode === 404) {
-        throw new Error('Slider not found');
-      }
-      
-      if (error.statusCode === 422) {
-        throw new Error('Please check your slider data');
-      }
-      
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw error;
     } finally {
       isLoading.value = false;
@@ -161,7 +156,6 @@ export function useSlider() {
     try {
       isLoading.value = true;
       error.value = null;
-      console.log('🗑️ Deleting slider...', { id });
 
       const response = await $fetch<SliderResponse>(`/api/sliders/${id}`, {
         method: 'DELETE',
@@ -169,27 +163,26 @@ export function useSlider() {
       });
 
       if (response.success) {
-        console.log('✅ Slider deleted successfully');
         // Refresh sliders list
         await getSliders();
+        toast.success('Slider deleted successfully!');
         return response.data;
       }
 
       throw new Error(response.message || 'Failed to delete slider');
 
     } catch (error: any) {
-      console.error('❌ Delete slider error:', error);
-      error.value = error.data?.message || error.message || 'Failed to delete slider';
+      let errorMessage = error.data?.message || error.message || 'Failed to delete slider';
       
       // Handle specific error cases
       if (error.statusCode === 401) {
-        throw new Error('Authentication required to delete slider');
+        errorMessage = 'Authentication required to delete slider';
+      } else if (error.statusCode === 404) {
+        errorMessage = 'Slider not found';
       }
       
-      if (error.statusCode === 404) {
-        throw new Error('Slider not found');
-      }
-      
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw error;
     } finally {
       isLoading.value = false;

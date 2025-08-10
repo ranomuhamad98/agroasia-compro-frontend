@@ -1,7 +1,5 @@
 export default defineEventHandler(async (event) => {
   try {
-    console.log('📁 Media upload proxy request received');
-    
     // Read multipart form data
     const formData = await readMultipartFormData(event);
     
@@ -11,13 +9,6 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'No form data received'
       });
     }
-    
-    console.log('📋 Form data fields received:', formData.map(field => ({
-      name: field.name,
-      filename: field.filename,
-      type: field.type,
-      size: field.data?.length
-    })));
     
     // Find the image file and alt text
     const imageField = formData.find(field => field.name === 'images');
@@ -46,9 +37,6 @@ export default defineEventHandler(async (event) => {
     const cookieHeader = getHeader(event, 'cookie');
     if (cookieHeader) {
       headers['cookie'] = cookieHeader;
-      console.log('🍪 Forwarding cookies to external API');
-    } else {
-      console.warn('⚠️ No cookies found for authenticated request');
     }
     
     // Create FormData for the external API request
@@ -64,21 +52,12 @@ export default defineEventHandler(async (event) => {
     const altText = altField.data.toString();
     externalFormData.append('alt', altText);
     
-    console.log('📤 Uploading to external API:', {
-      filename: imageField.filename,
-      type: imageField.type,
-      size: imageField.data.length,
-      alt: altText
-    });
-    
     // Make request to external API
     const response = await $fetch('https://agroasiaberdikari.id/api/media', {
       method: 'POST',
       headers,
       body: externalFormData
     });
-    
-    console.log('✅ Media uploaded successfully, external API response:', response);
     
     return {
       success: true,
@@ -87,8 +66,6 @@ export default defineEventHandler(async (event) => {
     };
     
   } catch (error: any) {
-    console.error('❌ Media upload proxy error:', error);
-    
     // Handle authentication errors
     if (error.status === 401) {
       throw createError({

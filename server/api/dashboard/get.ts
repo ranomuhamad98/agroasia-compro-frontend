@@ -1,7 +1,5 @@
 export default defineEventHandler(async (event) => {
   try {
-    console.log('📊 Dashboard data request received');
-    
     // Check authentication
     const cookieHeader = getHeader(event, 'cookie');
     if (!cookieHeader) {
@@ -50,8 +48,6 @@ export default defineEventHandler(async (event) => {
         lastUpdated: new Date().toISOString()
       }
     };
-
-    console.log('✅ Dashboard data retrieved successfully');
     
     return {
       success: true,
@@ -60,8 +56,6 @@ export default defineEventHandler(async (event) => {
     };
     
   } catch (error: any) {
-    console.error('❌ Dashboard data retrieval error:', error);
-    
     // Handle authentication errors
     if (error.status === 401) {
       throw createError({

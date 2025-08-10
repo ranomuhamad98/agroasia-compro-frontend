@@ -1,4 +1,5 @@
 import type { MediaItem, MediaUploadRequest, MediaUploadResponse, MediaListResponse, MediaQueryParams } from '@/types/media-api-type';
+import { toast } from 'vue3-toastify';
 
 export function useMedia() {
   const mediaItems = ref<MediaItem[]>([]);
@@ -13,7 +14,6 @@ export function useMedia() {
     try {
       isLoading.value = true;
       error.value = null;
-      console.log('📁 Fetching media items...');
 
       const queryString = params ? new URLSearchParams(params as Record<string, string>).toString() : '';
       const url = `/api/media/get${queryString ? '?' + queryString : ''}`;
@@ -25,14 +25,14 @@ export function useMedia() {
 
       if (response.success && response.data) {
         mediaItems.value = response.data;
-        console.log('✅ Media items fetched successfully:', response.data.length, 'items');
         return response.data;
       } else {
         throw new Error(response.message || 'Failed to fetch media items');
       }
     } catch (err: any) {
-      console.error('❌ Error fetching media items:', err);
-      error.value = err.message || 'An error occurred while fetching media items';
+      const errorMessage = err.message || 'An error occurred while fetching media items';
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw err;
     } finally {
       isLoading.value = false;
@@ -46,12 +46,6 @@ export function useMedia() {
     try {
       isUploading.value = true;
       error.value = null;
-      console.log('📤 Uploading media file:', { 
-        name: file.name, 
-        size: file.size, 
-        type: file.type,
-        alt 
-      });
 
       // Create FormData for file upload
       const formData = new FormData();
@@ -64,21 +58,18 @@ export function useMedia() {
         credentials: 'include'
       });
 
-      console.log('🔄 Response upload media:', response);
-
       if (response.success && response.data.media) {
-        console.log('✅ Media uploaded successfully:', response.data.media);
-        
         // Add the new media item to the list
-        mediaItems.value.unshift(response.data.media);
+        mediaItems.value.unshift(...response.data.media);
         
         return response.data.media;
       } else {
         throw new Error(response.message || 'Failed to upload media');
       }
     } catch (err: any) {
-      console.error('❌ Error uploading media:', err);
-      error.value = err.message || 'An error occurred while uploading media';
+      const errorMessage = err.message || 'An error occurred while uploading media';
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw err;
     } finally {
       isUploading.value = false;
@@ -92,7 +83,6 @@ export function useMedia() {
     try {
       isUploading.value = true;
       error.value = null;
-      console.log('📤 Uploading multiple media files:', files.length, 'files');
 
       const uploadPromises = files.map(({ file, alt }) => uploadMediaSingle(file, alt));
       const results = await Promise.allSettled(uploadPromises);
@@ -100,10 +90,9 @@ export function useMedia() {
       const successful = results.filter(result => result.status === 'fulfilled');
       const failed = results.filter(result => result.status === 'rejected');
       
-      console.log(`✅ Upload completed: ${successful.length} successful, ${failed.length} failed`);
-      
       if (failed.length > 0) {
-        console.warn('⚠️ Some uploads failed:', failed);
+        const errorMessage = `${failed.length} out of ${files.length} files failed to upload`;
+        toast.warning(errorMessage);
       }
       
       return {
@@ -112,8 +101,9 @@ export function useMedia() {
         results
       };
     } catch (err: any) {
-      console.error('❌ Error uploading multiple media:', err);
-      error.value = err.message || 'An error occurred while uploading media files';
+      const errorMessage = err.message || 'An error occurred while uploading media files';
+      error.value = errorMessage;
+      toast.error(errorMessage);
       throw err;
     } finally {
       isUploading.value = false;
@@ -133,8 +123,6 @@ export function useMedia() {
       body: formData,
       credentials: 'include'
     });
-
-    console.log('🔄 Response upload media single:', response);
 
     if (response.success && response.data.media) {
       return response.data.media;

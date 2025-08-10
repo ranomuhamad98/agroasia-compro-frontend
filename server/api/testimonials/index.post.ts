@@ -22,8 +22,6 @@ export default defineEventHandler(async (event): Promise<CreateTestimonialRespon
       })
     }
 
-    console.log('📝 Creating testimonial with data:', body)
-
     // Use proxy utility to forward request with authentication
     const response = await proxyToExternalApi(event, {
       endpoint: '/testimonials',
@@ -32,12 +30,8 @@ export default defineEventHandler(async (event): Promise<CreateTestimonialRespon
       requireAuth: true // Require authentication for creating testimonials
     }) as CreateTestimonialResponse
 
-    console.log('✅ Testimonial created successfully:', response)
-
     return response
   } catch (error: any) {
-    console.error('❌ Error creating testimonial:', error)
-    
     // Handle different types of errors
     if (error.statusCode) {
       throw createError({

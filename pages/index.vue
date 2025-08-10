@@ -90,7 +90,6 @@ onMounted(() => {
   // Force refresh if no data after mount
   nextTick(() => {
     if (!hasData.value && !isPending.value && !error.value) {
-      console.log('🔄 No data found, forcing refresh...');
       refresh();
     }
   });

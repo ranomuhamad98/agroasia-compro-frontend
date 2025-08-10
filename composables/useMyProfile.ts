@@ -1,4 +1,5 @@
 import type { ProfileResponse, ProfileError } from '@/types/profile-api-type';
+import { toast } from 'vue3-toastify';
 
 export function useMyProfile() {
     const apiClient = useApiClient();
@@ -10,7 +11,6 @@ export function useMyProfile() {
     // Get current user profile
     const fetchProfile = async (): Promise<ProfileResponse | null> => {
         try {
-            console.log('🚀 Fetching user profile from proxy API...');
             isLoading.value = true;
             error.value = null;
 
@@ -18,8 +18,6 @@ export function useMyProfile() {
             const response = await $fetch<ProfileResponse>('/api/auth/me', {
                 credentials: 'include' // Include cookies for session-based auth
             });
-
-            console.log('📡 Profile API Response received:', response);
 
             // Validate response structure
             if (!response || typeof response !== 'object') {
@@ -35,19 +33,19 @@ export function useMyProfile() {
                 profile.value = response.data.user;
             }
 
-            console.log('✅ Profile fetch successful');
             return response;
         } catch (err: any) {
-            console.error('❌ Profile fetch failed:', err);
-            
             // Handle specific error messages from the API
+            let errorMessage = 'Failed to fetch profile. Please try again.';
+            
             if (err.data?.message) {
-                error.value = err.data.message;
+                errorMessage = err.data.message;
             } else if (err.statusMessage) {
-                error.value = err.statusMessage;
-            } else {
-                error.value = 'Failed to fetch profile. Please try again.';
+                errorMessage = err.statusMessage;
             }
+            
+            error.value = errorMessage;
+            toast.error(errorMessage);
             
             // Clear profile data on error
             profile.value = null;
