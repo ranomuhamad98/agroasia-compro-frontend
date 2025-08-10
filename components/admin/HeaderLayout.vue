@@ -9,7 +9,7 @@
                 class="btn-secondary flex items-center gap-2 disabled:opacity-50"
                 :title="disableRefresh ? 'Please authenticate first' : refreshAlt">
                 <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': loading }" />
-                {{ categoriesLoading ? 'Loading...' : refreshMessage }}
+                {{ loading ? 'Loading...' : refreshMessage }}
             </button>
             <button @click="onAction" :disabled="disableAction" class="btn-primary flex items-center gap-2">
                 <PlusIcon class="w-4 h-4" />
