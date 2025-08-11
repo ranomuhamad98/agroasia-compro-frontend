@@ -477,6 +477,9 @@
                 </div>
               </div>
 
+              <!-- Our People Section -->
+              <OurPeopleDashboard />
+
               <!-- Gallery Section -->
               <div class="card">
                 <div class="card-header">
@@ -569,6 +572,7 @@ import FormSubmissions from '@/components/admin/FormSubmissions.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useHead } from '#imports'
 import TestimonialTab from '@/components/admin/TestimonialTab.vue'
+import OurPeopleDashboard from '@/components/admin/OurPeopleDashboard.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',

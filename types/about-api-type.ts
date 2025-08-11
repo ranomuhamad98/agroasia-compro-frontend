@@ -31,11 +31,43 @@ export interface AboutJumbotron {
   title: string;
 }
 
+// Our People types based on API specification
+export interface OurPeoplePayload {
+  image_link: string;
+  name: string;
+  title: string;
+  lokasi: string;
+  bertani_sejak: number;
+  bermitra_sejak: number;
+  keterangan: string;
+  status: boolean;
+}
+
+export interface OurPeopleData {
+  id: string;
+  image_link: string;
+  name: string;
+  title: string;
+  lokasi: string;
+  bertani_sejak: number;
+  bermitra_sejak: number;
+  keterangan: string;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateOurPeopleReturn {
+  status: number;
+  message: string;
+  data: OurPeopleData;
+}
+
 export interface AboutApiData {
   jumbotron: AboutJumbotron;
   milestones: AboutMilestone[];
   video: AboutVideo;
-  our_people: any[];
+  our_people: OurPeopleData[];
   our_value: AboutValueSection;
   gallery: any[];
   header: GlobalApiHeader;
