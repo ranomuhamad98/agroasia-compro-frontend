@@ -481,32 +481,7 @@
               <OurPeopleDashboard />
 
               <!-- Gallery Section -->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="text-green-800 font-semibold">Image Galleries</h3>
-                </div>
-                <div class="p-6 space-y-4">
-                  <div class="flex space-x-2">
-                    <button @click="selectGalleryImage" class="btn-primary flex items-center gap-2">
-                      <PlusIcon class="w-4 h-4" />
-                      Add Image
-                    </button>
-                  </div>
-                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div v-for="(imageUrl, index) in adminStore.galleries" :key="index" class="relative group">
-                      <img :src="imageUrl || '/placeholder.svg?height=200&width=300'" :alt="`Gallery ${index + 1}`"
-                        class="w-full h-48 object-cover rounded-lg border-2 border-green-200" />
-                      <button @click="adminStore.removeGalleryImage(index)"
-                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-600 hover:bg-red-700 text-white p-2 rounded-md">
-                        <Trash2Icon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <div v-if="adminStore.galleries.length === 0" class="text-center py-8 text-green-500">
-                    No images in gallery. Add some images to get started.
-                  </div>
-                </div>
-              </div>
+              <GalleryDashboard />
             </div>
           </div>
 
@@ -573,6 +548,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useHead } from '#imports'
 import TestimonialTab from '@/components/admin/TestimonialTab.vue'
 import OurPeopleDashboard from '@/components/admin/OurPeopleDashboard.vue'
+import GalleryDashboard from '@/components/admin/GalleryDashboard.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',

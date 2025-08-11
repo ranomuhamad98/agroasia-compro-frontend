@@ -79,3 +79,22 @@ export interface AboutApiResponse {
   message: string;
   data: AboutApiData;
 } 
+
+export interface GalleryPayload {
+  image_link: string;
+  alt: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  image_link: string;
+  alt: string;
+  input_time: string;
+  update_time: string;
+}
+
+export interface GalleryApiResponse {
+  status: number;
+  message: string;
+  gallery: GalleryItem[];
+}
