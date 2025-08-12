@@ -395,9 +395,8 @@
           </div>
 
           <!-- Form Submissions Tab -->
-          <ClientOnly fallback="Loading..." fallback-tag="span">
-            <FormSubmissions v-if="adminStore.activeTab === 'forms'" />
-          </ClientOnly>
+           <FormSubmissionTab v-if="adminStore.activeTab === 'forms'" />
+          
         </div>
       </main>
     </div>
@@ -452,7 +451,6 @@ import HeroBannerForm from '@/components/admin/HeroBannerForm.vue'
 import CategoryForm from '@/components/admin/CategoryForm.vue'
 import { useSlider } from '@/composables/useSlider'
 import { useCategoryManagement } from '@/composables/useCategoryManagement'
-import FormSubmissions from '@/components/admin/FormSubmissions.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useHead } from '#imports'
 import TestimonialTab from '@/components/admin/TestimonialTab.vue'
@@ -460,6 +458,7 @@ import OurPeopleDashboard from '@/components/admin/OurPeopleDashboard.vue'
 import GalleryDashboard from '@/components/admin/GalleryDashboard.vue'
 import CategoryTab from '@/components/admin/CategoryTab.vue'
 import MilestoneDashboard from '@/components/admin/MilestoneDashboard.vue'
+import FormSubmissionTab from '@/components/admin/FormSubmissionTab.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',

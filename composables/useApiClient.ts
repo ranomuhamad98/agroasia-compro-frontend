@@ -100,16 +100,16 @@ export function useApiClient(options: UseApiClientOptions = {}) {
     get: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method' | 'body'>) =>
       makeRequest<T>(endpoint, { ...options, method: 'GET' }),
     
-    post: <T>(endpoint: string, body?: any, options?: Omit<ApiRequestOptions, 'method'>) =>
-      makeRequest<T>(endpoint, { ...options, method: 'POST', body }),
+    post: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'POST' }),
     
-    put: <T>(endpoint: string, body?: any, options?: Omit<ApiRequestOptions, 'method'>) =>
-      makeRequest<T>(endpoint, { ...options, method: 'PUT', body }),
+    put: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'PUT' }),
     
     delete: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method' | 'body'>) =>
       makeRequest<T>(endpoint, { ...options, method: 'DELETE' }),
     
-    patch: <T>(endpoint: string, body?: any, options?: Omit<ApiRequestOptions, 'method'>) =>
-      makeRequest<T>(endpoint, { ...options, method: 'PATCH', body }),
+    patch: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'PATCH'}),
   };
 } 

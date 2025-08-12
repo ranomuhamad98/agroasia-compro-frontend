@@ -11,7 +11,7 @@
                 <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': loading }" />
                 {{ loading ? 'Loading...' : refreshMessage }}
             </button>
-            <button @click="onAction" :disabled="disableAction" class="btn-primary flex items-center gap-2">
+            <button v-if="actionMessage" @click="onAction" :disabled="disableAction" class="btn-primary flex items-center gap-2">
                 <PlusIcon class="w-4 h-4" />
                 {{ actionMessage }}
             </button>
@@ -33,7 +33,7 @@ const props = defineProps({
     },
     actionMessage: {
         type: String,
-        required: true
+        required: false,
     },
     refreshAlt: {
         type: String,

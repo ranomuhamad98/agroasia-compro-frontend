@@ -25,12 +25,12 @@ export default defineEventHandler(async (event): Promise<TestimonialListResponse
     const response = await proxyToExternalApi(event, {
       endpoint,
       method: 'GET',
-      requireAuth: false // Public endpoint, no auth required
+      requireAuth: true,
     })
 
     console.log('✅ Testimonials fetched successfully:', response)
 
-    return response
+    return response as TestimonialListResponse
   } catch (error: any) {
     console.error('❌ Error fetching testimonials:', error)
     
