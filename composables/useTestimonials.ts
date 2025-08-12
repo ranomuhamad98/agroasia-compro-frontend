@@ -9,12 +9,12 @@ export function useTestimonials() {
   const error = ref<string | null>(null)
   const pending = ref(false)
 
-  const getTestimonials = async () => {
+  const getTestimonials = async (active_only: boolean = false) => {
     try {
       isLoading.value = true;
       error.value = null;
       pending.value = true;
-      const response = await apiClient.get<TestimonialListResponse>('/testimonials');
+      const response = await apiClient.get<TestimonialListResponse>(`/testimonials?active_only=${active_only}`);
 
       if (response.status === 200) {
         testimonials.value = response.testimonials;

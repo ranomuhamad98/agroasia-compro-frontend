@@ -95,13 +95,16 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
     endpoint: string, 
     requestOptions: ApiRequestOptions = {}
   ): Promise<T> {
+    console.log('requestOptions', requestOptions);
     const {
       method = 'GET',
-      body,
-      headers = {},
+      body: requestBody,
+      headers,
       timeout = defaultOptions.timeout,
       retries = defaultOptions.retries,
     } = requestOptions;
+
+    console.log('headers', headers);
 
     const url = `${defaultOptions.baseURL}${endpoint}`;
     
@@ -109,14 +112,21 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
+        // Don't set Content-Type for FormData, let the browser handle it
+        const requestHeaders: Record<string, string> = {
+          'credentials': 'include',
+          ...headers,
+        };
+        
+        // Only set Content-Type if it's not FormData
+        if (!(requestBody instanceof FormData)) {
+          requestHeaders['Content-Type'] = headers?.['Content-Type'] || 'application/json';
+        }
+
         const response = await $fetch<T>(url, {
           method,
-          body,
-          headers: {
-            'Content-Type': 'application/json',
-            'credentials': 'include',
-            ...headers,
-          },
+          ...(requestBody && { body: requestBody }),
+          headers: requestHeaders,
           timeout,
           onResponseError({ response }) {
             throw createError({
@@ -129,6 +139,7 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
 
         return response as T;
       } catch (error: any) {
+        console.log('Error:', error);
         lastError = error;
         
         // Don't retry on client errors (4xx)
@@ -313,17 +324,17 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
     get: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method' | 'body'>) =>
       makeRequest<T>(endpoint, { ...options, method: 'GET' }),
     
-    post: <T>(endpoint: string, body?: any, options?: Omit<ApiRequestOptions, 'method'>) =>
-      makeRequest<T>(endpoint, { ...options, method: 'POST', body }),
+    post: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'POST' }),
     
-    put: <T>(endpoint: string, body?: any, options?: Omit<ApiRequestOptions, 'method'>) =>
-      makeRequest<T>(endpoint, { ...options, method: 'PUT', body }),
+    put: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'PUT' }),
     
     delete: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method' | 'body'>) =>
       makeRequest<T>(endpoint, { ...options, method: 'DELETE' }),
     
-    patch: <T>(endpoint: string, body?: any, options?: Omit<ApiRequestOptions, 'method'>) =>
-      makeRequest<T>(endpoint, { ...options, method: 'PATCH', body }),
+    patch: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'PATCH' }),
 
     // Organized endpoint groups
     auth,

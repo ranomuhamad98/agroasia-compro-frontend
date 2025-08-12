@@ -14,16 +14,17 @@ export function useCategoriesApi() {
                 isLoading.value = true;
                 error.value = null;
 
-                const response = await apiClient.get<{ success: boolean; data: CategoriesApiResponse; message: string }>('/api/product/category/get');
+                const response = await apiClient.get<CategoriesApiResponse>('/categories');
 
-                // Validate response structure
                 if (!response || typeof response !== 'object') {
                     throw new Error('Invalid response format');
                 }
 
-                // Handle proxy response structure
-                if (response.success && response.data) {
-                    return response.data as CategoriesApiResponse;
+                console.log('Response:', response);
+
+                if (response.status === 200 && response.categories) {
+                    console.log('Categories:', response.categories);
+                    return response as CategoriesApiResponse;
                 } else {
                     throw new Error(response.message || 'API request failed');
                 }

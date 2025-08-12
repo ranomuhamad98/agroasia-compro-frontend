@@ -2,7 +2,7 @@ import type { LoginRequest, LoginResponse, LoginError } from '@/types/login-api-
 import { toast } from 'vue3-toastify';
 
 export function useLoginApi() {
-    const apiClient = useProxyApiClient();
+    const apiClient = useApiClient();
     
     const isLoading = ref(false);
     const error = ref<string | null>(null);

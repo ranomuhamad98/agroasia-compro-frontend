@@ -44,6 +44,11 @@ const props = defineProps({
     testimonial: {
         type: Object,
         required: true
+    },
+    loading: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 })
 

@@ -230,102 +230,7 @@
           </div> -->
 
           <!-- Categories Tab -->
-          <div v-if="adminStore.activeTab === 'categories'">
-            <div class="flex justify-between items-center mb-6">
-              <div>
-                <h2 class="page-title">Category Management</h2>
-                <p class="page-subtitle">Manage product categories for your store.</p>
-              </div>
-              <div class="flex items-center gap-3">
-                <button @click="loadCategories()" :disabled="categoriesLoading || !isLoggedIn"
-                  class="btn-secondary flex items-center gap-2 disabled:opacity-50"
-                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh category list'">
-                  <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': categoriesLoading }" />
-                  {{ categoriesLoading ? 'Loading...' : 'Refresh' }}
-                </button>
-                <button @click="openCategoryDialog()" class="btn-primary flex items-center gap-2">
-                  <PlusIcon class="w-4 h-4" />
-                  Add Category
-                </button>
-              </div>
-            </div>
-
-            <!-- Loading State -->
-            <div v-if="categoriesLoading" class="flex items-center justify-center py-12">
-              <div class="text-center">
-                <div
-                  class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3">
-                </div>
-                <p class="text-green-600">Loading categories...</p>
-              </div>
-            </div>
-
-            <!-- Error State -->
-            <div v-else-if="categoriesError" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <div class="flex items-center gap-2">
-                <AlertCircleIcon class="w-5 h-5 text-red-500" />
-                <p class="text-red-700 mb-0">{{ categoriesError }}</p>
-                <!-- <button @click="loadCategories()"
-                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100">
-                  Try Again
-                </button> -->
-              </div>
-            </div>
-
-            <!-- Not Loaded Yet State -->
-            <div v-if="categoryData.length === 0 && !categoriesError && !categoriesLoading"
-              class="text-center py-12">
-              <FolderIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 class="text-lg font-medium text-gray-900 mb-2">Welcome to Category Management</h3>
-              <p class="text-gray-500 mb-4">Click "Refresh" to load existing categories or create your first one.</p>
-              <div class="flex justify-center gap-3">
-                <button @click="loadCategories()" class="btn-secondary">
-                  Load Categories
-                </button>
-                <button @click="openCategoryDialog()" class="btn-primary">
-                  Add First Category
-                </button>
-              </div>
-            </div>
-
-            <!-- Categories Grid -->
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div v-for="category in categoryData" :key="category.id" class="card">
-                <div class="p-4 border-b border-green-100">
-                  <div class="flex justify-between items-start">
-                    <div class="flex-1">
-                      <h3 class="text-lg font-semibold text-green-800 mb-2">{{ category.name }}</h3>
-                      <div class="flex items-center gap-1 text-xs text-gray-500">
-                        <span>ID: {{ category.id }}</span>
-                      </div>
-                    </div>
-                    <div class="flex space-x-1 ml-3">
-                      <button @click="openCategoryDialog(category)" class="btn-secondary p-2" title="Edit Category">
-                        <EditIcon class="w-4 h-4" />
-                      </button>
-                      <button @click="handleDeleteCategory(category)"
-                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                        title="Delete Category">
-                        <Trash2Icon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="p-4">
-                  <div class="relative">
-                    <img :src="category.image_link || '/placeholder.svg?height=200&width=200'" :alt="category.name"
-                      class="w-full h-32 object-cover rounded-md mb-3 border border-green-200" />
-                  </div>
-                  <div class="flex justify-between items-center text-xs text-gray-500">
-                    <span>Created: {{ formatDate(category.input_time) }}</span>
-                    <span v-if="category.update_time !== category.input_time">
-                      Updated: {{ formatDate(category.update_time) }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CategoryTab v-if="adminStore.activeTab === 'categories'" />
 
           <!-- Home Tab -->
           <div v-if="adminStore.activeTab === 'home'">
@@ -549,6 +454,7 @@ import { useHead } from '#imports'
 import TestimonialTab from '@/components/admin/TestimonialTab.vue'
 import OurPeopleDashboard from '@/components/admin/OurPeopleDashboard.vue'
 import GalleryDashboard from '@/components/admin/GalleryDashboard.vue'
+import CategoryTab from '@/components/admin/CategoryTab.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',

@@ -146,6 +146,7 @@ import {
 } from 'lucide-vue-next';
 import { useMedia } from '@/composables/useMedia';
 import { onMounted, watch, nextTick } from 'vue';
+import { useCategoryManagement } from '@/composables/useCategoryManagement';
 
 const props = defineProps({
   show: {
@@ -178,6 +179,7 @@ const fileInput = ref(null);
 
 // Media composable
 const { uploadMedia, isUploading: mediaUploading, error: mediaError, clearError } = useMedia();
+const { createCategory, updateCategory } = useCategoryManagement();
 
 // Initialize form when category prop changes
 watch(() => props.category, (newCategory) => {
@@ -295,6 +297,12 @@ const handleSubmit = async () => {
       name: form.value.name?.trim() || '',
       image_link: form.value.image_link?.trim() || ''
     };
+
+    if (editingCategory.value) {
+      await updateCategory(editingCategory.value.id, categoryData);
+    } else {
+      await createCategory(categoryData);
+    }
 
     emit('save', categoryData);
     

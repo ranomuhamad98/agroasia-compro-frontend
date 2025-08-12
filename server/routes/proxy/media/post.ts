@@ -2,6 +2,8 @@ export default defineEventHandler(async (event) => {
   try {
     // Read multipart form data
     const formData = await readMultipartFormData(event);
+
+    console.log('formData', formData);
     
     if (!formData) {
       throw createError({

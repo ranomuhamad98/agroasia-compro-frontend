@@ -4,12 +4,12 @@
  */
 
 export default defineNuxtPlugin(async () => {
-  const { initAuth, user } = useAuth();
+  // const { initAuth, user } = useAuth();
   
-  try {
-    // Check authentication status
-    await initAuth();
-  } catch (error) {
-    // Silent error handling for production
-  }
+  // try {
+  //   // Check authentication status
+  //   await initAuth();
+  // } catch (error) {
+  //   // Silent error handling for production
+  // }
 });

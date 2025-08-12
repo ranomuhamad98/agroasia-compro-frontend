@@ -1,6 +1,8 @@
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
+
+    console.log('body: ', body)
     
     // Use proxy utility for login
     const response = await proxyToExternalApi(event, {
@@ -20,6 +22,7 @@ export default defineEventHandler(async (event) => {
     };
     
   } catch (error: any) {
+    console.log('error: ', error.data)
     throw error; // Re-throw error sudah dihandle di proxy utility
   }
 });

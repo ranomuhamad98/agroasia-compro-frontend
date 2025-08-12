@@ -33,12 +33,14 @@
 
 <script setup lang="ts">
 import { watch, ref, onMounted } from "vue";
-import { useCategoriesApi } from "../../../composables/useCategoriesApi";
+import { useCategoriesApi } from "@/composables/useCategoriesApi";
 // import category_data from "@/data/category-data";
 const router = useRouter();
 const route = useRoute();
 const activeCategories = ref<string>("");
 const { categoriesData, error: errorCategories, pending: pendingCategories, hasData: hasCategoriesData, refreshData } = useCategoriesApi();
+
+console.log(categoriesData.value)
 
 // handle category route
 const handleCategoryRoute = (categoryId: string, e: Event) => {

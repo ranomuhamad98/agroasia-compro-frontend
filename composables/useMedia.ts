@@ -43,6 +43,18 @@ export function useMedia() {
       const formData = new FormData();
       formData.append('images', file);
       formData.append('alt', alt);
+      
+      // Debug logging
+      console.log('Uploading file:', {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+        alt: alt
+      });
+      console.log('FormData entries:');
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
 
       const response = await apiClient.post<MediaUploadResponse>('/media/post', {
         body: formData,
@@ -103,6 +115,14 @@ export function useMedia() {
     const formData = new FormData();
     formData.append('images', file);
     formData.append('alt', alt);
+    
+    // Debug logging
+    console.log('Uploading single file:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      alt: alt
+    });
 
     const response = await apiClient.post<MediaUploadResponse>('/media/post', {
       body: formData,
