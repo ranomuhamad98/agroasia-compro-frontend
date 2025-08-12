@@ -2,26 +2,21 @@ import type { MediaItem, MediaUploadRequest, MediaUploadResponse, MediaListRespo
 import { toast } from 'vue3-toastify';
 
 export function useMedia() {
+  const apiClient = useProxyApiClient();
   const mediaItems = ref<MediaItem[]>([]);
   const isLoading = ref(false);
   const isUploading = ref(false);
   const error = ref<string | null>(null);
 
-  /**
-   * Get all media items
-   */
   const getMediaItems = async (params?: MediaQueryParams) => {
     try {
       isLoading.value = true;
       error.value = null;
 
       const queryString = params ? new URLSearchParams(params as Record<string, string>).toString() : '';
-      const url = `/api/media/get${queryString ? '?' + queryString : ''}`;
+      const url = `/media/get${queryString ? '?' + queryString : ''}`;
 
-      const response = await $fetch<MediaListResponse>(url, {
-        method: 'GET',
-        credentials: 'include'
-      });
+      const response = await apiClient.get<MediaListResponse>(url);
 
       if (response.success && response.data) {
         mediaItems.value = response.data;
@@ -39,9 +34,6 @@ export function useMedia() {
     }
   };
 
-  /**
-   * Upload a media file
-   */
   const uploadMedia = async (file: File, alt: string) => {
     try {
       isUploading.value = true;
@@ -52,14 +44,11 @@ export function useMedia() {
       formData.append('images', file);
       formData.append('alt', alt);
 
-      const response = await $fetch<MediaUploadResponse>('/api/media/post', {
-        method: 'POST',
+      const response = await apiClient.post<MediaUploadResponse>('/media/post', {
         body: formData,
-        credentials: 'include'
       });
 
       if (response.success && response.data.media) {
-        // Add the new media item to the list
         mediaItems.value.unshift(...response.data.media);
         
         return response.data.media;
@@ -76,9 +65,6 @@ export function useMedia() {
     }
   };
 
-  /**
-   * Upload multiple media files
-   */
   const uploadMultipleMedia = async (files: { file: File; alt: string }[]) => {
     try {
       isUploading.value = true;
@@ -118,10 +104,8 @@ export function useMedia() {
     formData.append('images', file);
     formData.append('alt', alt);
 
-    const response = await $fetch<MediaUploadResponse>('/api/media/post', {
-      method: 'POST',
+    const response = await apiClient.post<MediaUploadResponse>('/media/post', {
       body: formData,
-      credentials: 'include'
     });
 
     if (response.success && response.data.media) {
@@ -131,28 +115,20 @@ export function useMedia() {
     }
   };
 
-  /**
-   * Clear error state
-   */
   const clearError = () => {
     error.value = null;
   };
 
-  /**
-   * Refresh media list
-   */
   const refreshMedia = async (params?: MediaQueryParams) => {
     return await getMediaItems(params);
   };
 
   return {
-    // State
     mediaItems: readonly(mediaItems),
     isLoading: readonly(isLoading),
     isUploading: readonly(isUploading),
     error: readonly(error),
     
-    // Actions
     getMediaItems,
     uploadMedia,
     uploadMultipleMedia,

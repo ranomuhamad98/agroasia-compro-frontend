@@ -7,22 +7,19 @@ import type {
 import { toast } from 'vue3-toastify'
 
 export function useTestimonialManagement() {
-  const apiClient = useApiClient()
+  const apiClient = useProxyApiClient()
   const testimonials = ref<Testimonial[]>([])
 
-  // Reactive state for loading and error handling
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const successMessage = ref<string | null>(null)
 
-  // Create new testimonial
   const createTestimonial = async (testimonialData: CreateTestimonialRequest): Promise<Testimonial | null> => {
     try {
       isLoading.value = true
       error.value = null
       successMessage.value = null
 
-      // Validate input data
       if (!testimonialData.pic || !testimonialData.name || !testimonialData.profession || !testimonialData.message) {
         const errorMsg = 'All fields are required: pic, name, profession, message'
         toast.error(errorMsg)
@@ -35,11 +32,8 @@ export function useTestimonialManagement() {
         throw new Error(errorMsg)
       }
 
-      // Make API request through proxy with credentials
-      const response = await $fetch<CreateTestimonialResponse>('/api/testimonials', {
-        method: 'POST',
+      const response = await apiClient.post<CreateTestimonialResponse>('/testimonials', {
         body: testimonialData,
-        credentials: 'include' // Include cookies for authentication
       })
 
       if (response.status === 200 || response.status === 201) {
@@ -62,52 +56,12 @@ export function useTestimonialManagement() {
     }
   }
 
-  // Get all testimonials
-  const getTestimonials = async (activeOnly?: boolean): Promise<Testimonial[]> => {
-    try {
-      isLoading.value = true
-      error.value = null
-
-      // Build query parameters
-      const params = new URLSearchParams()
-      if (activeOnly !== undefined) {
-        params.append('active_only', String(activeOnly))
-      }
-
-      const queryString = params.toString()
-      const endpoint = queryString ? `/testimonials?${queryString}` : '/testimonials'
-
-      const response = await $fetch<TestimonialListResponse>(`/api${endpoint}`, {
-        credentials: 'include' // Include cookies for authentication
-      })
-
-      if (response.status === 200 && response.testimonials) {
-        testimonials.value = response.testimonials
-        return testimonials.value
-      } else {
-        const errorMsg = response.message || 'Failed to fetch testimonials'
-        toast.error(errorMsg)
-        throw new Error(errorMsg)
-      }
-    } catch (err: any) {
-      const errorMsg = err.message || 'An error occurred while fetching testimonials'
-      error.value = errorMsg
-      toast.error(errorMsg)
-      return []
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  // Get testimonial by ID
   const getTestimonialById = async (id: string): Promise<Testimonial | null> => {
     try {
       isLoading.value = true
       error.value = null
 
-      const response = await $fetch<CreateTestimonialResponse>(`/api/testimonials/${id}`, {
-        credentials: 'include' // Include cookies for authentication
-      })
+      const response = await apiClient.get<CreateTestimonialResponse>(`/testimonials/${id}`);
 
       if (response.status === 200) {
         return response.testimonial || null
@@ -126,18 +80,15 @@ export function useTestimonialManagement() {
     }
   }
 
-  // Update testimonial
   const updateTestimonial = async (id: string, testimonialData: Partial<CreateTestimonialRequest>): Promise<Testimonial | null> => {
     try {
       isLoading.value = true
       error.value = null
       successMessage.value = null
 
-      const response = await $fetch<CreateTestimonialResponse>(`/api/testimonials/${id}`, {
-        method: 'PUT',
+      const response = await apiClient.put<CreateTestimonialResponse>(`/testimonials/${id}`, {
         body: testimonialData,
-        credentials: 'include' // Include cookies for authentication
-      })
+      });
 
       if (response.status === 200) {
         const successMsg = 'Testimonial updated successfully!'
@@ -159,17 +110,13 @@ export function useTestimonialManagement() {
     }
   }
 
-  // Delete testimonial
   const deleteTestimonial = async (id: string): Promise<boolean> => {
     try {
       isLoading.value = true
       error.value = null
       successMessage.value = null
 
-      const response = await $fetch<{ success: boolean; message: string }>(`/api/testimonials/${id}`, {
-        method: 'DELETE',
-        credentials: 'include' // Include cookies for authentication
-      })
+      const response = await apiClient.delete<{ success: boolean; message: string }>(`/testimonials/${id}`);
 
       if (response.success) {
         const successMsg = 'Testimonial deleted successfully!'
@@ -191,27 +138,22 @@ export function useTestimonialManagement() {
     }
   }
 
-  // Clear messages
   const clearMessages = () => {
     error.value = null
     successMessage.value = null
   }
 
-  // Reset loading state
   const resetLoading = () => {
     isLoading.value = false
   }
 
   return {
-    // State
     isLoading: readonly(isLoading),
     error: readonly(error),
     successMessage: readonly(successMessage),
     testimonials: readonly(testimonials),
 
-    // Actions
     createTestimonial,
-    getTestimonials,
     getTestimonialById,
     updateTestimonial,
     deleteTestimonial,

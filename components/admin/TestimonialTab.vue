@@ -69,15 +69,16 @@ import HeaderLayout from './HeaderLayout.vue';
 import { PlusIcon } from 'lucide-vue-next';
 import TestimonialForm from './TestimonialForm.vue';
 import TestimonialCard from './TestimonialCard.vue';
+import { useTestimonials } from '@/composables/useTestimonials';
 
 const showTestimonialForm = ref(false)
 const selectedTestimonial = ref(null)
 
+const { testimonials, isLoading, error, pending, getTestimonials } = useTestimonials()
+
 const {
-    testimonials,
     testimonialsPending,
     testimonialsError,
-    getTestimonials,
     deleteTestimonial
 } = useTestimonialManagement();
 

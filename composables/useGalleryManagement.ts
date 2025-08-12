@@ -17,7 +17,7 @@ export interface CreateGalleryReturn {
 }
 
 export function useGalleryManagement() {
-  const apiClient = useApiClient();
+  const apiClient = useProxyApiClient();
   
   // Reactive state for loading and error handling
   const isLoading = ref(false);
@@ -33,8 +33,7 @@ export function useGalleryManagement() {
       isLoading.value = true;
       error.value = null;
       
-      const response = await $fetch<CreateGalleryReturn>('/api/about/gallery', {
-        method: 'POST',
+      const response = await apiClient.post<CreateGalleryReturn>('/about/gallery', {
         body: payload,
       });
       
@@ -62,9 +61,7 @@ export function useGalleryManagement() {
       isLoading.value = true;
       error.value = null;
       
-      await $fetch(`/api/about/gallery/${id}`, {
-        method: 'DELETE',
-      });
+      await apiClient.delete<{ success: boolean; data: any; message: string }>(`/about/gallery/${id}`);
       
       // Remove from local list
       galleryList.value = galleryList.value.filter(item => item.id !== id);

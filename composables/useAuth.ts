@@ -1,3 +1,5 @@
+import { toast } from "vue3-toastify";
+
 interface LoginCredentials {
   email: string;
   password: string;
@@ -20,7 +22,7 @@ interface AuthResponse {
 }
 
 export function useAuth() {
-  // State untuk user dan loading
+  const apiClient = useProxyApiClient();
   const user = ref<AuthUser | null>(null);
   const isLoggedIn = computed(() => !!user.value);
   const isLoading = ref(false);
@@ -32,18 +34,13 @@ export function useAuth() {
   const login = async (credentials: LoginCredentials) => {
     try {
       isLoading.value = true;
-      console.log('🔐 Attempting login...');
       
-      const response = await $fetch<AuthResponse>('/api/auth/login', {
-        method: 'POST',
+      const response = await apiClient.post<AuthResponse>('/auth/login', {
         body: credentials,
-        // Pastikan cookies dikirim
-        credentials: 'include'
       });
       
       if (response.success && response.data) {
         user.value = response.data.user;
-        console.log('✅ Login successful:', response.data);
         
         // Redirect atau update state sesuai kebutuhan
         await navigateTo('/dashboard');
@@ -54,7 +51,13 @@ export function useAuth() {
       throw new Error(response.message || 'Login failed');
       
     } catch (error: any) {
-      console.error('❌ Login error:', error);
+      toast.error('Login failed', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
       user.value = null;
       
       // Handle specific error cases
@@ -78,25 +81,26 @@ export function useAuth() {
   const logout = async () => {
     try {
       isLoading.value = true;
-      console.log('🚪 Logging out...');
       
       // Call logout endpoint jika ada
-      await $fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
+      await apiClient.post('/auth/logout', {
       }).catch(() => {
         // Ignore error jika endpoint belum ada
-        console.log('Logout endpoint not available, clearing local state');
       });
       
       // Clear local state
       user.value = null;
-      console.log('✅ Logout successful');
       
       // No redirect - let the component handle the UI state change
       
     } catch (error) {
-      console.error('❌ Logout error:', error);
+      toast.error('Logout failed', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
       // Clear state even if API call fails
       user.value = null;
     } finally {
@@ -109,15 +113,12 @@ export function useAuth() {
    */
   const checkAuth = async () => {
     try {
-      console.log('👤 Checking authentication status...');
       
-      const response = await $fetch<AuthResponse>('/api/auth/me', {
-        credentials: 'include'
+      const response = await apiClient.get<AuthResponse>('/auth/me', {
       });
       
       if (response.success && response.data) {
         user.value = response.data.user;
-        console.log('✅ User is authenticated:', response.data);
         return true;
       }
       
@@ -125,7 +126,13 @@ export function useAuth() {
       return false;
       
     } catch (error: any) {
-      console.log('ℹ️ User not authenticated');
+      toast.error('Check auth failed', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
       user.value = null;
       return false;
     } finally {

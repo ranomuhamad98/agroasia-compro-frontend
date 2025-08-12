@@ -31,22 +31,17 @@ interface SliderResponse {
 }
 
 export function useSlider() {
+  const apiClient = useProxyApiClient();
   const sliders = ref<Slider[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  /**
-   * Get all sliders
-   */
   const getSliders = async () => {
     try {
       isLoading.value = true;
       error.value = null;
 
-      const response = await $fetch<SliderResponse>('/api/slider/get', {
-        method: 'GET',
-        credentials: 'include'
-      });
+      const response = await apiClient.get<SliderResponse>('/slider/get');
 
       if (response.success && response.data.sliders) {
         sliders.value = response.data.sliders;
@@ -65,22 +60,16 @@ export function useSlider() {
     }
   };
 
-  /**
-   * Create new slider
-   */
   const createSlider = async (sliderData: SliderData) => {
     try {
       isLoading.value = true;
       error.value = null;
 
-      const response = await $fetch<SliderResponse>('/api/slider/post', {
-        method: 'POST',
+      const response = await apiClient.post<SliderResponse>('/slider/post', {
         body: sliderData,
-        credentials: 'include'
       });
 
       if (response.success) {
-        // Refresh sliders list
         await getSliders();
         toast.success('Slider created successfully!');
         return response.data;
@@ -91,7 +80,6 @@ export function useSlider() {
     } catch (error: any) {
       let errorMessage = error.data?.message || error.message || 'Failed to create slider';
       
-      // Handle specific error cases
       if (error.statusCode === 401) {
         errorMessage = 'Authentication required to create slider';
       } else if (error.statusCode === 422) {
@@ -106,22 +94,16 @@ export function useSlider() {
     }
   };
 
-  /**
-   * Update existing slider
-   */
   const updateSlider = async (id: string, sliderData: SliderData) => {
     try {
       isLoading.value = true;
       error.value = null;
 
-      const response = await $fetch<SliderResponse>(`/api/sliders/${id}`, {
-        method: 'PUT',
+      const response = await apiClient.put<SliderResponse>(`/slider/${id}`, {
         body: sliderData,
-        credentials: 'include'
       });
 
       if (response.success) {
-        // Refresh sliders list
         await getSliders();
         toast.success('Slider updated successfully!');
         return response.data;
@@ -132,7 +114,6 @@ export function useSlider() {
     } catch (error: any) {
       let errorMessage = error.data?.message || error.message || 'Failed to update slider';
       
-      // Handle specific error cases
       if (error.statusCode === 401) {
         errorMessage = 'Authentication required to update slider';
       } else if (error.statusCode === 404) {
@@ -149,21 +130,15 @@ export function useSlider() {
     }
   };
 
-  /**
-   * Delete slider
-   */
   const deleteSlider = async (id: string) => {
     try {
       isLoading.value = true;
       error.value = null;
 
-      const response = await $fetch<SliderResponse>(`/api/sliders/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
+      const response = await apiClient.delete<SliderResponse>(`/slider/${id}`, {
       });
 
       if (response.success) {
-        // Refresh sliders list
         await getSliders();
         toast.success('Slider deleted successfully!');
         return response.data;
@@ -174,7 +149,6 @@ export function useSlider() {
     } catch (error: any) {
       let errorMessage = error.data?.message || error.message || 'Failed to delete slider';
       
-      // Handle specific error cases
       if (error.statusCode === 401) {
         errorMessage = 'Authentication required to delete slider';
       } else if (error.statusCode === 404) {
@@ -189,20 +163,15 @@ export function useSlider() {
     }
   };
 
-  /**
-   * Refresh sliders data
-   */
   const refreshSliders = async () => {
     return await getSliders();
   };
 
   return {
-    // State
     sliders: readonly(sliders),
     isLoading: readonly(isLoading),
     error: readonly(error),
     
-    // Methods
     getSliders,
     createSlider,
     updateSlider,

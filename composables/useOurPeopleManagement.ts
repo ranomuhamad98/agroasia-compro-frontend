@@ -6,7 +6,7 @@ import type {
 } from '@/types/about-api-type';
 
 export function useOurPeopleManagement() {
-  const apiClient = useApiClient();
+  const apiClient = useProxyApiClient();
   
   // Reactive state for loading and error handling
   const isLoading = ref(false);
@@ -22,8 +22,7 @@ export function useOurPeopleManagement() {
       isLoading.value = true;
       error.value = null;
       
-      const response = await $fetch('/api/about/ourpeople', {
-        method: 'POST',
+      const response = await apiClient.post<CreateOurPeopleReturn>('/about/ourpeople', {
         body: payload,
       });
       
@@ -51,7 +50,7 @@ export function useOurPeopleManagement() {
       isLoading.value = true;
       error.value = null;
       
-      const response = await $fetch<{ data: OurPeopleData[] }>('/api/about/ourpeople');
+      const response = await apiClient.get<{ data: OurPeopleData[] }>('/about/ourpeople');
       
       if (response.data) {
         ourPeopleList.value = response.data;
@@ -76,7 +75,7 @@ export function useOurPeopleManagement() {
       isLoading.value = true;
       error.value = null;
       
-      const response = await $fetch<{ data: OurPeopleData }>(`/api/about/ourpeople/${id}`);
+      const response = await apiClient.get<{ data: OurPeopleData }>(`/about/ourpeople/${id}`);
       
       if (response.data) {
         selectedPerson.value = response.data;
@@ -101,8 +100,7 @@ export function useOurPeopleManagement() {
       isLoading.value = true;
       error.value = null;
       
-      const response = await $fetch(`/api/about/ourpeople/${id}`, {
-        method: 'PUT',
+      const response = await apiClient.put<{ data: OurPeopleData }>(`/about/ourpeople/${id}`, {
         body: payload,
       });
       
@@ -138,9 +136,7 @@ export function useOurPeopleManagement() {
       isLoading.value = true;
       error.value = null;
       
-      await $fetch(`/api/about/ourpeople/${id}`, {
-        method: 'DELETE',
-      });
+      await apiClient.delete<{ data: OurPeopleData }>(`/about/ourpeople/${id}`);
       
       // Remove from local list
       ourPeopleList.value = ourPeopleList.value.filter(person => person.id !== id);
@@ -167,12 +163,10 @@ export function useOurPeopleManagement() {
     try {
       await updateOurPeople(id, { status: !currentStatus });
     } catch (error) {
-      // Error handling is done in updateOurPeople
       throw error;
     }
   };
 
-  // Search and filter functions
   const searchOurPeople = (query: string): OurPeopleData[] => {
     if (!query.trim()) return ourPeopleList.value;
     
@@ -198,18 +192,15 @@ export function useOurPeopleManagement() {
     );
   };
 
-  // Computed properties
   const activePeople = computed(() => filterByStatus(true));
   const inactivePeople = computed(() => filterByStatus(false));
   const totalCount = computed(() => ourPeopleList.value.length);
   const activeCount = computed(() => activePeople.value.length);
 
-  // Clear error
   const clearError = () => {
     error.value = null;
   };
 
-  // Reset state
   const resetState = () => {
     ourPeopleList.value = [];
     selectedPerson.value = null;
@@ -218,32 +209,28 @@ export function useOurPeopleManagement() {
   };
 
   return {
-    // State
+
     ourPeopleList: readonly(ourPeopleList),
     selectedPerson: readonly(selectedPerson),
     isLoading: readonly(isLoading),
     error: readonly(error),
     
-    // Computed
     activePeople: readonly(activePeople),
     inactivePeople: readonly(inactivePeople),
     totalCount: readonly(totalCount),
     activeCount: readonly(activeCount),
     
-    // CRUD Operations
     createOurPeople,
     fetchOurPeople,
     fetchOurPeopleById,
     updateOurPeople,
     deleteOurPeople,
     
-    // Utility Operations
     toggleStatus,
     searchOurPeople,
     filterByStatus,
     filterByLocation,
     
-    // State Management
     clearError,
     resetState,
   };

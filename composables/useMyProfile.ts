@@ -2,7 +2,7 @@ import type { ProfileResponse, ProfileError } from '@/types/profile-api-type';
 import { toast } from 'vue3-toastify';
 
 export function useMyProfile() {
-    const apiClient = useApiClient();
+    const apiClient = useProxyApiClient();
     
     const isLoading = ref(false);
     const error = ref<string | null>(null);
@@ -14,10 +14,7 @@ export function useMyProfile() {
             isLoading.value = true;
             error.value = null;
 
-            // Use proxy endpoint instead of direct API call
-            const response = await $fetch<ProfileResponse>('/api/auth/me', {
-                credentials: 'include' // Include cookies for session-based auth
-            });
+            const response = await apiClient.get<ProfileResponse>('/auth/me');
 
             // Validate response structure
             if (!response || typeof response !== 'object') {
@@ -28,14 +25,12 @@ export function useMyProfile() {
                 throw new Error(response.message || 'Failed to fetch profile');
             }
 
-            // Store profile data
             if (response.data?.user) {
                 profile.value = response.data.user;
             }
 
             return response;
         } catch (err: any) {
-            // Handle specific error messages from the API
             let errorMessage = 'Failed to fetch profile. Please try again.';
             
             if (err.data?.message) {
@@ -47,7 +42,6 @@ export function useMyProfile() {
             error.value = errorMessage;
             toast.error(errorMessage);
             
-            // Clear profile data on error
             profile.value = null;
             
             return null;
@@ -56,22 +50,18 @@ export function useMyProfile() {
         }
     };
 
-    // Refresh profile data
     const refreshProfile = async () => {
         return await fetchProfile();
     };
 
-    // Check if profile is loaded
     const hasProfile = computed(() => !!profile.value);
 
     return {
-        // State
         isLoading: readonly(isLoading),
         error: readonly(error),
         profile: readonly(profile),
         hasProfile,
         
-        // Methods
         fetchProfile,
         refreshProfile
     };
