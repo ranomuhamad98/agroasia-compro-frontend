@@ -9,8 +9,8 @@ export function useMilestoneManagement() {
     const successMessage = ref<string | null>(null);
     const milestones = ref<Milestone[]>([]);
 
-    const getMilestones = async (): Promise<MilestoneListResponse> => {
-        const response = await apiClient.get<MilestoneListResponse>('/about/milestone');
+    const getMilestones = async (active_only: boolean = false): Promise<MilestoneListResponse> => {
+        const response = await apiClient.get<MilestoneListResponse>(`/about/milestone?active_only=${active_only}`);
         milestones.value = response.milestones;
         return response;
     }

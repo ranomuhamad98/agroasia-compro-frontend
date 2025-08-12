@@ -148,7 +148,7 @@
                     <label class="flex items-center">
                         <input v-model="form.status" type="checkbox"
                             class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                        <span class="ml-2 text-sm text-gray-700">Status Aktif</span>
+                        <span class="ml-2 text-sm text-gray-700">Active Milestone</span>
                     </label>
                 </div>
 

@@ -1,7 +1,13 @@
 <template>
     <div class="card">
         <div class="card-header flex justify-between items-center">
-            <h3 class="text-green-800 font-semibold text-xl mb-0 mx-2">List of Milestone</h3>
+            <div class="flex items-center gap-4">
+                <h3 class="text-green-800 font-semibold text-xl mb-0 mx-2">List of Milestone</h3>
+                <select v-model="milestoneStatus" class="border border-green-200 rounded-md p-2">
+                    <option value="">All</option>
+                    <option value="active">Active Only</option>
+                </select>
+            </div>
             <div class="flex items-center gap-4">
                 <button class="btn-ghost text-green-600 flex items-center gap-2" @click="handleRefresh">
                     <RefreshCcw class="w-4 h-4" />
@@ -40,6 +46,7 @@ import MilestoneForm from './MilestoneForm.vue';
 
 const showMilestoneForm = ref<boolean>(false);
 const selectedMilestone = ref<Milestone | null>(null);
+const milestoneStatus = ref<string>('');
 
 const {
     milestones,
@@ -49,11 +56,15 @@ const {
 } = useMilestoneManagement();
 
 onMounted(() => {
-    getMilestones();
+    getMilestones(milestoneStatus.value === 'active');
+});
+
+watch(milestoneStatus, () => {
+    getMilestones(milestoneStatus.value === 'active');
 });
 
 const handleRefresh = () => {
-    getMilestones();
+    getMilestones(milestoneStatus.value === 'active');
 }
 
 const handleDelete = (milestone: Milestone) => {

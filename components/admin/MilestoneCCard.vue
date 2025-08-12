@@ -2,14 +2,19 @@
     <div class="card mt-0">
         <div class="card-header p-4 pb-0 border-b border-green-100">
             <div>
-                <div class="flex space-x-1 mb-4 justify-end">
-                    <button :disabled="loading" @click="onEdit" class="btn-secondary p-2 disabled:opacity-50">
-                        <Edit class="w-4 h-4" />
-                    </button>
-                    <button :disabled="loading" @click="onDelete"
-                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors">
-                        <Trash2 class="w-4 h-4" />
-                    </button>
+                <div class="flex space-x-1 mb-4 items-center justify-between">
+                    <p :class="{'text-xs px-2 py-1 rounded-md mb-0': true, 'text-green-600 bg-green-100': data.status, 'text-red-600 bg-red-100': !data.status}">
+                        {{ data.status ? 'Active' : 'Inactive' }}
+                    </p>
+                    <div class="flex space-x-1 items-center">
+                        <button :disabled="loading" @click="onEdit" class="btn-secondary p-2 disabled:opacity-50">
+                            <Edit class="w-4 h-4" />
+                        </button>
+                        <button :disabled="loading" @click="onDelete"
+                            class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors">
+                            <Trash2 class="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
                 <div class="flex flex-col">
                     <h3 class="text-green-800 font-semibold text-xl mb-0">{{ data.title }}</h3>
