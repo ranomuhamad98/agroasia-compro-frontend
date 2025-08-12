@@ -356,6 +356,10 @@
             </div>
 
             <div class="space-y-6">
+
+              <!-- Milestone Section -->
+              <MilestoneDashboard />
+
               <!-- Video Section -->
               <div class="card">
                 <div class="card-header">
@@ -455,6 +459,7 @@ import TestimonialTab from '@/components/admin/TestimonialTab.vue'
 import OurPeopleDashboard from '@/components/admin/OurPeopleDashboard.vue'
 import GalleryDashboard from '@/components/admin/GalleryDashboard.vue'
 import CategoryTab from '@/components/admin/CategoryTab.vue'
+import MilestoneDashboard from '@/components/admin/MilestoneDashboard.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',
