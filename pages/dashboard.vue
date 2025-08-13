@@ -178,56 +178,6 @@
 
           <!-- Products Tab -->
           <ProductTab v-if="adminStore.activeTab === 'products'" />
-          <!-- <div v-if="adminStore.activeTab === 'products'">
-            <div class="flex justify-between items-center mb-6">
-              <div>
-                <h2 class="page-title">Product Management</h2>
-                <p class="page-subtitle">
-                  Manage your products. Top products ({{ adminStore.topProductsCount }}/4) will be displayed on the home
-                  page.
-                </p>
-              </div>
-              <button @click="openProductDialog()" class="btn-primary flex items-center gap-2">
-                <PlusIcon class="w-4 h-4" />
-                Add Product
-              </button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div v-for="product in adminStore.products" :key="product.id" class="card">
-                <div class="p-4 border-b border-green-100">
-                  <div class="flex justify-between items-start">
-                    <div class="flex items-center gap-2">
-                      <h3 class="text-lg font-semibold text-green-800">{{ product.name }}</h3>
-                      <span v-if="product.isTop"
-                        class="text-xs bg-green-100 text-green-700 border border-green-300 px-2 py-1 rounded-full flex items-center gap-1">
-                        <StarIcon class="w-3 h-3" />
-                        Top
-                      </span>
-                    </div>
-                    <div class="flex space-x-1">
-                      <button @click="openProductDialog(product)" class="btn-secondary p-2">
-                        <EditIcon class="w-4 h-4" />
-                      </button>
-                      <button @click="adminStore.deleteProduct(product.id)"
-                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors">
-                        <Trash2Icon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="p-4">
-                  <img :src="product.image || '/placeholder.svg?height=200&width=200'" :alt="product.name"
-                    class="w-full h-32 object-cover rounded-md mb-3 border border-green-200" />
-                  <span class="border border-green-300 text-green-700 text-xs px-2 py-1 rounded-full">
-                    {{ product.category }}
-                  </span>
-                  <p class="text-sm text-green-600 mt-2 mb-2">{{ product.description }}</p>
-                  <p v-if="product.additionalInfo" class="text-xs text-green-500">{{ product.additionalInfo }}</p>
-                </div>
-              </div>
-            </div>
-          </div> -->
 
           <!-- Categories Tab -->
           <CategoryTab v-if="adminStore.activeTab === 'categories'" />
@@ -396,7 +346,10 @@
 
           <!-- Form Submissions Tab -->
            <FormSubmissionTab v-if="adminStore.activeTab === 'forms'" />
-          
+
+          <!-- FAQ Tab -->
+          <FAQTab v-if="adminStore.activeTab === 'faq'" />
+
         </div>
       </main>
     </div>
@@ -439,7 +392,8 @@ import {
   AlertCircleIcon,
   ImageIcon,
   LinkIcon,
-  FolderIcon
+  FolderIcon,
+  HelpCircleIcon
 } from 'lucide-vue-next'
 import { useAdminStore } from '@/stores/admin.js'
 import { useFileUpload } from '@/composables/useFileUpload.js'
@@ -459,6 +413,7 @@ import GalleryDashboard from '@/components/admin/GalleryDashboard.vue'
 import CategoryTab from '@/components/admin/CategoryTab.vue'
 import MilestoneDashboard from '@/components/admin/MilestoneDashboard.vue'
 import FormSubmissionTab from '@/components/admin/FormSubmissionTab.vue'
+import FAQTab from '@/components/admin/FAQTab.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',
@@ -580,7 +535,8 @@ const tabs = [
   { id: 'home', label: 'Home', icon: HomeIcon },
   { id: 'testimonials', label: 'Testimonials', icon: MessageSquareIcon },
   { id: 'about', label: 'About Us', icon: InfoIcon },
-  { id: 'forms', label: 'Form Submissions', icon: ClipboardListIcon }
+  { id: 'forms', label: 'Form Submissions', icon: ClipboardListIcon },
+  { id: 'faq', label: 'FAQ', icon: HelpCircleIcon },
 ]
 
 // Product dialog

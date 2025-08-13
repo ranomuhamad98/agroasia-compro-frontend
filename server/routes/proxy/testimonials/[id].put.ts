@@ -23,11 +23,11 @@ export default defineEventHandler(async (event): Promise<CreateTestimonialRespon
       method: 'PUT',
       body,
       requireAuth: true // Require authentication for updating testimonials
-    })
+    }) as CreateTestimonialResponse
 
     console.log('✅ Testimonial updated successfully:', response)
 
-    return response
+    return response as CreateTestimonialResponse
   } catch (error: any) {
     console.error('❌ Error updating testimonial:', error)
     
