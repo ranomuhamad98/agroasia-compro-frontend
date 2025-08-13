@@ -77,6 +77,7 @@ const {
   faq, 
   slider,
   header,
+  footer,
   isLoading, 
   isPending, 
   error, 
@@ -84,13 +85,43 @@ const {
   refresh 
 } = useHomeApi();
 
+const {
+  footerData,
+  headerData,
+  updateFooterData,
+  updateHeaderData
+} = useLayoutStore()
+
+watch(header, (newHeader, oldHeader) => {
+  if (newHeader !== oldHeader) {
+    console.log('Header changed:', newHeader)
+    updateHeaderData(newHeader)
+  }
+}, {
+  immediate: true
+})
+
+watch(footer, (newFooter, oldFooter) => {
+  if (newFooter !== oldFooter) {
+    updateFooterData(newFooter)
+  }
+}, {
+  immediate: true
+})
+
 // Debug current state on mount
 onMounted(() => {
-  
   // Force refresh if no data after mount
   nextTick(() => {
     if (!hasData.value && !isPending.value && !error.value) {
       refresh();
+    } else {
+      if (footer.value) {
+        updateFooterData(footer.value)
+      }
+      if (header.value) {
+        updateHeaderData(header.value)
+      }
     }
   });
 });

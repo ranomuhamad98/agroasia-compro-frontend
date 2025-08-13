@@ -7,7 +7,7 @@
                     A highly efficient slip-ring scanner for today's diagnostic requirements.</p>
             </div>
             <div class="pk-content">
-                <div v-for="(petani, index) in petanis" :key="petani.name" class="pk-content__items">
+                <div v-for="(petani, index) in ourPeople" :key="petani.name" class="pk-content__items">
                     <div class="pk-content-item__image">
                         <svg v-if="index === 1" width="280" height="280" viewBox="0 0 337 324" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -24,14 +24,14 @@
                                 d="M312.401 160.783C312.088 158.492 311.897 156.185 311.829 153.872C311.738 151.904 311.847 151.233 312.165 154.809C312.326 156.944 312.172 156.966 312.401 160.783Z"
                                 fill="#80B500" />
                         </svg>
-                        <img :src="petani.image" alt="Petani Kami">
+                        <img :src="petani.image_link" alt="Petani Kami">
                     </div>
                     <div class="pk-content-item__content">
                         <h3 class="pk-content-item__title">{{ petani.name }}</h3>
                         <p class="pk-content-item__description">
-                            {{ petani.work }}
+                            {{ petani.title }}
                         </p>
-                        <div class="pk-content__item-social">
+                        <!-- <div class="pk-content__item-social">
                             <a :href="petani.social.instagram" target="_blank" class="pk-content__item-social-item">
                                 <i class="fa-brands fa-instagram"></i>
                             </a>
@@ -41,7 +41,7 @@
                             <a :href="petani.social.twitter" target="_blank">
                                 <i class="fa-brands fa-twitter"></i>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -49,43 +49,11 @@
     </div>
 </template>
 <script setup lang="ts">
+import type { OurPeopleData } from '@/types/about-api-type';
 
 const props = defineProps<{
-    ourPeople: readonly any[]
+    ourPeople: readonly OurPeopleData[]
 }>()
-
-const petanis = [
-    {
-        name: 'Pak Slamet',
-        work: 'Petani Kopi',
-        image: 'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?q=80&w=1000&auto=format&fit=crop',
-        social: {
-            instagram: 'https://www.instagram.com/pakslamet',
-            facebook: 'https://www.facebook.com/pakslamet',
-            twitter: 'https://www.twitter.com/pakslamet',
-        }
-    },
-    {
-        name: 'Bu Yanti',
-        work: 'Petani Sayur',
-        image: 'https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?q=80&w=1000&auto=format&fit=crop',
-        social: {
-            instagram: 'https://www.instagram.com/buyanti',
-            facebook: 'https://www.facebook.com/buyanti',
-            twitter: 'https://www.twitter.com/buyanti',
-        }
-    },
-    {
-        name: 'Pak Bambang',
-        work: 'Petani Padi',
-        image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1000&auto=format&fit=crop',
-        social: {
-            instagram: 'https://www.instagram.com/pakbambang',
-            facebook: 'https://www.facebook.com/pakbambang',
-            twitter: 'https://www.twitter.com/pakbambang',
-        }
-    }
-]
 </script>
 
 <style lang="scss" scoped>
@@ -175,6 +143,7 @@ const petanis = [
     gap: .5rem;
     transition: all .8s ease-in-out;
     margin-top: .5rem;
+
     a {
         background-color: rgba(128, 181, 0, .18);
         font-size: 1rem;

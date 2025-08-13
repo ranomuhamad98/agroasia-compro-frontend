@@ -1,4 +1,5 @@
 <template>
+    <p>{{ JSON.stringify(props.testimonials) }}</p>
     <div v-if="props.testimonials.length > 0" class="tp-home-testimoni">
         <div class="container">
             <div class="title">
@@ -9,12 +10,12 @@
                 <div ref="sliderRef" class="keen-slider">
                     <div v-for="item in props.testimonials" :key="item.name" class="keen-slider__slide content__item">
                         <div class="item__header">
-                            <nuxt-img class="image" :src="item.avatar" :alt="item.name" width="70" height="70" />
+                            <nuxt-img class="image" :src="item.pic" :alt="item.name" width="70" height="70" />
                         </div>
                         <div class="item__content">
                             <p class="item__name">{{ item.name }}</p>
-                            <p class="item__role">{{ item.role }}</p>
-                            <p class="item__description">{{ item.description }}</p>
+                            <p class="item__role">{{ item.profession }}</p>
+                            <p class="item__description">{{ item.message }}</p>
                         </div>
                     </div>
                 </div>

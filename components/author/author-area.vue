@@ -1,5 +1,5 @@
 <template>
-   <section class="tp-author-area pb-120">
+   <!-- <section class="tp-author-area pb-120">
       <div class="container">
         <div class="tp-author-inner p-relative z-index-1 tp-author-bg-overlay fix" style="background-color:#821F40">
           <!-- shape -->
@@ -42,7 +42,7 @@
           </div>
         </div>
       </div>
-  </section>
+  </section> -->
 </template>
 
 <script setup lang="ts">

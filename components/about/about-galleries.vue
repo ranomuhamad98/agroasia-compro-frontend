@@ -7,8 +7,8 @@
             </div>
             <div class="gallery-content">
                 <div ref="container" class="gallery-slider keen-slider">
-                    <div v-for="image in images" :key="image.img" class="gallery-item keen-slider__slide">
-                        <img :src="image.img" :alt="image.alt" />
+                    <div v-for="image in props.gallery" :key="image.image_link" class="gallery-item keen-slider__slide" @click="selectedImage = image">
+                        <img :src="image.image_link" :alt="image.alt" />
                     </div>
                 </div>
                 <button class="gallery-nav prev" @click="slider?.prev()">
@@ -20,14 +20,30 @@
             </div>
         </div>
     </div>
+    <div v-if="selectedImage" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-[99]">
+        <div class="max-w-screen-lg mx-auto">
+            <div class="flex justify-end p-4">
+                <button class="text-white text-2xl" @click="selectedImage = null">
+                    <X class="w-6 h-6" />
+                </button>
+            </div>
+            <img :src="selectedImage.image_link" :alt="selectedImage.alt" class="w-full h-full object-contain" />
+            <p>{{ selectedImage.alt }}</p>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
+import type { Gallery } from '@/types/about-api-type';
 import { useKeenSlider } from 'keen-slider/vue';
+import type { DeepReadonly } from 'vue';
+import { X } from 'lucide-vue-next';
 
 const props = defineProps<{
-    gallery: readonly any[]
+    gallery: DeepReadonly<Gallery[]>
 }>()
+
+const selectedImage = ref<Gallery | null>(null)
 
 const [container, slider] = useKeenSlider({
     slides: {

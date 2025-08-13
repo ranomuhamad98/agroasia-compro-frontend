@@ -2,37 +2,34 @@
   <footer>
     <div class="container">
       <div class="about-us">
-        <p class="title">Summarize.</p>
-        <p class="description">orporate clients and leisure travelers has been relying on Groundlink for dependable
-          safe, and professional
-          chauffeured car service in major cities across World. Indeed it has been more than one decade and five years
-          that Groundlink</p>
+        <p class="title capitalize font-bold">{{ footer?.about_us }}</p>
+        <p class="description">{{ footer?.about_us_text }}</p>
         <div class="socials">
-          <a href="https://www.facebook.com/profile.php?id=100093111111111" target="_blank" rel="noopener noreferrer">
+          <a :href="footer?.sosmed_facebook" target="_blank" rel="noopener noreferrer">
             <Icon name="fa:facebook" />
           </a>
-          <a href="https://www.twitter.com/profile.php?id=100093111111111" target="_blank" rel="noopener noreferrer">
+          <a :href="footer?.sosmed_twitter" target="_blank" rel="noopener noreferrer">
             <Icon name="mdi:twitter" />
           </a>
-          <a href="https://vimeo.com/profile.php?id=100093111111111" target="_blank" rel="noopener noreferrer">
-            <Icon name="entypo-social:vimeo" />
+          <a :href="footer?.sosmed_youtube" target="_blank" rel="noopener noreferrer">
+            <Icon name="icon-park-outline:youtube" />
           </a>
-          <a href="https://www.linkedin.com/profile.php?id=100093111111111" target="_blank" rel="noopener noreferrer">
-            <Icon name="streamline-logos:path-logo-solid" />
+          <a :href="footer?.sosmed_linkedin" target="_blank" rel="noopener noreferrer">
+            <Linkedin class="size-4" />
           </a>
         </div>
       </div>
       <div class="contact">
-        <h2>PT Agro Asia Berdikari</h2>
-        <a href="mailto:agroasia119@gmail.com" class="contact__mail">agroasia119@gmail.com</a>
+        <h2>{{ footer?.pt_name }}</h2>
+        <a :href="`mailto:${footer?.email}`" class="contact__mail">{{ footer?.email }}</a>
         <p class="contact__phone">
-          <a href="https://wa.me/+628127733166" class="contact__phone-item" target="_blank" rel="noopener noreferrer">+62 812 773 3166</a> | <a href="https://wa.me/+622174634590" class="contact__phone-item" target="_blank" rel="noopener noreferrer">+62 21 74634590</a>
+          <a :href="`https://wa.me/${footer?.whatsapp_number}?text=${footer?.whatsapp_prerequisite_text}`" class="contact__phone-item" target="_blank" rel="noopener noreferrer">{{ footer?.whatsapp_number }}</a>
         </p>
         <div class="contact-address">
           <Icon name="mdi:map-marker-outline" class="contact-address-icon" />
-          <span>Jl Palapa perum serua barokah Blok D12 serua Tangerang selatan 15414</span>
+          <span>{{ footer?.address }}</span>
         </div>
-        <a class="wa-button" href="https://wa.me/628127733166" target="_blank" rel="noopener noreferrer">
+        <a class="wa-button" :href="`https://wa.me/${footer?.whatsapp_number}?text=${footer?.whatsapp_prerequisite_text}`" target="_blank" rel="noopener noreferrer">
           <Icon name="mdi:whatsapp" class="wa-button-title" />
           <p class="wa-button-item wa-button__text">Hubungi Kami</p>
         </a>
@@ -44,13 +41,20 @@
       <nuxt-img src="/images/footer/daun-lengkap.png" alt="decoration" class="decoration-4" width="100" />
     </div>
     <div class="copyright">
-      <p>© Agro Asia Berdikari 2025 All rights reserved.</p>
+      <p>© {{ footer?.pt_name }} {{ new Date().getFullYear() }} All rights reserved.</p>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
+import { Linkedin } from 'lucide-vue-next';
+import { useHomeApi } from '@/composables/useHomeApi';
 defineProps<{ bg_clr?: boolean }>();
+
+const {
+  footer
+} = useHomeApi()
+
 </script>
 
 <style lang="scss" scoped>

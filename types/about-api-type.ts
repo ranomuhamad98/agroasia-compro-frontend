@@ -63,13 +63,18 @@ export interface CreateOurPeopleReturn {
   data: OurPeopleData;
 }
 
+export interface Gallery {
+  image_link: string;
+  alt: string;
+}
+
 export interface AboutApiData {
   jumbotron: AboutJumbotron;
   milestones: AboutMilestone[];
   video: AboutVideo;
   our_people: OurPeopleData[];
   our_value: AboutValueSection;
-  gallery: any[];
+  gallery: Gallery[];
   header: GlobalApiHeader;
   footer: GlobalApiFooter;
 }

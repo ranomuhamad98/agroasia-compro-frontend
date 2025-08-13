@@ -107,6 +107,7 @@
         .keen-slider__slide {
             background-size: cover;
             background-position: center;
+            background-color: var(--tp-green-old);
             height: 90vh;
             display: flex;
             align-items: center;
@@ -453,6 +454,7 @@
             .container__right {
                 padding: 3rem 0;
                 min-width: 50%;
+                max-width: 60%;
 
                 .title {
                     margin-bottom: 3rem;
@@ -636,6 +638,7 @@
                                 border-radius: 50%;
                                 object-fit: cover;
                                 box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+                                margin: 0 auto;
                             }
                         }
 

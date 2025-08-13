@@ -72,6 +72,23 @@ export interface Footer {
   sosmed_youtube: string;
 }
 
+export interface Slider {
+  title: string;
+  sub_title: string;
+  image: string;
+  button_title: string;
+  button_link: string;
+  position: number;
+  id: string;
+}
+
+export interface Testimonial {
+  pic: string;
+  name: string;
+  profession: string;
+  message: string;
+}
+
 export interface HomeApiResponse {
   status: number;
   message: string;
@@ -82,7 +99,7 @@ export interface HomeApiResponse {
   top_product_section: TopProductSection;
   program: Program;
   featured: Featured[];
-  testimonials: any[];
+  testimonials: Testimonial[];
   faq: FAQ[];
   header: GlobalApiHeader;
   footer: GlobalApiFooter;

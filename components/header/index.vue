@@ -6,17 +6,17 @@
           <div class="d-flex align-items-center gap-lg-4 gap-2 flex-row flex-wrap">
             <div class="d-flex align-items-center gap-2">
               <Icon name="material-symbols:location-on-outline" style="color: var(--tp-green-light);" />
-              <span class="tp-header-top-text">Tangerang Selatan</span>
+              <span class="tp-header-top-text">{{ header?.city }}</span>
             </div>
             <div class="d-flex align-items-center gap-2 border-start border-start ps-lg-4 ps-2 pe-lg-4 pe-2">
               <Icon name="material-symbols:mail-outline-rounded" style="color: var(--tp-green-light);" />
               <span class="tp-header-top-text">
-                <a href="mailto:agroasia119@gmail.com" class="tp-header-top-text-link text-white">agroasia119@gmail.com</a>
+                <a :href="`mailto:${header?.email}`" class="tp-header-top-text-link text-white">{{ header?.email }}</a>
               </span>
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <div class="offcanvas__lang d-flex align-items-center">
+            <div v-if="header?.option_language_active" class="offcanvas__lang d-flex align-items-center">
               <div class="offcanvas__lang-wrapper">
                 <div @click="handleToggleLanguage" class="tp-header-language-selector" style="cursor: pointer">
                   <Icon name="ph:globe-bold" />
@@ -83,10 +83,14 @@
 import { useCartStore } from '@/pinia/useCartStore';
 import { useWishlistStore } from '@/pinia/useWishlistStore';
 import { useUtilityStore } from '@/pinia/useUtilityStore';
+import { useHomeApi } from '@/composables/useHomeApi';
 
 const { isSticky } = useSticky();
 const router = useRouter();
 const route = useRoute();
+const {
+  header
+} = useHomeApi()
 
 const isLanguageOpen = ref(false);
 const selectedLanguage = ref('English');

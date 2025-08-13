@@ -3,13 +3,12 @@
         <!-- Show slider only when slides exist -->
         <div v-if="props.slides && props.slides.length > 0" ref="sliderRef" class="keen-slider">
             <div v-for="(slide, index) in props.slides" :key="index" class="keen-slider__slide"
-                :style="{ backgroundImage: `url(${slide.image})` }">
+                :style="{ backgroundImage: `url(${getImageUrl(slide.image)})` }">
                 <div class="slide-content">
-                    <p>{{ slide.description }}</p>
-                    <p>{{ slide.description2 }}</p>
-                    <h2>{{ slide.title }}<br>{{ slide.title2 }}</h2>
-                    <a class="cta-button" :href="slide.ctaLink">
-                        {{ slide.cta }}
+                    <p>{{ slide.sub_title }}</p>
+                    <h2>{{ slide.title }}</h2>
+                    <a class="cta-button" :href="slide.button_link">
+                        {{ slide.button_title }}
                         <Icon name="streamline:interface-arrows-right-arrow-right-keyboard" />
                     </a>
                 </div>
@@ -38,37 +37,16 @@
 <script setup lang="ts">
 import { useKeenSlider } from 'keen-slider/vue.es'
 import 'keen-slider/keen-slider.min.css'
-import { computed, ref } from 'vue'
+import { computed, ref, type DeepReadonly } from 'vue'
+import type { Slider } from '@/types/home-api-type';
 
 const props = defineProps<{
-    slides: readonly any[]
+    slides: DeepReadonly<Slider[]>
 }>()
 
-// const slides = ref([
-//     {
-//         title: 'Healthy Food',
-//         title2: 'Happy for Life',
-//         description: '100% Genuine Products',
-//         description2: 'Global Supplier Of Premium Agricultural Commodities',
-//         cta: 'Explore Our Products',
-//         ctaLink: '/products',
-//         image: '/images/home/hero/bg.png'
-//     },
-//     {
-//         title: 'Organic Fruits',
-//         description: 'A wide variety of organic and delicious fruits.',
-//         cta: 'Explore',
-//         ctaLink: '/products',
-//         image: 'https://images.unsplash.com/photo-1521483451569-e33803c0330c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-//     },
-//     {
-//         title: 'Daily Deals',
-//         description: 'Check out our daily deals and save big!',
-//         cta: 'Explore Our Products',
-//         ctaLink: '/products',
-//         image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-//     }
-// ])
+const getImageUrl = (image: string) => {
+    return image ? image : "https://images.unsplash.com/photo-1754770584877-73ba9341671c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+}
 
 const currentSlide = ref(0)
 const paused = ref(false)
