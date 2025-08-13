@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div
-                :class="{ ' transition-all duration-300 transform-gpu will-change-transform': true, 'card-body p-4': !isMinimized, 'card-body p-0 h-0 overflow-hidden': isMinimized }">
+                :class="{ ' transition-all duration-300 transform-gpu will-change-transform max-h-[calc(100vh-200px)] overflow-y-auto': true, 'card-body p-4': !isMinimized, 'card-body p-0 h-0 overflow-hidden': isMinimized }">
                 <div v-for="setting in sectionSettings" :key="setting.id">
                     <div class="card mb-4">
                         <div class="card-header flex justify-between items-center flex-wrap">

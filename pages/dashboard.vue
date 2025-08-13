@@ -39,7 +39,7 @@
       <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Tab Navigation -->
         <div class="bg-white shadow-md border border-green-200 p-1 rounded-lg mb-6">
-          <div class="grid grid-cols-7 gap-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-1">
             <button v-for="tab in tabs" :key="tab.id" @click="adminStore.setActiveTab(tab.id)" :class="[
               'flex items-center justify-center gap-2 px-4 py-3 rounded-md transition-colors font-medium',
               adminStore.activeTab === tab.id
