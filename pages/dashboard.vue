@@ -350,6 +350,9 @@
           <!-- FAQ Tab -->
           <FAQTab v-if="adminStore.activeTab === 'faq'" />
 
+          <!-- Section Tab -->
+          <SectionTab v-if="adminStore.activeTab === 'sections'" />
+
         </div>
       </main>
     </div>
@@ -393,7 +396,8 @@ import {
   ImageIcon,
   LinkIcon,
   FolderIcon,
-  HelpCircleIcon
+  HelpCircleIcon,
+  LayoutGridIcon
 } from 'lucide-vue-next'
 import { useAdminStore } from '@/stores/admin.js'
 import { useFileUpload } from '@/composables/useFileUpload.js'
@@ -414,6 +418,7 @@ import CategoryTab from '@/components/admin/CategoryTab.vue'
 import MilestoneDashboard from '@/components/admin/MilestoneDashboard.vue'
 import FormSubmissionTab from '@/components/admin/FormSubmissionTab.vue'
 import FAQTab from '@/components/admin/FAQTab.vue'
+import SectionTab from '@/components/admin/SectionTab.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',
@@ -537,6 +542,7 @@ const tabs = [
   { id: 'about', label: 'About Us', icon: InfoIcon },
   { id: 'forms', label: 'Form Submissions', icon: ClipboardListIcon },
   { id: 'faq', label: 'FAQ', icon: HelpCircleIcon },
+  { id: 'sections', label: 'Sections', icon: LayoutGridIcon },
 ]
 
 // Product dialog
