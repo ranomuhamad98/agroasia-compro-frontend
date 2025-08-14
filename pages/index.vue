@@ -94,7 +94,6 @@ const {
 
 watch(header, (newHeader, oldHeader) => {
   if (newHeader !== oldHeader) {
-    console.log('Header changed:', newHeader)
     updateHeaderData(newHeader)
   }
 }, {

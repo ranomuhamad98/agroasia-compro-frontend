@@ -14,7 +14,7 @@ export function useLoginApi() {
             isLoading.value = true;
             error.value = null;
 
-            const response = await apiClient.post<LoginResponse>('/auth/login', credentials);
+            const response = await apiClient.post<LoginResponse>('/auth/login', { body: credentials });
 
             if (!response || typeof response !== 'object') {
                 throw new Error('Invalid response format');

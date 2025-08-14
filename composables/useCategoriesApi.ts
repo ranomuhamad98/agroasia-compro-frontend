@@ -20,10 +20,7 @@ export function useCategoriesApi() {
                     throw new Error('Invalid response format');
                 }
 
-                console.log('Response:', response);
-
                 if (response.status === 200 && response.categories) {
-                    console.log('Categories:', response.categories);
                     return response as CategoriesApiResponse;
                 } else {
                     throw new Error(response.message || 'API request failed');

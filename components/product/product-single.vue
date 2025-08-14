@@ -37,7 +37,7 @@
       </div>
       <div>
         <a 
-        :href="`https://wa.me/919826000000?text=Halo, saya ingin memesan produk ${product.name}`" 
+        :href="waLink || '#'" 
         class="tp-product-pesan-sekarang">
           <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
           <span>Pesan Sekarang</span>
@@ -59,10 +59,11 @@ import type { DeepReadonly } from 'vue';
 const props = defineProps<{
   product?: DeepReadonly<Product>
   isLoading?: boolean
+  waLink?: string
   }>();
 
   // console.log(product);
-  console.log(props.product);
+  // console.log(props.product);
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();

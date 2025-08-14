@@ -30,7 +30,6 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
     endpoint: string, 
     requestOptions: ApiRequestOptions = {}
   ): Promise<T> {
-    console.log('requestOptions', requestOptions);
     const {
       method = 'GET',
       body: requestBody,
@@ -38,8 +37,6 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
       timeout = defaultOptions.timeout,
       retries = defaultOptions.retries,
     } = requestOptions;
-
-    console.log('headers', headers);
 
     const url = `${defaultOptions.baseURL}${endpoint}`;
     
@@ -74,20 +71,16 @@ export function useProxyApiClient(options: UseProxyApiClientOptions = {}) {
 
         return response as T;
       } catch (error: any) {
-        console.log('Error:', error);
         lastError = error;
         
-        // Don't retry on client errors (4xx)
         if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
           break;
         }
 
-        // If this is the last attempt, don't wait
         if (attempt === retries) {
           break;
         }
 
-        // Wait before retrying with exponential backoff
         const delay = defaultOptions.retryDelay * Math.pow(2, attempt);
         await sleep(delay);
       }

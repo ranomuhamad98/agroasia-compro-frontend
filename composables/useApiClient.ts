@@ -19,7 +19,7 @@ export function useApiClient(options: UseApiClientOptions = {}) {
   const config = useRuntimeConfig();
   
   const defaultOptions = {
-    baseURL: options.baseURL || 'https://agroasiaberdikari.id/api',
+    baseURL: import.meta.env.VITE_API_URL || 'https://agroasiaberdikari.id/api',
     timeout: options.timeout || 10000,
     retries: options.retries || 3,
     retryDelay: options.retryDelay || 1000,

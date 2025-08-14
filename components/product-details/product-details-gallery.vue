@@ -7,8 +7,8 @@
             </div>
             <div class="gallery-content">
                 <div ref="container" class="gallery-slider keen-slider">
-                    <div v-for="image in product.images" :key="image" class="gallery-item keen-slider__slide">
-                        <nuxt-img :src="image" :alt="product.name" />
+                    <div v-for="image in product.gallery" :key="image.image" class="gallery-item keen-slider__slide">
+                        <nuxt-img :src="image.image" :alt="product.name" />
                     </div>
                 </div>
                 <button class="gallery-nav prev" @click="slider?.prev()">
@@ -23,7 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { type IProduct } from '@/types/product-d-t';
+import type { ProductDetail } from '@/types/product-detail-api-types';
+import type { DeepReadonly } from 'vue';
 import { useKeenSlider } from 'keen-slider/vue';
 
 const [container, slider] = useKeenSlider({
@@ -44,7 +45,7 @@ const [container, slider] = useKeenSlider({
 })
 
 defineProps<{
-    product: IProduct
+    product: DeepReadonly<ProductDetail>
 }>();
 </script>
 

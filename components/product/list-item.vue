@@ -35,8 +35,8 @@
           </h3>
           <p>{{ item.summary.slice(0, 100) }}</p>
           <div>
-            <a :href="`https://wa.me/919826000000?text=Halo, saya ingin memesan produk ${item.name}`"
-              class="tp-product-pesan-sekarang list-item-pesan-sekarang">
+            <a :href="waLink || '#'"
+              class="tp-product-pesan-sekarang list-item-pesan-sekarang" target="_blank" rel="noopener noreferrer">
               <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
               <span>Pesan Sekarang</span>
             </a>
@@ -48,33 +48,14 @@
 </template>
 
 <script setup lang="ts">
-import { type IProduct } from "@/types/product-d-t";
-import { useUtilityStore } from "@/pinia/useUtilityStore";
-import { useCompareStore } from "@/pinia/useCompareStore";
-import { useCartStore } from "@/pinia/useCartStore";
-import { useWishlistStore } from "@/pinia/useWishlistStore";
 import type { DeepReadonly } from "vue";
 import type { Product } from "@/types/products-api-type";
 
 defineProps<{ 
   item: DeepReadonly<Product>;
   isLoading?: boolean;
+  waLink?: string;
 }>();
-
-const compareStore = useCompareStore();
-const cartStore = useCartStore();
-const wishlistStore = useWishlistStore();
-const utilityStore = useUtilityStore();
-
-function isItemInWishlist(product: IProduct) {
-  return wishlistStore.wishlists.some((prd) => prd.id === product.id);
-}
-function isItemInCompare(product: IProduct) {
-  return compareStore.compare_items.some((prd) => prd.id === product.id);
-}
-function isItemInCart(product: IProduct) {
-  return cartStore.cart_products.some((prd) => prd.id === product.id);
-}
 </script>
 
 <style scoped>

@@ -6,9 +6,7 @@ export const useLayoutStore = defineStore('layout', () => {
     const headerData = ref<GlobalApiHeader | null>(null)
 
     const updateFooterData = (data: GlobalApiFooter) => {
-        console.log('Store - Updating footer data:', data)
         footerData.value = data
-        console.log('Store - Footer data after update:', footerData.value)
     }
 
     const updateHeaderData = (data: GlobalApiHeader) => {

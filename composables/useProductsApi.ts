@@ -153,7 +153,7 @@ export function useProductsApi(
     // Clear useAsyncData cache
     clearNuxtData(cacheKey.value);
     
-    // Clear persistent cache
+    // Clear persistent cache (localStorage)
     if (persistent && process.client) {
       const allKeys = Object.keys(localStorage).filter(key => 
         key.startsWith(`products-api-data-${reactiveParams.value.page}-${reactiveParams.value.limit}`)
@@ -162,27 +162,11 @@ export function useProductsApi(
     }
   };
 
-  const clearAllProductsCache = () => {
-    // Clear all products related cache
-    if (process.client) {
-      const allKeys = Object.keys(localStorage).filter(key => key.startsWith('products-api-data-'));
-      allKeys.forEach(key => localStorage.removeItem(key));
-    }
-    
-    // Clear all nuxt data cache for products by finding matching keys
-    if (nuxtApp.payload.data) {
-      const dataKeys = Object.keys(nuxtApp.payload.data as Record<string, any>).filter(key => key.startsWith('products-api-data-'));
-      dataKeys.forEach(key => clearNuxtData(key));
-    }
-  };
-
-  // Force refresh (bypass all caches)
   const forceRefresh = async () => {
     clearCache();
     await refreshProducts();
   };
 
-  // Function to update params and fetch new data (with internal smart caching)
   const updateParams = async (newParams: Partial<ProductsApiParams>) => {
     const updatedParams = {
       ...internalParams.value,
@@ -193,13 +177,11 @@ export function useProductsApi(
     internalParams.value = updatedParams;
   };
 
-  // Function to fetch with completely new query (with internal smart caching)
   const fetchWithNewQuery = async (newParams: ProductsApiParams) => {
     // Replace all params (this will trigger useAsyncData automatically)
     internalParams.value = newParams;
   };
 
-  // Function to set specific param and fetch (with internal smart caching)
   const setParams = async (newParams: Partial<ProductsApiParams>) => {
     const updatedParams = { ...internalParams.value };
     
@@ -218,14 +200,12 @@ export function useProductsApi(
     internalParams.value = updatedParams;
   };
 
-  // Function to go to next page (with internal smart caching)
   const nextPage = async () => {
     const current = internalParams.value;
     const newPage = (current.page || 1) + 1;
     await updateParams({ page: newPage });
   };
 
-  // Function to go to previous page (with internal smart caching)
   const previousPage = async () => {
     const current = internalParams.value;
     const currentPage = current.page || 1;
@@ -234,66 +214,25 @@ export function useProductsApi(
     }
   };
 
-  // Function to go to specific page (with internal smart caching)
   const goToPage = async (page: number) => {
     await updateParams({ page });
   };
 
-  // Function to change category (with internal smart caching)
+  const changePage = async (page: number) => {
+    await updateParams({ page });
+  };
+
   const changeCategory = async (category: string | undefined) => {
-    await updateParams({ category, page: 1 }); // Reset to page 1 when changing category
+    await updateParams({ category, page: 1 });
   };
 
-  // Function to change limit per page (with internal smart caching)
   const changeLimit = async (limit: number) => {
-    await updateParams({ limit, page: 1 }); // Reset to page 1 when changing limit
+    await updateParams({ limit, page: 1 });
   };
 
-  // Debug function to check current state
-  const debugState = () => {
-    return {
-      internalParams: internalParams.value,
-      reactiveParams: reactiveParams.value,
-      cacheKey: cacheKey.value,
-      queryString: queryString.value,
-      pending: productsPending.value,
-      hasData: !!productsData.value,
-      dataLength: productsData.value?.data?.products?.length || 0
-    };
-  };
-
-    // Manual refresh function that ensures fresh data
   const manualRefresh = async () => {
     await refreshProducts();
   };
-
-  // Add watchers for debugging (development only)
-  if (process.env.NODE_ENV === 'development') {
-    watch(internalParams, (newParams, oldParams) => {
-      console.log('🔄 Internal params changed:', { old: oldParams, new: newParams });
-    }, { deep: true });
-
-    watch(cacheKey, (newKey, oldKey) => {
-      console.log('🔑 Cache key changed:', { old: oldKey, new: newKey });
-    });
-
-    watch(productsData, (newData, oldData) => {
-      console.log('📦 Products data changed:', { 
-        hadData: !!oldData, 
-        hasData: !!newData,
-        newLength: newData?.data?.products?.length || 0
-      });
-    });
-
-    watch(productsPending, (pending, wasPending) => {
-      if (pending && !wasPending) {
-        console.log('⏳ Fetch started...');
-      }
-      if (!pending && wasPending) {
-        console.log('✅ Fetch completed');
-      }
-    });
-  }
 
   return {
     // Core data
@@ -307,6 +246,7 @@ export function useProductsApi(
     updateParams,
     fetchWithNewQuery,
     setParams,
+    changePage,
     // Pagination helpers
     nextPage,
     previousPage,
@@ -318,7 +258,5 @@ export function useProductsApi(
     forceRefresh,
     // Manual refresh function
     manualRefresh,
-    // Debug utilities (for development)
-    debugState
   };
 }

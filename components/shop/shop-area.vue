@@ -64,7 +64,7 @@
                 class="row infinite-container">
                 <div v-for="item in productsData?.data.products" :key="item.id"
                   class="col-xl-4 col-md-6 col-sm-6 infinite-item">
-                  <product-single :product="item" />
+                  <product-single :product="item" :waLink="generateWaLink(item, productsData?.data.wa_text_interest)" />
                 </div>
               </div>
               <div
@@ -83,7 +83,7 @@
                   v-if="!productsPending"
                   class="col-xl-12">
                   <product-list-item v-for="item in productsData?.data.products" :key="item.id"
-                    :item="item" />
+                    :item="item" :waLink="generateWaLink(item, productsData?.data.wa_text_interest)" />
                 </div>
                 <div v-else>
                   <product-list-item
@@ -103,8 +103,8 @@
           </div>
 
           <div class="tp-shop-pagination mt-20">
-            <div v-if="store.filteredProducts && store.filteredProducts.length > 9" class="tp-pagination">
-              <ui-pagination :items-per-page="perPage" :data="productsData?.data.products || []"
+            <div v-if="productsData?.data.pagination" class="tp-pagination">
+              <ui-pagination :items-per-page="perPage" :data="productsData?.data.pagination"
                 @handle-paginate="handlePagination" />
             </div>
           </div>
@@ -118,10 +118,10 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
 import { useProductFilterStore } from "../../pinia/useProductFilterStore";
-import { type IProduct } from "../../types/product-d-t";
 import { useProductsApi } from "../../composables/useProductsApi";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import type { Product } from "@/types/products-api-type";
 
 const router = useRouter();
 const route = useRoute();
@@ -137,23 +137,15 @@ const store = useProductFilterStore();
 const handlePerPageChange = (e: Event) => {
   const target = e.target as HTMLSelectElement;
   perPage.value = parseInt(target.value);
-  router.push({
-    query: { ...route.query, limit: perPage.value.toString() }
-  });
+  changeLimit(perPage.value);
 };
 
 const { 
-  productsData, 
-  productsError, 
+  productsData,
   productsPending,
-  currentParams,
-  // Easy to use functions
-  nextPage,
-  previousPage,
   changeCategory,
   changeLimit,
-  updateParams,
-  refreshProducts
+  changePage,
 } = useProductsApi({
   page: 1,
   limit: 12,
@@ -163,18 +155,8 @@ const {
   ttl: 5 * 60 * 1000 // 5 minutes cache
 })
 
-const handleLimitChange = async (newLimit: number) => {
-  await changeLimit(newLimit)
-}
-
-let filteredProductsItems = ref<IProduct[]>(store.filteredProducts!);
-let startIndex = ref<number>(0);
-let endIndex = ref<number>(store.filteredProducts?.length!);
-
-const handlePagination = (data: IProduct[], start: number, end: number) => {
-  filteredProductsItems.value = data;
-  startIndex.value = start;
-  endIndex.value = end;
+const handlePagination = (page: number) => {
+  changePage(page);
 };
 
 function handleActiveTab(tab: string) {
@@ -185,6 +167,11 @@ function handleActiveTab(tab: string) {
       tab: tab
     }
   });
+}
+
+const generateWaLink = (item: Product, message?: string) => {
+  if (!message) return '#';
+  return `${message.replace('[1]', item.name)}`
 }
 
 onMounted(() => {
@@ -209,17 +196,6 @@ watch(
     } else {
       active_tab.value = "grid";
     }
-    if (newQuery.limit) {
-      perPage.value = parseInt(newQuery.limit as string);
-      console.log(perPage.value, 'perPage');
-      handleLimitChange(perPage.value);
-    }
   }
-  // () => route.query || route.params,
-  // (newStatus) => {
-  //   startIndex.value = 0;
-  //   endIndex.value =
-  //     store.filteredProducts && store.filteredProducts.length > 9 ? 9 : store.filteredProducts?.length!;
-  // }
 );
 </script>
