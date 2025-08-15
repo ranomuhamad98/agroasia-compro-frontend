@@ -5,7 +5,7 @@
         <div class="flex flex-col gap-4 lg:flex-row">
           <product-details-thumb :product="product" />
           <div>
-            <product-details-wrapper :product="product" :wa-link="waLink" />
+            <product-details-wrapper :product="product" :wa-link="waLink || '#'" />
           </div>
         </div>
       </div>
@@ -26,5 +26,5 @@
 import type { ProductDetail } from '@/types/product-detail-api-types';
 import type { DeepReadonly } from 'vue';
 
-defineProps<{ product: DeepReadonly<ProductDetail>; waLink: string }>()
+defineProps<{ product: DeepReadonly<ProductDetail>; waLink: string | undefined }>()
 </script>

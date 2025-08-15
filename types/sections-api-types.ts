@@ -22,3 +22,9 @@ export interface SectionNameApiResponse {
     message: string;
     sections: string[];
 }
+
+export interface SectionSingleApiResponse {
+    status: number;
+    message: string;
+    setting: Section;
+}

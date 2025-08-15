@@ -38,7 +38,9 @@
       <div>
         <a 
         :href="waLink || '#'" 
-        class="tp-product-pesan-sekarang">
+        class="tp-product-pesan-sekarang"
+        target="_blank"
+        rel="noopener noreferrer">
           <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
           <span>Pesan Sekarang</span>
         </a>

@@ -54,6 +54,7 @@
 import { ref } from 'vue'
 import { useSectionManagement } from '@/composables/useSectionManagement'
 import type { Section } from '@/types/sections-api-types'
+import { toast } from 'vue3-toastify'
 
 const props = defineProps({
     data: {
@@ -87,7 +88,7 @@ const handleSubmit = async () => {
             emit('save', updatedSection)
         }
     } catch {
-        // toast.error('Gagal menambahkan FAQ')
+        toast.error('Gagal mengupdate section')
     }
 }
 

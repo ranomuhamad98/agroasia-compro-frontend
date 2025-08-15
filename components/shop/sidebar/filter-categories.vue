@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div class="tp-shop-widget mb-50">
     <h3 class="tp-shop-widget-title">Product Categories</h3>
     <div v-if="pendingCategories" class="d-flex justify-content-center align-items-center">
@@ -7,28 +7,23 @@
       </div>
     </div>
     <div v-else-if="errorCategories" class="alert alert-danger">{{ errorCategories }}</div>
-  <div class="tp-shop-widget-content">
-    <div class="tp-shop-widget-categories">
-      <ul>
-        <li v-for="category in categoriesData" :key="category.id">
-          <div class="filter-item checkbox">
-            <input 
-              type="checkbox"
-              :id="category.id"
-              class="filter-checkbox-input"
-              :checked="isCategoryActive(category.id)"
-              @change="(e) => handleCategoryRoute(category.id, e)"
-            />
-            <label :for="category.id">
-              {{ category.name }}
-              <!-- <span>({{ category.products.length }})</span> -->
-            </label>
-          </div>
-        </li>
-      </ul>
+    <div class="tp-shop-widget-content">
+      <div class="tp-shop-widget-categories">
+        <ul>
+          <li v-for="category in categoriesData" :key="category.id">
+            <div class="filter-item checkbox">
+              <input type="checkbox" :id="category.id" class="filter-checkbox-input"
+                :checked="isCategoryActive(category.id)" @change="(e) => handleCategoryRoute(category.id, e)" />
+              <label :for="category.id">
+                {{ category.name }}
+                <!-- <span>({{ category.products.length }})</span> -->
+              </label>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-  </div> 
 </template>
 
 <script setup lang="ts">
@@ -40,17 +35,15 @@ const route = useRoute();
 const activeCategories = ref<string>("");
 const { categoriesData, error: errorCategories, pending: pendingCategories, hasData: hasCategoriesData, refreshData } = useCategoriesApi();
 
-console.log(categoriesData.value)
-
 // handle category route
 const handleCategoryRoute = (categoryId: string, e: Event) => {
   const target = e.target as HTMLInputElement;
   // Use actual category ID instead of slug
   const currentCategories = target.checked ? categoryId : '';
   activeCategories.value = currentCategories;
-  
+
   router.push({
-    path: '/products', 
+    path: '/products',
     query: {
       ...route.query,
       category: currentCategories,

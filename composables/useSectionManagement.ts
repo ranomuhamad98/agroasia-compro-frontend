@@ -1,5 +1,4 @@
-
-import type { Section } from "@/types/sections-api-types";
+import type { Section, SectionPayload } from "@/types/sections-api-types";
 import { toast } from "vue3-toastify";
 
 export function useSectionManagement() {
@@ -9,7 +8,7 @@ export function useSectionManagement() {
     const error = ref<string | null>(null)
     const successMessage = ref<string | null>(null)
 
-    const updateSection = async (id: string, sectionData: Section) => {
+    const updateSection = async (id: string, sectionData: SectionPayload) => {
         try {
             isLoading.value = true
             error.value = null

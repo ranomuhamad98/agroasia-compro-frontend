@@ -86,8 +86,6 @@ const {
 } = useHomeApi();
 
 const {
-  footerData,
-  headerData,
   updateFooterData,
   updateHeaderData
 } = useLayoutStore()

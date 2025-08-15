@@ -141,7 +141,8 @@
           <button type="button" @click="$emit('close')" class="btn-secondary">
             Cancel
           </button>
-          <button type="submit" class="btn-primary">
+          <button type="submit" class="btn-primary flex items-center gap-2">
+            <LoaderIcon v-if="isLoading" class="w-4 h-4" />
             {{ product ? 'Update' : 'Add' }} Product
           </button>
         </div>
@@ -152,7 +153,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { XIcon, ImageIcon, UploadIcon } from 'lucide-vue-next'
+import { XIcon, ImageIcon, UploadIcon, LoaderIcon  } from 'lucide-vue-next'
 import { useAdminStore } from '@/stores/admin'
 import { useCategoryManagement } from '@/composables/useCategoryManagement'
 import { useProductManagement } from '@/composables/useProductManagement'
@@ -175,6 +176,7 @@ const uploadError = ref('')
 const detailLoading = ref(false)
 const detailCategoryId = ref('')
 const detailCategoryName = ref('')
+const isLoading = ref(false)
 
 const form = ref({
   images: [],
@@ -374,6 +376,7 @@ watch(() => props.product, async (newProduct) => {
 }, { immediate: true })
 
 const handleSubmit = async () => {
+  isLoading.value = true
   // Step 1: kirim detail produk, Step 2: tambahkan gallery bila ada media
   try {
     const payload = {
@@ -460,10 +463,26 @@ const handleSubmit = async () => {
         }
       }
     }
+    // reset form
+    form.value = {
+      images: [],
+      name: '',
+      description: '',
+      category: '',
+      isTop: false,
+      additional: {
+        content1: '',
+        headers: ['Attribute', 'Description'],
+        rows: [],
+        content3: ''
+      }
+    }
+    fileInput.value = null
     emit('save')
   } catch (e) {
     console.error(e)
   } finally {
+    isLoading.value = false
     emit('close')
   }
 }

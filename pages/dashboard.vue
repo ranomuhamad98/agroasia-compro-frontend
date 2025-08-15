@@ -306,40 +306,9 @@
             </div>
 
             <div class="space-y-6">
-
-              <!-- Milestone Section -->
               <MilestoneDashboard />
-
-              <!-- Video Section -->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="text-green-800 font-semibold">About Us Video</h3>
-                </div>
-                <div class="p-6 space-y-4">
-                  <div class="space-y-2">
-                    <label for="videoUrl" class="text-green-700 font-medium block">Video URL (YouTube Embed)</label>
-                    <input id="videoUrl" v-model="adminStore.videoUrl" type="url"
-                      placeholder="https://www.youtube.com/embed/VIDEO_ID" class="input-field" />
-                  </div>
-                  <div class="space-y-2">
-                    <label class="text-green-700 font-medium block">Video Preview</label>
-                    <div class="aspect-video border-2 border-green-200 rounded-lg overflow-hidden">
-                      <iframe :src="adminStore.videoUrl" class="w-full h-full" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                    </div>
-                  </div>
-                  <button @click="saveVideo" class="btn-primary w-full flex items-center justify-center gap-2">
-                    <SaveIcon class="w-4 h-4" />
-                    Save Video
-                  </button>
-                </div>
-              </div>
-
-              <!-- Our People Section -->
+              <AboutUsVideoDashboard />
               <OurPeopleDashboard />
-
-              <!-- Gallery Section -->
               <GalleryDashboard />
             </div>
           </div>
@@ -419,6 +388,7 @@ import MilestoneDashboard from '@/components/admin/MilestoneDashboard.vue'
 import FormSubmissionTab from '@/components/admin/FormSubmissionTab.vue'
 import FAQTab from '@/components/admin/FAQTab.vue'
 import SectionTab from '@/components/admin/SectionTab.vue'
+import AboutUsVideoDashboard from '@/components/admin/AboutUsVideoDashboard.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',

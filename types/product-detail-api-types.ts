@@ -10,8 +10,7 @@ interface Detail {
     jumbotron: Jumbotron;
     product: ProductDetail;
     footer: GlobalApiFooter;
-    images: string[];
-    description: string;
+    wa_text_interest: string;
 }
 
 interface Jumbotron {

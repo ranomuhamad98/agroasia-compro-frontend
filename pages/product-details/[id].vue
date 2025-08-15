@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { useProductStore } from '@/pinia/useProductStore';
 import { useProductDetailApi } from '@/composables/useProductDetailApi';
 
 const route = useRoute()
@@ -32,18 +31,8 @@ const {
   product,
   productPending,
   waLink,
-  productError,
 } = useProductDetailApi(productId)
 
-const productStore = useProductStore();
-
-// let product = ref<IProduct | undefined>();
-useSeoMeta({ title: "Product Details Page" });
-// onMounted(() => {
-//   product.value = product_data.find(b => b.id === Number(route.params.id));
-//   if (product.value && product.value?.images?.length > 0) {
-//     productStore.activeImg = product.value.images[0];
-//   }
-// });
+useSeoMeta({ title: `${product?.value?.name} - Product Details Page - Agro Asia Berdikari` });
 
 </script>

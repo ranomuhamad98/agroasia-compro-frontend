@@ -187,6 +187,9 @@ onMounted(() => {
 watch(
   () => route.query,
   (newQuery) => {
+    if (!newQuery.category && active_category.value) {
+      changeCategory(undefined);
+    }
     if (newQuery.category) {
       active_category.value = newQuery.category as string;
       changeCategory(active_category.value);

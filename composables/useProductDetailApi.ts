@@ -29,7 +29,7 @@ export const useProductDetailApi = (productId: string) => {
   )
 
   const product = computed(() => productData.value?.data.product);
-  const waLink = computed(() => `${productData.value?.data.footer.whatsapp_number} ${productData.value?.data.footer.whatsapp_prerequisite_text.replace('[1]', product.value?.name || '')}`);
+  const waLink = computed(() => productData.value?.data.wa_text_interest.replace('[1]', product.value?.name || ''));
 
   return {
     productData,
