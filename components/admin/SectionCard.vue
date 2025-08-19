@@ -26,8 +26,17 @@
                             </button>
                         </div>
                         <div class="card-body p-4 pb-4">
-                            <p>{{ setting.value }}</p>
-                            <div v-if="isImageTipe(setting.tipe) && setting.value" class="mt-2">
+                            <p v-if="!isListTipe(setting.tipe)">{{ setting.value }}</p>
+                            <div v-else class="space-y-2 mb-4 ml-3">
+                                <ul class="list-disc pl-5 space-y-1" v-if="parseList(setting.value).length">
+                                    <li v-for="(item, idx) in parseList(setting.value)" :key="idx">
+                                        <span class="font-medium">{{ item.title }}</span>
+                                        <span v-if="item.content"> - {{ item.content }}</span>
+                                    </li>
+                                </ul>
+                                <p v-else class="text-gray-500">Tidak ada item</p>
+                            </div>
+                            <div v-if="isImageTipe(setting.tipe) && setting.value" class="mt-2 mb-4">
                                 <img :src="setting.value" :alt="setting.tipe" class="h-24 w-24 object-cover rounded border border-green-200" />
                             </div>
                             <div class="flex justify-start items-center flex-wrap gap-4 border-t border-green-100 pt-2">
@@ -86,4 +95,15 @@ const handleSave = () => {
 
 const imageLikeTipes = ['icon', 'image_link', 'logo', 'about_us_media_link', 'jumbotron_image']
 const isImageTipe = (tipe: string) => imageLikeTipes.includes((tipe || '').toLowerCase())
+const listLikeTipes = ['list', 'our_value_list', 'about_us_list']
+const isListTipe = (tipe: string) => listLikeTipes.includes((tipe || '').toLowerCase())
+const parseList = (value: string) => {
+    try {
+        const parsed = JSON.parse(value)
+        if (Array.isArray(parsed)) {
+            return parsed.map((i: any) => ({ title: String(i?.title || ''), content: String(i?.content || '') }))
+        }
+    } catch (_) {}
+    return []
+}
 </script>

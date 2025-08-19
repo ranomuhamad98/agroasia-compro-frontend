@@ -24,7 +24,24 @@
                     <label for="sectionPosition" class="text-green-700 font-medium block">Position</label>
                     <input id="sectionPosition" v-model="form.position" type="number" class="input-field" required />
                 </div>
-                <div v-if="!isImageTipe(props.data?.tipe)" class="space-y-2">
+                <div v-if="isListTipe(props.data?.tipe)" class="space-y-3">
+                    <label class="text-green-700 font-medium block">Items</label>
+                    <div class="space-y-3">
+                        <div v-for="(item, index) in listItems" :key="index" class="border border-green-200 rounded-lg p-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-green-700 font-medium">Item {{ index + 1 }}</span>
+                                <button type="button" class="text-red-600 text-sm hover:underline" @click="removeListItem(index)">Hapus</button>
+                            </div>
+                            <div class="space-y-2">
+                                <input v-model="item.title" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Title" />
+                                <textarea v-model="item.content" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Content"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-secondary" @click="addListItem">+ Tambah Item</button>
+                    </div>
+                </div>
+
+                <div v-else-if="!isImageTipe(props.data?.tipe)" class="space-y-2">
                     <label for="sectionContent" class="text-green-700 font-medium block">Content</label>
                     <textarea id="sectionContent" v-model="form.value" type="text"
                         placeholder="e.g., CEO, Company Name" class="input-field" />
@@ -172,6 +189,14 @@ const handleSubmit = async () => {
             }
         }
 
+        // Serialize list items if tipe is list-like
+        if (isListTipe(props.data?.tipe)) {
+            const sanitized = listItems.value
+                .map(i => ({ title: (i.title || '').trim(), content: (i.content || '').trim() }))
+                .filter(i => i.title || i.content)
+            form.value.value = JSON.stringify(sanitized)
+        }
+
         // Update existing section
         const updatedSection = await updateSection(props.data?.id || '', form.value as Section)
         if (updatedSection) {
@@ -188,6 +213,9 @@ const handleCancel = () => {
 
 const imageLikeTipes = ['icon', 'image_link', 'logo', 'about_us_media_link', 'jumbotron_image']
 const isImageTipe = (tipe?: string) => !!tipe && imageLikeTipes.includes(tipe.toLowerCase())
+
+const listLikeTipes = ['list', 'our_value_list', 'about_us_list']
+const isListTipe = (tipe?: string) => !!tipe && listLikeTipes.includes(tipe.toLowerCase())
 
 // Media upload state and helpers (for image-like tipe)
 const { uploadMedia, isUploading } = useMedia()
@@ -221,4 +249,31 @@ const removeSelectedFile = () => {
         fileInput.value.value = ''
     }
 }
+
+// List editor state and helpers (for list-like tipe)
+type ListItem = { title: string; content: string }
+const listItems = ref<ListItem[]>([])
+
+const initializeListItems = () => {
+    if (isListTipe(props.data?.tipe) && props.data?.value) {
+        try {
+            const parsed = JSON.parse(props.data.value)
+            if (Array.isArray(parsed)) {
+                listItems.value = parsed.map((i: any) => ({ title: String(i?.title || ''), content: String(i?.content || '') }))
+            }
+        } catch (_) {
+            listItems.value = []
+        }
+    }
+}
+
+const addListItem = () => {
+    listItems.value.push({ title: '', content: '' })
+}
+
+const removeListItem = (index: number) => {
+    listItems.value.splice(index, 1)
+}
+
+initializeListItems()
 </script>
