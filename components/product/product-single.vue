@@ -1,5 +1,5 @@
 <template>
- <div class="tp-product-item-5 p-relative white-bg mb-40">
+  <div class="tp-product-item-5 p-relative white-bg mb-40">
     <!-- Loading placeholder -->
     <div v-if="isLoading" class="loading-placeholder">
       <div class="tp-product-thumb-5 w-img fix mb-15">
@@ -17,30 +17,19 @@
     <!-- Actual content -->
     <template v-else-if="product">
       <div class="tp-product-thumb-5 w-img fix mb-15">
-          <nuxt-link :href="`/product-details/${product.id}`" class="shop-area__img-link">
-            <img 
-              :src="product.image" 
-              :alt="product.name"
-              :aria-label="product.name"
-              :title="product.name"
-              loading="lazy"
-              decoding="async"
-              class="shop-area__img"
-            />
-          </nuxt-link>
+        <nuxt-link :href="`/product-details/${product.id}`" class="shop-area__img-link">
+          <img :src="product.image" :alt="product.name" :aria-label="product.name" :title="product.name" loading="lazy"
+            decoding="async" class="shop-area__img" />
+        </nuxt-link>
       </div>
       <div class="tp-product-content-5 mt-4 mb-2">
-          <h3 class="tp-product-title-5 text-center font-weight-bold">
-            <nuxt-link :href="`/product-details/${product.id}`">{{ product.name }}</nuxt-link>
-          </h3>
-          <p class="text-center text-truncate px-4">{{ product.summary }}</p>
+        <h3 class="tp-product-title-5 text-center font-weight-bold">
+          <nuxt-link :href="`/product-details/${product.id}`" class="text-[#010F1C]">{{ product.name }}</nuxt-link>
+        </h3>
+        <p class="text-center text-truncate px-4">{{ product.summary }}</p>
       </div>
       <div>
-        <a 
-        :href="waLink || '#'" 
-        class="tp-product-pesan-sekarang"
-        target="_blank"
-        rel="noopener noreferrer">
+        <a :href="waLink || '#'" class="tp-product-pesan-sekarang" target="_blank" rel="noopener noreferrer">
           <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
           <span>Pesan Sekarang</span>
         </a>
@@ -62,10 +51,10 @@ const props = defineProps<{
   product?: DeepReadonly<Product>
   isLoading?: boolean
   waLink?: string
-  }>();
+}>();
 
-  // console.log(product);
-  // console.log(props.product);
+// console.log(product);
+// console.log(props.product);
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
@@ -91,6 +80,7 @@ function isItemInCart(product: IProduct) {
   min-height: 220px;
   background-color: #f2f3f5;
 }
+
 .shop-area__img {
   width: 100%;
   height: 100%;
@@ -146,15 +136,19 @@ function isItemInCart(product: IProduct) {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.8;
   }

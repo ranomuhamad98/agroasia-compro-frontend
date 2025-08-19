@@ -7,7 +7,7 @@
             </div>
             <div class="prodrel-content">
                 <div class="prodrel-item" v-for="product in related_products" :key="product.id">
-                    <nuxt-link :to="`/product-details/${product.id}`">
+                    <nuxt-link :to="`/product-details/${product.id}`" class="text-[#010F1C]">
                         <div class="prodrel-item-img">
                             <img :src="product.image" :alt="product.name" loading="lazy" decoding="async" />
                         </div>

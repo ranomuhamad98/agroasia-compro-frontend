@@ -31,7 +31,7 @@
       <div class="tp-product-list-content">
         <div class="tp-product-content-2 pt-15">
           <h3 class="tp-product-title-2">
-            <nuxt-link :href="`/product-details/${item.id}`">{{ item.name }}</nuxt-link>
+            <nuxt-link :href="`/product-details/${item.id}`" class="text-[#010F1C]">{{ item.name }}</nuxt-link>
           </h3>
           <p>{{ item.summary.slice(0, 100) }}</p>
           <div>

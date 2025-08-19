@@ -12,7 +12,7 @@
       </nav>
       <div class="tab-content m-img" id="productDetailsNavContent">
         <div class="tp-product-details-nav-main-thumb w-[calc(100vw-4rem)] lg:w-[calc(50vw-150px)]" style="background-color: #f5f6f8">
-          <img :src="mainImage" alt="prd-image" />
+          <img :src="activeImage" alt="prd-image" />
           <button class="nav-arrow prev" @click="handlePrevImage" v-if="product.gallery && product.gallery.length > 1">
             <Icon name="mdi:chevron-left" class="icon" />
           </button>
@@ -33,12 +33,18 @@ const props = defineProps<{ product: DeepReadonly<ProductDetail> }>();
 
 const activeImage = ref<string>('');
 
-const mainImage = computed(() => {
-  if (!props.product.gallery) return '';
-  const mainImage = props.product.gallery.find(img => img.status === 'main')?.image;
-  if (activeImage.value === '') activeImage.value = mainImage || '';
-  return mainImage;
+onMounted(() => {
+  if (props.product.gallery) {
+    activeImage.value = props.product.gallery.find(img => img.status === 'main')?.image || '';
+  }
 });
+
+// const mainImage = computed(() => {
+//   if (!props.product.gallery) return '';
+//   const mainImage = props.product.gallery.find(img => img.status === 'main')?.image;
+//   if (activeImage.value === '') activeImage.value = mainImage || '';
+//   return mainImage;
+// });
 
 // Add navigation functions
 const handleNextImage = () => {

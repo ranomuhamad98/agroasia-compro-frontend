@@ -41,4 +41,19 @@ export default defineNuxtConfig({
   nitro: {
     compatibilityDate: '2025-07-16',
   },
+
+  // proxy: {
+  //   proxies: {
+  //     "/uploads": {
+  //       target: "https://agroasiaberdikari.id",
+  //       changeOrigin: true,
+  //     },
+  //   },
+  // },
+
+  icon: {
+    clientBundle: {
+      scan: true,
+    }
+  }
 })
