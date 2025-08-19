@@ -2,11 +2,11 @@
   <div class="space-y-6">
     <div class="flex items-center space-x-4 justify-end">
       <div class="flex space-x-2">
-        <button @click="exportToExcel" class="btn-primary bg-green-100 text-green-800 flex items-center gap-2">
+        <button @click="exportToExcel" class="btn-primary bg-green-100 text-green-800 flex items-center gap-2 hover:bg-[#15803d]">
           <FileSpreadsheetIcon class="w-4 h-4" />
           Export Excel
         </button>
-        <button @click="exportToPDF" class="btn-primary bg-green-100 text-green-800 flex items-center gap-2">
+        <button @click="exportToPDF" class="btn-primary bg-green-100 text-green-800 flex items-center gap-2 hover:bg-[#15803d]">
           <FileTextIcon class="w-4 h-4" />
           Export PDF
         </button>
