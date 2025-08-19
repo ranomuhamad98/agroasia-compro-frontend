@@ -28,6 +28,7 @@ export interface ProductDetail {
     category_id: string;
     gallery: Gallery[]
     additional_information: AdditionalInformation;
+    text_wa_product: string;
 }
 
 interface Gallery {

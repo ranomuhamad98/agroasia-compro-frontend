@@ -61,6 +61,11 @@
         </div>
 
         <div class="space-y-2">
+          <label for="productSummary" class="text-green-700 font-medium block font-semibold">Summary</label>
+          <textarea id="productSummary" v-model="form.summary" rows="3" class="input-field" required></textarea>
+        </div>
+
+        <div class="space-y-2">
           <label for="productDescription" class="text-green-700 font-medium block font-semibold">Description</label>
           <textarea id="productDescription" v-model="form.description" rows="3" class="input-field" required></textarea>
         </div>
@@ -300,7 +305,8 @@ watch(() => props.product, async (newProduct) => {
     form.value = {
       images: [],
       name: newProduct.name || '',
-      description: newProduct.summary || newProduct.description || '',
+      summary: newProduct.summary || '',
+      description: newProduct.description || '',
       category: newProduct.category_id ? String(newProduct.category_id) : (newProduct.category || ''),
       isTop: !!newProduct.isTop,
       additional: {
@@ -337,7 +343,8 @@ watch(() => props.product, async (newProduct) => {
         form.value = {
           images: [],
           name: p?.name || form.value.name,
-          description: p?.summary || p?.description || form.value.description,
+          summary: p?.summary || '',
+          description: p?.description || form.value.description,
           category: p?.category_id ? String(p.category_id) : form.value.category,
           isTop: !!(p?.is_top_product ?? form.value.isTop),
           additional: {
@@ -381,7 +388,7 @@ const handleSubmit = async () => {
   try {
     const payload = {
       name: form.value.name,
-      summary: form.value.description,
+      summary: form.value.summary,
       description: form.value.description,
       additional_information: {
         content_1: form.value.additional.content1 || '',

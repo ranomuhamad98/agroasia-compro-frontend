@@ -29,7 +29,8 @@ export const useProductDetailApi = (productId: string) => {
   )
 
   const product = computed(() => productData.value?.data.product);
-  const waLink = computed(() => productData.value?.data.wa_text_interest.replace('[1]', product.value?.name || ''));
+  const waLink = computed(() => productData.value?.data.wa_text_interest.split('text=')[0] + 'text=' + product.value?.text_wa_product);
+  // const waLink = computed(() => productData.value?.data.wa_text_interest.replace('[1]', product.value?.name || ''));
 
   return {
     productData,

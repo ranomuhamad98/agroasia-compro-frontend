@@ -2,8 +2,8 @@
   <div class="tp-product-details-wrapper has-sticky">
     <h3 class="tp-product-details-title">{{ product.name }}</h3>
 
-    <p class="tp-product-details-description whitespace-pre-wrap">{{ textMore ? product.description :
-      `${product.description.substring(0,
+    <p class="tp-product-details-description whitespace-pre-wrap">{{ textMore ? product.summary :
+      `${product.summary.substring(0,
         100)}...` }} <span @click="textMore = !textMore">{{ textMore ? 'See less' : 'See more' }}</span></p>
 
     <!-- actions -->
