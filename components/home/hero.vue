@@ -5,7 +5,7 @@
             <div v-for="(slide, index) in props.slides" :key="index" class="keen-slider__slide"
                 :style="{ backgroundImage: `url(${getImageUrl(slide.image)})` }">
                 <div class="slide-content">
-                    <p>{{ slide.sub_title }}</p>
+                    <p v-html="$sanitize(slide.sub_title)"></p>
                     <h2>{{ slide.title }}</h2>
                     <a class="cta-button" :href="slide.button_link">
                         {{ slide.button_title }}

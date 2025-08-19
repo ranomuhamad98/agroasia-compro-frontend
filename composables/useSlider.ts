@@ -9,7 +9,7 @@ interface SliderData {
   position?: number;
 }
 
-interface Slider {
+export interface Slider {
   id: string;
   image_link: string;
   sub_title: string;

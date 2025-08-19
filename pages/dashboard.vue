@@ -183,117 +183,7 @@
           <CategoryTab v-if="adminStore.activeTab === 'categories'" />
 
           <!-- Home Tab -->
-          <div v-if="adminStore.activeTab === 'home'">
-            <div class="flex justify-between items-center mb-6">
-              <div>
-                <h2 class="page-title">Home Page Management</h2>
-                <p class="page-subtitle">Manage hero banners for your home page.</p>
-              </div>
-              <div class="flex items-center gap-3">
-                <button @click="loadSliders()" :disabled="slidersLoading || !isLoggedIn"
-                  class="btn-secondary flex items-center gap-2 disabled:opacity-50"
-                  :title="!isLoggedIn ? 'Please authenticate first' : 'Refresh slider list'">
-                  <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': slidersLoading }" />
-                  {{ slidersLoading ? 'Loading...' : 'Refresh' }}
-                </button>
-                <button @click="openHeroBannerDialog()" class="btn-primary flex items-center gap-2">
-                  <PlusIcon class="w-4 h-4" />
-                  Add Slider
-                </button>
-              </div>
-            </div>
-
-            <!-- Loading State -->
-            <div v-if="slidersLoading" class="flex items-center justify-center py-12">
-              <div class="text-center">
-                <div
-                  class="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-3">
-                </div>
-                <p class="text-green-600">Loading sliders...</p>
-              </div>
-            </div>
-
-            <!-- Error State -->
-            <div v-else-if="slidersError" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <div class="flex items-center gap-2">
-                <AlertCircleIcon class="w-5 h-5 text-red-500" />
-                <p class="text-red-700">{{ slidersError }}</p>
-                <button @click="loadSliders()"
-                  class="ml-auto text-red-600 hover:text-red-800 px-3 py-1 rounded border border-red-300 hover:bg-red-100">
-                  Try Again
-                </button>
-              </div>
-            </div>
-
-            <!-- Not Loaded Yet State -->
-            <div v-else-if="sliders.length === 0 && !slidersError && !slidersLoading" class="text-center py-12">
-              <ImageIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 class="text-lg font-medium text-gray-900 mb-2">Welcome to Slider Management</h3>
-              <p class="text-gray-500 mb-4">Click "Refresh" to load existing sliders or create your first one.</p>
-              <div class="flex justify-center gap-3">
-                <button @click="loadSliders()" class="btn-secondary">
-                  Load Sliders
-                </button>
-                <button @click="openHeroBannerDialog()" class="btn-primary">
-                  Add First Slider
-                </button>
-              </div>
-            </div>
-
-            <!-- Sliders Grid -->
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div v-for="slider in sliders" :key="slider.id" class="card">
-                <div class="p-4 border-b border-green-100">
-                  <div class="flex justify-between items-start">
-                    <div class="flex-1">
-                      <div class="flex items-center gap-2 mb-2">
-                        <h3 class="text-lg font-semibold text-green-800 mb-0">{{ slider.title }}</h3>
-                        <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 border border-blue-300">
-                          Position {{ slider.position }}
-                        </span>
-                      </div>
-                      <p class="text-sm text-gray-600 mb-2">{{ slider.sub_title }}</p>
-                      <div v-if="slider.button_title" class="flex items-center gap-1 text-xs text-gray-500">
-                        <LinkIcon class="w-3 h-3" />
-                        Button: "{{ slider.button_title }}"
-                        <span v-if="slider.button_link" class="truncate max-w-32" :title="slider.button_link">
-                          → {{ slider.button_link }}
-                        </span>
-                      </div>
-                    </div>
-                    <div class="flex space-x-1 ml-3">
-                      <button @click="openHeroBannerDialog(slider)" class="btn-secondary p-2" title="Edit Slider">
-                        <EditIcon class="w-4 h-4" />
-                      </button>
-                      <button @click="handleDeleteSlider(slider)"
-                        class="border border-red-300 text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                        title="Delete Slider">
-                        <Trash2Icon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="p-4">
-                  <div class="relative">
-                    <NuxtImg
-                      :src="failedImages.has(slider.image_link) ? '/placeholder.svg?height=400&width=800' : (slider.image_link || '/placeholder.svg?height=400&width=800')"
-                      :alt="slider.title" class="w-full h-32 object-cover rounded-md mb-3 border border-green-200"
-                      :class="{ 'opacity-75': failedImages.has(slider.image_link) }" />
-                    <div v-if="failedImages.has(slider.image_link)"
-                      class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
-                      Image Failed
-                    </div>
-                  </div>
-                  <div class="flex justify-between items-center text-xs text-gray-500">
-                    <span>Created: {{ formatDate(slider.input_time) }}</span>
-                    <span v-if="slider.update_time !== slider.input_time">
-                      Updated: {{ formatDate(slider.update_time) }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <HomeTab v-if="adminStore.activeTab === 'home'" />
 
           <!-- Testimonials Tab -->
           <TestimonialTab v-if="adminStore.activeTab === 'testimonials'" />
@@ -330,9 +220,6 @@
     <ProductForm :show="showProductDialog" :product="editingProduct" @close="closeProductDialog" />
 
     <TestimonialForm :show="showTestimonialDialog" :testimonial="editingTestimonial" @close="closeTestimonialDialog" />
-
-    <HeroBannerForm :show="showHeroBannerDialog" :banner="editingHeroBanner" @close="closeHeroBannerDialog"
-      @save="handleSliderSave" />
 
     <CategoryForm :show="showCategoryDialog" :category="editingCategory" @close="closeCategoryDialog"
       @save="handleCategorySave" />
@@ -389,6 +276,7 @@ import FormSubmissionTab from '@/components/admin/FormSubmissionTab.vue'
 import FAQTab from '@/components/admin/FAQTab.vue'
 import SectionTab from '@/components/admin/SectionTab.vue'
 import AboutUsVideoDashboard from '@/components/admin/AboutUsVideoDashboard.vue'
+import HomeTab from '@/components/admin/HomeTab.vue'
 
 useHead({
   title: 'Admin Dashboard - Agro Asia Berdikari',
@@ -400,15 +288,7 @@ useHead({
 const { isLoggedIn, logout, user, checkAuth, isInitializing, isLoading } = useAuth();
 const beenAuthenticated = ref(isLoggedIn.value);
 const adminStore = useAdminStore();
-const {
-  sliders,
-  isLoading: slidersLoading,
-  error: slidersError,
-  getSliders,
-  updateSlider,
-  deleteSlider,
-  refreshSliders
-} = useSlider();
+
 
 // Category management
 const {
@@ -423,25 +303,25 @@ const {
 } = useCategoryManagement();
 
 // Load sliders only when on home tab and authenticated
-const loadSliders = async () => {
-  // Check if we should load sliders
-  if (adminStore.activeTab !== 'home') {
-    return
-  }
+// const loadSliders = async () => {
+//   // Check if we should load sliders
+//   if (adminStore.activeTab !== 'home') {
+//     return
+//   }
 
-  if (!isLoggedIn.value) {
-    return
-  }
+//   if (!isLoggedIn.value) {
+//     return
+//   }
 
-  try {
-    await getSliders()
+//   try {
+//     await getSliders()
 
-    // Clear failed images cache when successfully loading new data
-    failedImages.value.clear()
-  } catch (error) {
-    // Error handling is done by the composable with toast notifications
-  }
-}
+//     // Clear failed images cache when successfully loading new data
+//     failedImages.value.clear()
+//   } catch (error) {
+//     // Error handling is done by the composable with toast notifications
+//   }
+// }
 
 // Load categories only when on categories tab and authenticated
 const loadCategories = async () => {
@@ -462,13 +342,13 @@ const loadCategories = async () => {
 }
 
 // Watch for tab changes to load data when specific tabs are activated
-watch(() => adminStore.activeTab, (newTab, oldTab) => {
-  if (newTab === 'home' && oldTab !== 'home' && isLoggedIn.value) {
-    loadSliders()
-  } else if (newTab === 'categories' && oldTab !== 'categories' && isLoggedIn.value) {
-    loadCategories()
-  }
-})
+// watch(() => adminStore.activeTab, (newTab, oldTab) => {
+//   if (newTab === 'home' && oldTab !== 'home' && isLoggedIn.value) {
+//     loadSliders()
+//   } else if (newTab === 'categories' && oldTab !== 'categories' && isLoggedIn.value) {
+//     loadCategories()
+//   }
+// })
 
 // Handle logout function
 const handleLogout = async () => {
@@ -543,24 +423,6 @@ const closeTestimonialDialog = () => {
   editingTestimonial.value = null
 }
 
-// Hero Banner dialog
-const showHeroBannerDialog = ref(false)
-const editingHeroBanner = ref(null)
-
-const openHeroBannerDialog = (banner = null) => {
-  editingHeroBanner.value = banner
-  showHeroBannerDialog.value = true
-}
-
-const closeHeroBannerDialog = () => {
-  showHeroBannerDialog.value = false
-  editingHeroBanner.value = null
-
-  // Only refresh sliders if we're still on the home tab and authenticated
-  if (adminStore.activeTab === 'home' && isLoggedIn.value) {
-    loadSliders()
-  }
-}
 
 // Category dialog
 const showCategoryDialog = ref(false)
@@ -599,27 +461,6 @@ const handleCategorySave = async (categoryData) => {
     closeCategoryDialog()
   } catch (error) {
     throw error // Re-throw to let the form handle the error
-  }
-}
-
-// Slider management functions
-const handleDeleteSlider = async (slider) => {
-  // Check if we should allow deletion
-  if (adminStore.activeTab !== 'home') {
-    return
-  }
-
-  if (!isLoggedIn.value) {
-    toast.error('Please authenticate first')
-    return
-  }
-
-  if (confirm(`Are you sure you want to delete the slider "${slider.title}"?`)) {
-    try {
-      await deleteSlider(slider.id)
-    } catch (error) {
-      toast.error('Failed to delete slider. Please try again.')
-    }
   }
 }
 

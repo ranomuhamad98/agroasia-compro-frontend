@@ -1,3 +1,4 @@
+// @ts-nocheck
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
@@ -10,7 +11,8 @@ export default defineNuxtConfig({
         ['defineStore', 'definePiniaStore'],
       ],
     },
-  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts", "@nuxtjs/tailwindcss"],
+  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts", "@nuxtjs/tailwindcss",
+    '@nuxt-alt/proxy',],
   app: {
     head: {
       title: "Agro Asia Berdikari",
@@ -34,7 +36,7 @@ export default defineNuxtConfig({
   vite: {
     optimizeDeps: {
       include: ['jspdf'],
-    },
+    }
   },
 
   // Tambahan opsional agar warning compatibilityDate hilang:
@@ -42,18 +44,20 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-07-16',
   },
 
-  // proxy: {
-  //   proxies: {
-  //     "/uploads": {
-  //       target: "https://agroasiaberdikari.id",
-  //       changeOrigin: true,
-  //     },
-  //   },
-  // },
+  
+
+  proxy: {
+    proxies: {
+      "/uploads": {
+        target: "https://agroasiaberdikari.id",
+        changeOrigin: true,
+      },
+    },
+  },
 
   icon: {
     clientBundle: {
-      scan: true,
+      scan: true
     }
   }
 })
