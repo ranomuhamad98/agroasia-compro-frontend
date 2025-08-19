@@ -8,7 +8,7 @@
             <div class="gallery-content">
                 <div ref="container" class="gallery-slider keen-slider">
                     <div v-for="image in product.gallery" :key="image.image" class="gallery-item keen-slider__slide">
-                        <nuxt-img :src="image.image" :alt="product.name" />
+                        <img :src="image.image" :alt="product.name" />
                     </div>
                 </div>
                 <button class="gallery-nav prev" @click="slider?.prev()">

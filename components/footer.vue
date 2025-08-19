@@ -33,12 +33,12 @@
           <Icon name="mdi:whatsapp" class="wa-button-title" />
           <p class="wa-button-item wa-button__text">Hubungi Kami</p>
         </a>
-        <nuxt-img src="/images/footer/rintik.png" alt="decoration" class="decoration-1" width="50" />
+        <img src="/images/footer/rintik.png" alt="decoration" class="decoration-1" width="50" />
       </div>
 
-      <nuxt-img src="/images/footer/daun.png" alt="decoration" class="decoration-2" width="100" />
-      <nuxt-img src="/images/footer/daun-panjang.png" alt="decoration" class="decoration-3" width="130" />
-      <nuxt-img src="/images/footer/daun-lengkap.png" alt="decoration" class="decoration-4" width="100" />
+      <img src="/images/footer/daun.png" alt="decoration" class="decoration-2" width="100" />
+      <img src="/images/footer/daun-panjang.png" alt="decoration" class="decoration-3" width="130" />
+      <img src="/images/footer/daun-lengkap.png" alt="decoration" class="decoration-4" width="100" />
     </div>
     <div class="copyright">
       <p>© {{ footer?.pt_name }} {{ new Date().getFullYear() }} All rights reserved.</p>

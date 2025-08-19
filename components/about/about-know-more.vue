@@ -13,7 +13,7 @@
                 </div> -->
             </div>
             <div class="know-more-area-image">
-                <nuxt-img :src="activeMilestones?.media_link" alt="about-img" width="542" />
+                <img :src="activeMilestones?.media_link" alt="about-img" width="542" />
             </div>
         </div>
         <div class="know-more-history container">

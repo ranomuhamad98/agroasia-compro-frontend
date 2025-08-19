@@ -9,7 +9,7 @@
                 <div class="prodrel-item" v-for="product in related_products" :key="product.id">
                     <nuxt-link :to="`/product-details/${product.id}`">
                         <div class="prodrel-item-img">
-                            <nuxt-img :src="product.image" :alt="product.name" loading="lazy" decoding="async" />
+                            <img :src="product.image" :alt="product.name" loading="lazy" decoding="async" />
                         </div>
                         <div class="prodrel-item-content">
                             <p>{{ product.category }}</p>

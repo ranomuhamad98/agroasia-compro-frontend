@@ -8,8 +8,11 @@
               <div :class="`breadcrumb__content p-relative z-index-1 ${center && 'text-center'}`">
                 <h3 class="breadcrumb__title" :style="`color:${color}`">{{ title }}</h3>
                 <div class="d-flex align-items-center justify-content-start gap-2 flex-wrap">
-                  <span v-for="(item, index) in subtitle" :key="item" :style="`color:${color}`" class="breadcrumb-items">{{ item }}
-                    <span v-if="index !== subtitle.length - 1" class="breadcrumb-separator"> <Icon name="mdi:chevron-right" /></span>
+                  <span v-for="(item, index) in subtitle" :key="item" :style="`color:${color}`"
+                    class="breadcrumb-items">{{ item }}
+                    <span v-if="index !== subtitle.length - 1" class="breadcrumb-separator">
+                      <Icon name="mdi:chevron-right" />
+                    </span>
                   </span>
                 </div>
               </div>
@@ -20,8 +23,8 @@
     </div>
     <div class="min-h-300 w-100 position-absolute top-0 start-0 w-100 h-100"
       style="background-color: rgba(0, 0, 0, 0.5);">
-      <lazy-nuxt-img :src="image || '/images/product/list/bg.png'" alt="products-banner" width="100%" height="300"
-        class="object-fit-cover h-100 w-100" />
+      <img :src="image || '/images/product/list/bg.png'" alt="products-banner" width="100%" height="300"
+        class="object-fit-cover h-100 w-100" loading="lazy" decoding="async" />
     </div>
   </div>
 </template>

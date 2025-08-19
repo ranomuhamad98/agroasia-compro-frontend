@@ -2,7 +2,7 @@
     <div class="tp-home-spotlight">
         <div v-for="item in props.featured" :key="item.title" class="content__item">
             <div class="item__header">
-                <nuxt-img class="image" :src="item.icon" :alt="item.title" height="90" />
+                <img class="image" :src="item.icon" :alt="item.title" height="90" />
             </div>
             <div class="item__content">
                 <p class="item__title capitalize">{{ item.title }}</p>

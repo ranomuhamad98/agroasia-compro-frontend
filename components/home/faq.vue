@@ -3,7 +3,7 @@
         <div class="container">
             <div class="wrapper">
                 <div class="title">
-                    <nuxt-img src="/images/home/faq/logo.png" alt="Frequently Asked Questions" width="80" height="80" />
+                    <img src="/images/home/faq/logo.png" alt="Frequently Asked Questions" width="80" height="80" />
                     <h3 class="title__main">FAQ</h3>
                 </div>
                 <div class="content">

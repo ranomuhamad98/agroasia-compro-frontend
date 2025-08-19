@@ -9,7 +9,7 @@
                 <div class="content">
                     <div v-for="item in services" :key="item.title" class="content__item">
                         <div class="item__header">
-                            <nuxt-img class="item__icon" src="/images/home/about/check.png" alt="check" width="26"
+                            <img class="item__icon" src="/images/home/about/check.png" alt="check" width="26"
                                 height="26" />
                         </div>
                         <div>
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <nuxt-img class="thumbnail" :src="props.topProductSection.image" alt="thumbnail" width="400"
+                <img class="thumbnail" :src="props.topProductSection.image" alt="thumbnail" width="400"
                     height="100%" />
             </div>
             <div class="container__right">
@@ -29,7 +29,7 @@
                 <div class="content">
                     <div v-for="item in topProducts" :key="item.id" class="content__item">
                         <div class="item__header">
-                            <nuxt-img class="image" :src="item.image" alt="check"
+                            <img class="image" :src="item.image" alt="check"
                                 width="90" height="90" />
                         </div>
                         <div class="item__content">
