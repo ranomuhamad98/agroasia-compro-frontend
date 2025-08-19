@@ -27,6 +27,9 @@
                         </div>
                         <div class="card-body p-4 pb-4">
                             <p>{{ setting.value }}</p>
+                            <div v-if="isImageTipe(setting.tipe) && setting.value" class="mt-2">
+                                <img :src="setting.value" :alt="setting.tipe" class="h-24 w-24 object-cover rounded border border-green-200" />
+                            </div>
                             <div class="flex justify-start items-center flex-wrap gap-4 border-t border-green-100 pt-2">
                                 <p class="mb-0">📌 {{ setting.position }}</p>
                                 <p class="mb-0">🗓️ {{ formatDate(setting.input_time) }}</p>
@@ -80,4 +83,7 @@ const handleSave = () => {
     showForm.value = false;
     refresh();
 }
+
+const imageLikeTipes = ['icon', 'image_link', 'logo', 'about_us_media_link', 'jumbotron_image']
+const isImageTipe = (tipe: string) => imageLikeTipes.includes((tipe || '').toLowerCase())
 </script>

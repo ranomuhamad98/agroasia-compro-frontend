@@ -207,7 +207,7 @@ const form = ref<MilestonePayload>({
 });
 
 // Image upload state
-const uploadMethod = ref<'file' | 'url'>('url');
+const uploadMethod = ref<'file' | 'url'>('file');
 const selectedFile = ref<File | null>(null);
 const previewUrl = ref<string>('');
 const uploadProgress = ref(0);
