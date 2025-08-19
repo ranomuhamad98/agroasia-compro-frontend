@@ -13,7 +13,7 @@ export default defineEventHandler(async (event): Promise<FAQApiResponse> => {
 
     const body = await readBody<FAQPayload>(event)
     
-    if (!body.title || !body.content || !body.position) {
+    if (!body.title || !body.content || (!body.position && body.position !== 0)) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Missing required fields: title, content, position'

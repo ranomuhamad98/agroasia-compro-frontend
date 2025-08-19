@@ -1,4 +1,4 @@
-import type { FAQ } from "@/types/faq-api-type"
+import type { FAQ, FAQPayload } from "@/types/faq-api-type"
 import { toast } from "vue3-toastify";
 
 export function useFAQManagement() {
@@ -8,13 +8,13 @@ export function useFAQManagement() {
     const error = ref<string | null>(null)
     const successMessage = ref<string | null>(null)
 
-    const createFAQ = async (faqData: FAQ) => {
+    const createFAQ = async (faqData: FAQPayload) => {
         try {
             isLoading.value = true
             error.value = null
             successMessage.value = null
 
-            const response = await apiClient.post<FAQ>('/faqs', {
+            const response = await apiClient.post<FAQPayload>('/faqs', {
                 body: faqData,
             })
 
@@ -29,13 +29,13 @@ export function useFAQManagement() {
         }
     }
 
-    const updateFAQ = async (id: string, faqData: FAQ) => {
+    const updateFAQ = async (id: string, faqData: FAQPayload) => {
         try {
             isLoading.value = true
             error.value = null
             successMessage.value = null
 
-            const response = await apiClient.put<FAQ>(`/faqs/${id}`, {
+            const response = await apiClient.put<FAQPayload>(`/faqs/${id}`, {
                 body: faqData,
             })
 

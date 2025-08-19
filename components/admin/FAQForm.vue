@@ -101,13 +101,23 @@ const handleSubmit = async () => {
 
         if (props.data?.id) {
             // Update existing FAQ
-            const updatedFAQ = await updateFAQ(props.data.id, form.value as FAQ)
+            const updatedFAQ = await updateFAQ(props.data.id, {
+                title: form.value.title,
+                content: form.value.content,
+                position: form.value.position,
+                status: form.value.status ?? true,
+            })
             if (updatedFAQ) {
                 emit('save', updatedFAQ)
             }
         } else {
             // Create new FAQ
-            const newFAQ = await createFAQ(form.value as FAQ)
+            const newFAQ = await createFAQ({
+                title: form.value.title,
+                content: form.value.content,
+                position: form.value.position,
+                status: form.value.status ?? true,
+            })
             if (newFAQ) {
                 emit('save', newFAQ)
             }

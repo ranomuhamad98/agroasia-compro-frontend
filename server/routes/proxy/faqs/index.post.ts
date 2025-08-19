@@ -5,9 +5,11 @@ export default defineEventHandler(async (event): Promise<FAQApiResponse> => {
   try {
     // Get the request body
     const body = await readBody<FAQPayload>(event)
+
+    console.log('body', !body.title || !body.content || (!body.position && body.position !== 0), body)
     
     // Validate required fields
-    if (!body.title || !body.content || !body.position) {
+    if (!body.title || !body.content || (!body.position && body.position !== 0)) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Missing required fields: title, content, position'

@@ -62,7 +62,7 @@ import { useFAQManagement } from '@/composables/useFAQManagement';
 
 const showFAQDialog = ref(false);
 const selectedFAQ = ref<FAQ | undefined>(undefined);
-const filterType = ref('');
+const filterType = ref('active');
 
 const { faq, refresh, pending } = useFAQApi({ active_only: true });
 const { deleteFAQ } = useFAQManagement();
@@ -72,8 +72,9 @@ const handleRefresh = () => {
 }
 
 const handleDelete = (item: FAQ) => {
-    deleteFAQ(item.id);
-    handleRefresh();
+    deleteFAQ(item.id).then(() => {
+        handleRefresh();
+    });
 }
 
 const handleEdit = (item: FAQ) => {
