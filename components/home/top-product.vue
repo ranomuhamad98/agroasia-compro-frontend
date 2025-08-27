@@ -2,22 +2,6 @@
     <div class="tp-home-product">
         <div class="container">
             <div class="container__left">
-                <div class="title">
-                    <p class="title__main">100% Geniuine Products</p>
-                    <p class="title__sub">We Provide</p>
-                </div>
-                <div class="content">
-                    <div v-for="item in services" :key="item.title" class="content__item">
-                        <div class="item__header">
-                            <img class="item__icon" src="/images/home/about/check.png" alt="check" width="26"
-                                height="26" />
-                        </div>
-                        <div>
-                            <p class="item__title">{{ item.title }}</p>
-                            <p class="item__description">{{ item.description }}</p>
-                        </div>
-                    </div>
-                </div>
                 <img class="thumbnail" :src="props.topProductSection.image" alt="thumbnail" width="400"
                     height="100%" />
             </div>

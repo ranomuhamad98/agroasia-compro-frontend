@@ -384,20 +384,13 @@
             gap: 3rem;
 
             .container__left {
-                background-color: #eeebe4;
-                padding: 3rem 2rem;
                 max-width: 410px;
                 position: relative;
-                padding-bottom: 10rem;
 
                 .thumbnail {
                     width: 100%;
                     object-fit: contain;
-                    position: absolute;
-                    right: 0;
-                    left: 0;
                     z-index: 1;
-                    bottom: -17%;
                 }
 
                 .title {
