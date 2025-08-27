@@ -40,13 +40,22 @@
         &-container {
             max-width: 1200px;
             margin: 2rem auto;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 5rem;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 2rem;
             margin-bottom: -3rem;
+
+            @media #{$md} {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            @media #{$sm} {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            @media #{$xs} {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
         }
 
         &-card {
@@ -87,6 +96,7 @@
             font-weight: 700;
             font-size: 30px;
             margin-bottom: 0;
+            text-align: center;
 
             &-container {
                 text-align: center;
