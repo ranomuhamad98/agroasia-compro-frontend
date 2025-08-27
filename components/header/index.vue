@@ -65,7 +65,7 @@
               </div>
             </div>
             <div class="d-none d-lg-block">
-              <a href="#contact-us" class="tp-header-btn-cta">Contact Us</a>
+              <a href="/#contact-us" class="tp-header-btn-cta">Contact Us</a>
             </div>
           </div>
         </div>
