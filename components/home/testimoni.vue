@@ -1,5 +1,4 @@
 <template>
-    <p>{{ JSON.stringify(props.testimonials) }}</p>
     <div v-if="props.testimonials.length > 0" class="tp-home-testimoni">
         <div class="container">
             <div class="title">
