@@ -3,15 +3,18 @@
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: [[
-    '@pinia/nuxt',
-    {
-      autoImports: [
-        'defineStore',
-        ['defineStore', 'definePiniaStore'],
-      ],
-    },
-  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts", "@nuxtjs/tailwindcss", "@nuxt-alt/proxy"],
+  modules: [
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          'defineStore',
+          ['defineStore', 'definePiniaStore'],
+        ],
+      },
+    ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts", "@nuxtjs/tailwindcss",
+    // "@nuxt-alt/proxy"
+  ],
   app: {
     head: {
       title: "Agro Asia Berdikari",
@@ -43,14 +46,14 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-07-16',
   },
 
-  proxy: {
-    proxies: {
-      "/uploads": {
-        target: "https://agroasiaberdikari.id",
-        changeOrigin: true,
-      },
-    },
-  },
+  // proxy: {
+  //   proxies: {
+  //     "/uploads": {
+  //       target: "https://agroasiaberdikari.id",
+  //       changeOrigin: true,
+  //     },
+  //   },
+  // },
 
   icon: {
     clientBundle: {
