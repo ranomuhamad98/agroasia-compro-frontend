@@ -5,7 +5,6 @@
       <slot />
     </main>
     <Footer></Footer>
-    <modal-product/>
     <back-to-top />
   </div>
   <div v-else>

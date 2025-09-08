@@ -32,16 +32,26 @@
               {{ product.additional_information.content_1 }}
             </p>
             <div class="my-4">
-              <div v-for="(header, key) in product.additional_information.content_2.headers" :key="header">
-                <p class="text-base whitespace-pre-wrap mb-0 font-semibold">
-                  {{ header }}
-                </p>
-                <ul class="list-disc list-inside mb-2">
-                  <li v-for="row in product.additional_information.content_2.rows[key]" :key="row">
-                    {{ row }}
-                  </li>
-                </ul>
-              </div>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th
+                      v-for="header in product.additional_information.content_2.headers"
+                      :key="header"
+                      class="!py-4 !px-8"
+                    >
+                      {{ header }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="row in product.additional_information.content_2.rows" :key="row">
+                    <td v-for="cell in row" :key="cell">
+                      {{ cell }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <p class="text-base whitespace-pre-wrap">
               {{ product.additional_information.content_3 }}

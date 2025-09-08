@@ -73,8 +73,6 @@ const loginUser = async () => {
       });
 
       if (result && result.success) {
-        console.log('Admin login successful!', result);
-        // Clear form on success
         form.value.email = '';
         form.value.password = '';
         // Notify parent if callback is provided

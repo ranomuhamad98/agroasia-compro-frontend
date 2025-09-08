@@ -53,9 +53,6 @@ const props = defineProps<{
   waLink?: string
 }>();
 
-// console.log(product);
-// console.log(props.product);
-
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 const utilityStore = useUtilityStore();

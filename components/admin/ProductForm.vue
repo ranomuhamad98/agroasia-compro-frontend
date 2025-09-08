@@ -61,6 +61,15 @@
         </div>
 
         <div class="space-y-2">
+          <label for="productIsTop" class="text-green-700 font-medium block font-semibold">Top Product</label>
+          <div class="flex items-center gap-2">
+            <input id="productIsTop" v-model="form.isTop" type="checkbox" class="input-field w-auto" :disabled="!canSetAsTop" />
+            <label for="productIsTop">Make this product a top product</label>
+          </div>
+          <p v-if="!canSetAsTop" class="text-xs text-green-600">Top product limit reached. Unmark another product first.</p>
+        </div>
+
+        <div class="space-y-2">
           <label for="productSummary" class="text-green-700 font-medium block font-semibold">Summary</label>
           <textarea id="productSummary" v-model="form.summary" rows="3" class="input-field" required></textarea>
         </div>
@@ -78,6 +87,11 @@
               {{ category.name }}
             </option>
           </select>
+        </div>
+
+        <div class="space-y-2">
+          <label for="productTags" class="text-green-700 font-medium block font-semibold">Tags (comma separated)</label>
+          <input id="productTags" v-model="form.tags" type="text" class="input-field px-3 !h-12" />
         </div>
 
         <!-- Additional Information: content_1, content_2 (table), content_3 -->
@@ -142,6 +156,11 @@
           </div>
         </div>
 
+        <div class="space-y-2">
+          <label for="productTextWa" class="text-green-700 font-medium block font-semibold">Text WhatsApp</label>
+          <input id="productTextWa" v-model="form.textWa" type="text" class="input-field" />
+        </div>
+
         <div class="flex justify-end space-x-2 pt-4">
           <button type="button" @click="$emit('close')" class="btn-secondary">
             Cancel
@@ -173,7 +192,7 @@ const emit = defineEmits(['close', 'save'])
 
 const adminStore = useAdminStore()
 const { categories: categoryData, fetchCategories } = useCategoryManagement()
-const { createProduct, updateProduct, addProductImage, getProductDetail } = useProductManagement()
+const { createProduct, updateProduct, addProductImage, deleteProductImage, getProductDetail } = useProductManagement()
 const { uploadMedia, isUploading: mediaUploading } = useMedia()
 
 const categories = computed(() => categoryData.value || [])
@@ -182,13 +201,18 @@ const detailLoading = ref(false)
 const detailCategoryId = ref('')
 const detailCategoryName = ref('')
 const isLoading = ref(false)
+// Keep initial gallery snapshot to detect changes
+const initialGallery = ref([])
 
 const form = ref({
   images: [],
   name: '',
+  summary: '',
   description: '',
   category: '',
+  tags: '',
   isTop: false,
+  textWa: '',
   additional: {
     content1: '',
     headers: ['Attribute', 'Description'],
@@ -309,6 +333,7 @@ watch(() => props.product, async (newProduct) => {
       description: newProduct.description || '',
       category: newProduct.category_id ? String(newProduct.category_id) : (newProduct.category || ''),
       isTop: !!newProduct.isTop,
+      textWa: newProduct.text_wa || '',
       additional: {
         content1: newProduct?.additional_information?.content_1 || newProduct?.additionalInfo || '',
         headers: Array.isArray(newProduct?.additional_information?.content_2?.headers)
@@ -340,13 +365,24 @@ watch(() => props.product, async (newProduct) => {
               return ['', '']
             })
           : []
+
         form.value = {
-          images: [],
+          images: p?.gallery?.length
+            ? p.gallery.map(g => ({
+                // Preserve gallery id if provided by API so we can delete via proxy
+                id: g?.id || '',
+                url: g.image,
+                isMain: g.status === 'main',
+                existing: true
+              }))
+            : [],
           name: p?.name || form.value.name,
           summary: p?.summary || '',
           description: p?.description || form.value.description,
           category: p?.category_id ? String(p.category_id) : form.value.category,
           isTop: !!(p?.is_top_product ?? form.value.isTop),
+          tags: p?.tags?.join(',') || form.value.tags,
+          textWa: p?.text_wa_product || form.value.textWa || '',
           additional: {
             content1: p?.additional_information?.content_1 || form.value.additional.content1 || '',
             headers: Array.isArray(p?.additional_information?.content_2?.headers) && p.additional_information.content_2.headers.length
@@ -356,6 +392,10 @@ watch(() => props.product, async (newProduct) => {
             content3: p?.additional_information?.content_3 || form.value.additional.content3 || ''
           }
         }
+        // Save initial gallery snapshot for change detection
+        initialGallery.value = Array.isArray(p?.gallery)
+          ? p.gallery.map(g => ({ url: g.image, isMain: g.status === 'main' }))
+          : []
         // Save category info for later reconciliation with categories list
         detailCategoryId.value = p?.category_id ? String(p.category_id) : ''
         detailCategoryName.value = p?.category || p?.category_name || ''
@@ -369,9 +409,12 @@ watch(() => props.product, async (newProduct) => {
     form.value = {
       images: [],
       name: '',
+      summary: '',
       description: '',
       category: '',
+      tags: '',
       isTop: false,
+      textWa: '',
       additional: {
         content1: '',
         headers: ['Attribute', 'Description'],
@@ -401,13 +444,15 @@ const handleSubmit = async () => {
         content_3: form.value.additional.content3 || ''
       },
       category_id: form.value.category, // contains selected category id
-      tags: [],
-      text_wa: 'Interested in this product? Contact us on WhatsApp!',
+      tags: typeof form.value.tags === 'string'
+        ? form.value.tags.split(',').map(t => t.trim()).filter(Boolean)
+        : [],
+      text_wa: form.value.textWa || 'Interested in this product? Contact us on WhatsApp!',
       is_top_product: !!form.value.isTop
     }
 
     if (props.product && props.product.id) {
-      // Update product details first
+      // Update product details first (no image field; gallery will be recreated)
       const updatePayload = { ...payload }
       await updateProduct(props.product.id, updatePayload)
 
@@ -416,16 +461,50 @@ const handleSubmit = async () => {
         const hasMain = form.value.images.some(i => i.isMain)
         const images = hasMain ? form.value.images : form.value.images.map((img, i) => ({ ...img, isMain: i === 0 }))
 
-        // Upload any new files, then attach gallery
+        // Detect if gallery actually changed compared to initial snapshot
+        const currentSnapshot = images.map(i => ({ url: i.url, isMain: !!i.isMain })).filter(it => !!it.url)
+        const init = initialGallery.value || []
+        const sameLength = currentSnapshot.length === init.length
+        const sameUrls = sameLength && currentSnapshot.every(cs => init.some(ii => ii.url === cs.url))
+        const sameMain = sameLength && (init.find(ii => ii.isMain)?.url === currentSnapshot.find(cs => cs.isMain)?.url)
+        const galleryChanged = !(sameLength && sameUrls && sameMain) || images.some(i => !!i.file)
+
+        // If there is no change, skip media operations but continue to finalize
+        if (!galleryChanged) {
+          // No changes in gallery; skip media operations
+        } else {
+
+        // Helper: convert image URL to File for re-upload
+        const fileFromUrl = async (url) => {
+          const res = await fetch(url)
+          const blob = await res.blob()
+          const guessedName = (url.split('/').pop() || 'image').split('?')[0]
+          return new File([blob], guessedName, { type: blob.type || 'image/jpeg' })
+        }
+
+        // Delete existing gallery images first if we have their IDs
+        const existingIds = images.map((i) => i.id).filter(Boolean)
+        if (existingIds.length) {
+          try {
+            await Promise.all(existingIds.map((gid) => deleteProductImage(props.product.id, gid)))
+          } catch (e) {
+            console.warn('Some gallery items failed to delete; continuing with upload')
+          }
+        }
+
+        // Re-upload every image (existing or new) to get fresh media ids, then attach gallery
         const uploadedWithFlags = await Promise.all(
           images.map(async (img) => {
-            let galleryId = img.id
-            if (!galleryId && img.file) {
-              const media = await uploadMedia(img.file, form.value.name || img.file.name)
-              const m = Array.isArray(media) ? media[0] : media
-              galleryId = m?.id
+            let mediaItem = null
+            if (img.file) {
+              const media = await uploadMedia(img.file, form.value.name || img.file?.name || 'image')
+              mediaItem = Array.isArray(media) ? media[0] : media
+            } else if (img.url) {
+              const file = await fileFromUrl(img.url)
+              const media = await uploadMedia(file, form.value.name || file.name)
+              mediaItem = Array.isArray(media) ? media[0] : media
             }
-            return { id: galleryId, isMain: img.isMain }
+            return { id: mediaItem?.id, isMain: img.isMain }
           })
         )
 
@@ -437,6 +516,7 @@ const handleSubmit = async () => {
               { image_gallery_id: img.id, status: img.isMain ? 'main' : 'gallery' }
             ))
           )
+        }
         }
       }
     } else {
@@ -474,9 +554,12 @@ const handleSubmit = async () => {
     form.value = {
       images: [],
       name: '',
+      summary: '',
       description: '',
       category: '',
+      tags: '',
       isTop: false,
+      textWa: '',
       additional: {
         content1: '',
         headers: ['Attribute', 'Description'],

@@ -128,6 +128,35 @@ export function useProductManagement() {
     }
   };
 
+  const deleteProductImage = async (productId: string, galleryId: string) => {
+    try {
+      isLoading.value = true;
+      error.value = null;
+
+      const response = await apiClient.delete<{ success: boolean; data: any; message?: string }>(
+        `/product/${productId}/gallery/${galleryId}`
+      );
+
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to delete product image');
+      }
+
+      return response.data;
+    } catch (err: any) {
+      toast.error('Failed to delete product image', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      error.value = err?.message || 'Failed to delete product image';
+      throw err;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   const clearError = () => {
     error.value = null;
   };
@@ -227,6 +256,7 @@ export function useProductManagement() {
     updateProduct,
     getProductDetail,
     addProductImage,
+    deleteProductImage,
     deleteProduct,
     clearError,
   };

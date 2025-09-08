@@ -1,7 +1,5 @@
 export default defineEventHandler(async (event) => {
     try {
-      console.log('🗑️ Gallery delete request received');
-      
       // Get gallery ID from URL params
       const id = getRouterParam(event, 'id');
       
@@ -12,8 +10,6 @@ export default defineEventHandler(async (event) => {
         });
       }
       
-      console.log('📋 Gallery delete data received:', { id });
-      
       // Use proxy utility for deleting gallery
       const response = await proxyToExternalApi(event, {
         endpoint: `/about-us/gallery/${id}`,
@@ -21,8 +17,6 @@ export default defineEventHandler(async (event) => {
         requireAuth: true
       });
   
-      console.log('✅ Gallery deleted successfully, forwarding response');
-      
       return {
         success: true,
         data: response,

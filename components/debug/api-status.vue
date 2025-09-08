@@ -90,9 +90,6 @@ onMounted(() => {
   if (process.env.NODE_ENV === 'production') {
     showDebug.value = false;
   }
-  
-  // Log API status
-  console.log('🔧 API Debug component mounted');
 });
 </script>
 

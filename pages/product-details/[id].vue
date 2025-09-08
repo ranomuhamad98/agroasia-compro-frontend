@@ -8,12 +8,12 @@
           <p class="text-green-600">Fetching product details...</p>
         </div>
     </div>
-    <div class="pb-100" v-else-if="product">
+    <div class="pb-100" v-else-if="product" :key="product?.id">
         <breadcrumb-with-image title="Product Details" :subtitle="['Home', 'Products', product?.name || '']" color="#FFFFFF" />
         
         <product-details-area :product="product" :wa-link="waLink" />
 
-        <product-details-gallery v-if="product.gallery.length > 0" :product="product" />
+        <product-details-gallery v-if="(product?.gallery?.length || 0) > 0" :product="product" />
 
         <product-related-v2 :product-id="product?.id || ''" :category-id="product?.category_id || ''" />
     </div>
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { useProductDetailApi } from '@/composables/useProductDetailApi';
+import { computed } from 'vue'
 
 const route = useRoute()
 
@@ -33,6 +34,14 @@ const {
   waLink,
 } = useProductDetailApi(productId)
 
-useSeoMeta({ title: `${product?.value?.name} - Product Details Page - Agro Asia Berdikari` });
+// console.log(product.value)
+
+useSeoMeta({
+  title: computed(() =>
+    product?.value?.name
+      ? `${product.value.name} - Product Details Page - Agro Asia Berdikari`
+      : 'Product Details - Agro Asia Berdikari'
+  )
+});
 
 </script>

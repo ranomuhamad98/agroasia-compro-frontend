@@ -186,6 +186,7 @@ const handleMilestoneClick = (milestone: AboutMilestone) => {
                 position: relative;
                 cursor: pointer;
                 transition: all 0.3s ease;
+                padding: 0 1rem;
 
                 &:last-child {
                     color: var(--tp-green-moss);
@@ -208,7 +209,6 @@ const handleMilestoneClick = (milestone: AboutMilestone) => {
                 &:hover {
                     color: var(--tp-common-white);
                     background-color: var(--tp-green-moss);
-                    padding: 0 1rem;
                     border-radius: 0.3rem;
                     &::before {
                         background-color: var(--tp-common-white);

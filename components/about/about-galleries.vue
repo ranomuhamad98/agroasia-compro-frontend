@@ -12,10 +12,10 @@
                     </div>
                 </div>
                 <button class="gallery-nav prev" @click="slider?.prev()">
-                    <Icon name="mynaui:arrow-left" class="icon-arrow" />
+                    <Icon name="ph:arrow-left-bold" class="icon-arrow" />
                 </button>
                 <button class="gallery-nav next" @click="slider?.next()">
-                    <Icon name="mynaui:arrow-right" class="icon-arrow" />
+                    <Icon name="ph:arrow-right-bold" class="icon-arrow" />
                 </button>
             </div>
         </div>

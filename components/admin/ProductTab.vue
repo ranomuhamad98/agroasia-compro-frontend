@@ -1,44 +1,21 @@
 <template>
   <div>
-    <HeaderLayout
-      title="Product Management"
-      :subtitle="`Manage your products. Top products (${adminStore.topProductsCount}/4) will be displayed on the home page.`"
-      actionMessage="Add Product"
-      :disableRefresh="productsPending"
-      :loading="productsPending"
-      @action="openProductDialog"
-      @refresh="handleRefresh"
-    />
-    <!-- <div class="flex justify-between items-center mb-6">
-      <div>
-        <h2 class="page-title">Product Management</h2>
-        <p class="page-subtitle">
-          Manage your products. Top products ({{ adminStore.topProductsCount }}/4) will be displayed on the home
-          page.
-        </p>
-      </div>
-      <button @click="openProductDialog()" class="btn-primary flex items-center gap-2">
-        <PlusIcon class="w-4 h-4" />
-        Add Product
-      </button>
-    </div> -->
+    <HeaderLayout title="Product Management"
+      :subtitle="`Manage your products. Top products (${topProducts.length}) will be displayed on the home page.`"
+      actionMessage="Add Product" :disableRefresh="productsPending" :loading="productsPending"
+      @action="openProductDialog" @refresh="handleRefresh" />
 
     <div v-if="productsError" class="text-red-600 border border-red-200 bg-red-50 p-3 rounded-md mb-4">
       {{ productsError?.message || 'Failed to load products' }}
     </div>
 
     <div v-if="productsPending && uiProducts.length === 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <ProductCard v-for="n in 6" :key="`skeleton-`+n" :loading="true" :product="skeletonProduct" />
+      <ProductCard v-for="n in 6" :key="`skeleton-` + n" :loading="true" :product="skeletonProduct" />
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <ProductCard
-        v-for="product in uiProducts"
-        :key="product.id"
-        :product="product"
-        @edit="openProductDialog(product)"
-        @delete="handleDelete(product)"
-      />
+      <ProductCard v-for="product in uiProducts" :key="product.id" :product="product" @edit="openProductDialog(product)"
+        @delete="handleDelete(product)" />
     </div>
 
     <!-- Pagination Controls -->
@@ -47,11 +24,7 @@
         <!-- Left: page size selector -->
         <div class="flex items-center gap-2">
           <label class="text-sm text-green-700 w-full">Items per page</label>
-          <select
-            :value="currentParams.limit"
-            @change="onChangeLimit($event)"
-            class="input-field w-28"
-          >
+          <select :value="currentParams.limit" @change="onChangeLimit($event)" class="input-field w-28">
             <option :value="6">6</option>
             <option :value="12">12</option>
             <option :value="24">24</option>
@@ -61,38 +34,25 @@
 
         <!-- Center: numbered pagination -->
         <nav class="flex items-center gap-2">
-          <button
-            class="btn-secondary p-2"
-            :disabled="productsPending || pagination.current_page <= 1"
-            @click="previousPage()"
-            :title="'Previous page'"
-          >
+          <button class="btn-secondary p-2" :disabled="productsPending || pagination.current_page <= 1"
+            @click="previousPage()" :title="'Previous page'">
             <ChevronLeftIcon class="w-4 h-4" />
           </button>
 
-          <button
-            v-for="(p, idx) in pageNumbers"
-            :key="`p-${idx}-${p}`"
-            class="px-3 py-1 rounded-md border transition-colors"
-            :class="[
+          <button v-for="(p, idx) in pageNumbers" :key="`p-${idx}-${p}`"
+            class="px-3 py-1 rounded-md border transition-colors" :class="[
               p === pagination.current_page
                 ? 'bg-green-600 text-white border-green-600'
                 : p === '…' || p === '...'
                   ? 'bg-transparent text-green-700 border-transparent cursor-default'
                   : 'bg-white text-green-700 border-green-300 hover:bg-green-50'
-            ]"
-            :disabled="p === '…' || p === '...' || productsPending"
-            @click="typeof p === 'number' && goToPage(p)"
-          >
+            ]" :disabled="p === '…' || p === '...' || productsPending" @click="typeof p === 'number' && goToPage(p)">
             {{ p }}
           </button>
 
-          <button
-            class="btn-secondary p-2"
-            :disabled="productsPending || pagination.current_page >= pagination.last_page"
-            @click="nextPage()"
-            :title="'Next page'"
-          >
+          <button class="btn-secondary p-2"
+            :disabled="productsPending || pagination.current_page >= pagination.last_page" @click="nextPage()"
+            :title="'Next page'">
             <ChevronRightIcon class="w-4 h-4" />
           </button>
         </nav>
@@ -105,18 +65,14 @@
     </div>
   </div>
 
-  <ProductForm
-    :show="showProductForm"
-    :product="selectedProduct"
-    @close="closeProductDialog"
-    @save="handleRefresh"
-  />
+  <ProductForm :show="showProductForm" :product="selectedProduct" @close="closeProductDialog" @save="handleRefresh" />
 </template>
 
 <script setup>
 import { useAdminStore } from '@/stores/admin'
 import ProductCard from './ProductCard.vue'
 import { useProductsApi } from '@/composables/useProductsApi'
+import { useHomeApi } from '@/composables/useHomeApi'
 import HeaderLayout from './HeaderLayout.vue'
 import ProductForm from './ProductForm.vue'
 import { ref, computed } from 'vue'
@@ -126,24 +82,49 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-vue-next'
 const showProductForm = ref(false)
 const selectedProduct = ref(null)
 
-const { productsData, productsError, productsPending, forceRefresh, nextPage, previousPage, goToPage, changeLimit, currentParams } = useProductsApi()
+const { 
+  productsData,
+  productsError,
+  productsPending,
+  forceRefresh,
+  nextPage,
+  previousPage,
+  goToPage,
+  changeLimit,
+  currentParams
+} = useProductsApi()
+
+const { 
+  topProducts, 
+  hasData,
+  refresh 
+} = useHomeApi();
+
 const { deleteProduct } = useProductManagement()
 const { $toast } = useNuxtApp()
 
 const adminStore = useAdminStore()
 
+// Build a fast lookup set of Top Product IDs from home API
+const topProductIdSet = computed(() => new Set((topProducts.value || []).map((tp) => tp.id)))
+
 // Map API products to UI shape expected by ProductCard
 const uiProducts = computed(() => {
   const apiProducts = productsData.value?.data?.products || []
-  return apiProducts.map((p) => ({
-    id: p.id,
-    image: p.image || '/placeholder.svg?height=200&width=200',
-    name: p.name,
-    description: p.summary, // ProductCard expects `description`
-    category: p.category,
-    additionalInfo: '',
-    isTop: false,
-  }))
+  return apiProducts.map((p) => {
+    const isTopProduct = topProductIdSet.value.has(p.id)
+    return {
+      id: p.id,
+      image: p.image || '/placeholder.svg?height=200&width=200',
+      name: p.name,
+      description: p.summary, // ProductCard expects `description`
+      category: p.category,
+      additionalInfo: '',
+      // Keep both keys for UI and potential downstream usage
+      isTop: isTopProduct,
+      is_top_product: isTopProduct,
+    }
+  })
 })
 
 // Placeholder product for skeleton state

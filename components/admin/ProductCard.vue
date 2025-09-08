@@ -3,16 +3,16 @@
     <!-- Header -->
     <div class="p-4 border-b border-green-100">
       <div class="flex justify-between items-start">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-center gap-2">
           <template v-if="loading">
             <div class="h-5 w-40 bg-gray-200 rounded animate-pulse" />
             <div class="h-5 w-12 bg-gray-200 rounded-full animate-pulse" />
           </template>
           <template v-else>
-            <h3 class="text-lg font-semibold text-green-800">{{ product.name }}</h3>
+            <h3 class="text-lg font-semibold text-green-800 mb-0">{{ product.name }}</h3>
             <span v-if="product.isTop"
               class="text-xs bg-green-100 text-green-700 border border-green-300 px-2 py-1 rounded-full flex items-center gap-1">
-              <StarIcon class="w-3 h-3" />
+              <StarIcon class="w-3 h-3 fill-green-700" />
               Top
             </span>
           </template>
