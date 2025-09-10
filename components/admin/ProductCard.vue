@@ -10,7 +10,7 @@
           </template>
           <template v-else>
             <h3 class="text-lg font-semibold text-green-800 mb-0">{{ product.name }}</h3>
-            <span v-if="product.isTop"
+            <span v-if="product.is_top_product"
               class="text-xs bg-green-100 text-green-700 border border-green-300 px-2 py-1 rounded-full flex items-center gap-1">
               <StarIcon class="w-3 h-3 fill-green-700" />
               Top

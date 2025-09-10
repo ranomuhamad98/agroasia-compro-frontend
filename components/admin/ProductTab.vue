@@ -95,34 +95,23 @@ const {
 } = useProductsApi()
 
 const { 
-  topProducts, 
-  hasData,
-  refresh 
+  topProducts,
 } = useHomeApi();
 
 const { deleteProduct } = useProductManagement()
 const { $toast } = useNuxtApp()
 
-const adminStore = useAdminStore()
-
-// Build a fast lookup set of Top Product IDs from home API
-const topProductIdSet = computed(() => new Set((topProducts.value || []).map((tp) => tp.id)))
-
 // Map API products to UI shape expected by ProductCard
 const uiProducts = computed(() => {
   const apiProducts = productsData.value?.data?.products || []
   return apiProducts.map((p) => {
-    const isTopProduct = topProductIdSet.value.has(p.id)
     return {
       id: p.id,
       image: p.image || '/placeholder.svg?height=200&width=200',
       name: p.name,
       description: p.summary, // ProductCard expects `description`
       category: p.category,
-      additionalInfo: '',
-      // Keep both keys for UI and potential downstream usage
-      isTop: isTopProduct,
-      is_top_product: isTopProduct,
+      is_top_product: p.is_top_product,
     }
   })
 })
@@ -134,7 +123,6 @@ const skeletonProduct = {
   name: 'Loading…',
   description: 'Loading…',
   category: '…',
-  additionalInfo: '',
   isTop: false,
 }
 

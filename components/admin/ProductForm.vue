@@ -8,7 +8,13 @@
         </h3>
         <p class="text-green-600 mt-1">Fill in the product information below.</p>
       </div>
-      <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
+      <div v-if="product && detailLoading" class="p-6 flex items-center justify-center min-h-[300px]">
+        <div class="flex items-center gap-3 text-green-700">
+          <LoaderIcon class="w-5 h-5 animate-spin" />
+          <span>Loading product data...</span>
+        </div>
+      </div>
+      <form v-else @submit.prevent="handleSubmit" class="p-6 space-y-4">
         <div class="space-y-2">
           <label class="text-green-700 font-medium block font-semibold">Product Images</label>
           <input ref="fileInput" type="file" multiple accept="image/*" class="hidden" @change="onFilesSelected" />
@@ -165,7 +171,7 @@
           <button type="button" @click="$emit('close')" class="btn-secondary">
             Cancel
           </button>
-          <button type="submit" class="btn-primary flex items-center gap-2">
+          <button type="submit" class="btn-primary flex items-center gap-2" :disabled="isLoading || detailLoading">
             <LoaderIcon v-if="isLoading" class="w-4 h-4" />
             {{ product ? 'Update' : 'Add' }} Product
           </button>
