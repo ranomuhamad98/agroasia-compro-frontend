@@ -1,7 +1,5 @@
 <template>
   <div>
-    <breadcrumb-with-image title="Products" :subtitle="['Home', 'Products']" color="#FFFFFF" />
-
     <shop-area />
   </div>
 </template>

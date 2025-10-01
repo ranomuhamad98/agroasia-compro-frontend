@@ -2,14 +2,18 @@
     <div class="tp-home-hero">
         <!-- Show slider only when slides exist -->
         <div v-if="props.slides && props.slides.length > 0" ref="sliderRef" class="keen-slider">
-            <div v-for="(slide, index) in props.slides" :key="index" class="keen-slider__slide"
+            <div v-for="(slide, index) in props.slides" :key="slide.id" class="keen-slider__slide"
                 :style="{ backgroundImage: `url(${getImageUrl(slide.image)})` }">
                 <div class="slide-content">
-                    <p v-html="$sanitize(slide.sub_title)"></p>
+                    <ClientOnly>
+                        <p v-if="slide.sub_title" v-html="$sanitize(slide.sub_title)"></p>
+                    </ClientOnly>
                     <h2>{{ slide.title }}</h2>
                     <a class="cta-button" :href="slide.button_link">
                         {{ slide.button_title }}
-                        <Icon name="streamline:interface-arrows-right-arrow-right-keyboard" />
+                        <ClientOnly>
+                        <ArrowRightIcon />
+                        </ClientOnly>
                     </a>
                 </div>
             </div>
@@ -18,17 +22,18 @@
         <!-- Slider controls - only show when slides exist and slider is initialized -->
         <template v-if="props.slides && props.slides.length > 0 && slider">
             <button class="arrow arrow--left" @click="slider.prev()">
-                <Icon name="feather:chevron-left" />
+                <ChevronLeftIcon />
             </button>
             <button class="arrow arrow--right" @click="slider.next()">
-                <Icon name="feather:chevron-right" />
+                <ChevronRightIcon />
             </button>
             <div class="dots">
                 <button v-for="(_slide, idx) in dotHelper" :key="idx" :class="{ dot: true, active: currentSlide === idx }"
                     @click="slider.moveToIdx(idx)" />
             </div>
             <button class="pause-button" @click="togglePause">
-                <Icon :name="paused ? 'feather:play' : 'feather:pause'" size="16" />
+                <PauseIcon v-if="paused" :size="16" />
+                <PlayIcon v-else :size="16" />
             </button>
         </template>
     </div>
@@ -39,6 +44,7 @@ import { useKeenSlider } from 'keen-slider/vue.es'
 import 'keen-slider/keen-slider.min.css'
 import { computed, ref, type DeepReadonly } from 'vue'
 import type { Slider } from '@/types/home-api-type';
+import { ChevronLeftIcon, ChevronRightIcon, PauseIcon, PlayIcon, ArrowRightIcon } from 'lucide-vue-next';
 
 const props = defineProps<{
     slides: DeepReadonly<Slider[]>

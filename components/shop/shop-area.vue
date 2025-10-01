@@ -1,4 +1,5 @@
 <template>
+  <breadcrumb-with-image title="Products" :subtitle="['Home', 'Products']" color="#FFFFFF" :image="productsData?.data.jumbotron.image" />
   <section class="tp-shop-area pb-120">
     <div class="container">
       <div class="row">
@@ -94,7 +95,8 @@
                       summary: '',
                       category: '',
                       category_id: '',
-                      update_time: ''
+                      update_time: '',
+                      text_wa_product: '',
                     }"
                     :is-loading="productsPending" />
                 </div>
@@ -151,7 +153,7 @@ const {
   limit: 12,
   category: undefined
 }, {
-  persistent: true, // Enable localStorage caching
+  persistent: false, // Enable localStorage caching
   ttl: 5 * 60 * 1000 // 5 minutes cache
 })
 

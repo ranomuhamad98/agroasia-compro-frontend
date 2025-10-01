@@ -27,6 +27,7 @@ export interface Product {
     category: string;
     category_id: string;
     update_time: string;
+    text_wa_product?: string;
 }
 
 export interface ProductPagination {

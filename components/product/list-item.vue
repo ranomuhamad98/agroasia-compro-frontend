@@ -35,7 +35,7 @@
           </h3>
           <p>{{ item.summary.slice(0, 100) }}</p>
           <div>
-            <a :href="waLink || '#'"
+            <a :href="computedWaLink"
               class="tp-product-pesan-sekarang list-item-pesan-sekarang" target="_blank" rel="noopener noreferrer">
               <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
               <span>Pesan Sekarang</span>
@@ -51,11 +51,18 @@
 import type { DeepReadonly } from "vue";
 import type { Product } from "@/types/products-api-type";
 
-defineProps<{ 
+const props = defineProps<{ 
   item: DeepReadonly<Product>;
   isLoading?: boolean;
   waLink?: string;
 }>();
+
+const computedWaLink = computed(() => {
+  if (props.item.text_wa_product) {
+    return props.item.text_wa_product;
+  }
+  return props.waLink || "#";
+});
 </script>
 
 <style scoped>
