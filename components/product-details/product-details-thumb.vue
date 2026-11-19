@@ -35,12 +35,15 @@ import type { DeepReadonly } from "vue";
 
 const props = defineProps<{ product: DeepReadonly<ProductDetail> }>();
 
-const activeImage = ref<string>('');
+const pickImage = () => {
+  const gallery = props.product.gallery || []
+  return gallery.find(img => img.status === 'main')?.image || gallery[0]?.image || ''
+}
 
-onMounted(() => {
-  if (props.product.gallery) {
-    activeImage.value = props.product.gallery.find(img => img.status === 'main')?.image || '';
-  }
+const activeImage = ref<string>(pickImage());
+
+watch(() => props.product.gallery, () => {
+  if (!activeImage.value) activeImage.value = pickImage()
 });
 
 // const mainImage = computed(() => {

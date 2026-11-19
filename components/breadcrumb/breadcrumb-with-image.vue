@@ -7,14 +7,15 @@
             <div class="col-xxl-12">
               <div :class="`breadcrumb__content p-relative z-index-1 ${center && 'text-center'}`">
                 <h3 class="breadcrumb__title" :style="`color:${color}`">{{ title }}</h3>
-                <div class="d-flex align-items-center justify-content-start gap-2 flex-wrap">
-                  <span v-for="(item, index) in subtitle" :key="item" :style="`color:${color}`"
-                    class="breadcrumb-items">{{ item }}
-                    <span v-if="index !== subtitle.length - 1" class="breadcrumb-separator">
-                      <Icon name="mdi:chevron-right" />
-                    </span>
-                  </span>
-                </div>
+                <nav class="breadcrumb-trail" :style="`color:${color}`" aria-label="Breadcrumb">
+                  <template v-for="(item, index) in subtitle" :key="`${item}-${index}`">
+                    <nuxt-link v-if="index !== subtitle.length - 1" :to="crumbLink(item)" class="breadcrumb-items">{{ item }}</nuxt-link>
+                    <span v-else class="breadcrumb-items is-current">{{ item }}</span>
+                    <svg v-if="index !== subtitle.length - 1" class="breadcrumb-separator" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fill="currentColor" d="M9.29 6.71a1 1 0 0 0 0 1.42L13.17 12l-3.88 3.88a1 1 0 1 0 1.42 1.41l4.58-4.58a1 1 0 0 0 0-1.42L10.71 6.7a1 1 0 0 0-1.42 0Z"/>
+                    </svg>
+                  </template>
+                </nav>
               </div>
             </div>
           </div>
@@ -38,21 +39,43 @@ defineProps<{
   color?: string;
   image?: string;
 }>();
+
+const crumbLink = (item: string) => {
+  if (item === 'Home') return '/'
+  if (item === 'Products') return '/products'
+  return '/'
+}
 </script>
 
 <style scoped>
-.breadcrumb-items {
-  font-size: 1rem;
-  font-weight: 300;
+.breadcrumb-trail {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.breadcrumb-items {
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+a.breadcrumb-items:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-items.is-current {
+  opacity: 0.9;
 }
 
 .breadcrumb-separator {
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  display: block;
 }
 </style>
