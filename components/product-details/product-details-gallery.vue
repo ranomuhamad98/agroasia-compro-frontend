@@ -11,11 +11,15 @@
                         <img :src="image.image" :alt="product.name" />
                     </div>
                 </div>
-                <button class="gallery-nav prev" @click="slider?.prev()">
-                    <Icon name="mynaui:arrow-left" class="icon-arrow" />
+                <button type="button" class="gallery-nav prev" aria-label="Previous photos" @click="slider?.prev()">
+                    <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M14.71 6.71a1 1 0 0 0-1.42 0L8.71 11.3a1 1 0 0 0 0 1.4l4.58 4.59a1 1 0 0 0 1.42-1.42L10.83 12l3.88-3.88a1 1 0 0 0 0-1.41Z"/>
+                    </svg>
                 </button>
-                <button class="gallery-nav next" @click="slider?.next()">
-                    <Icon name="mynaui:arrow-right" class="icon-arrow" />
+                <button type="button" class="gallery-nav next" aria-label="Next photos" @click="slider?.next()">
+                    <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M9.29 6.71a1 1 0 0 0 0 1.42L13.17 12l-3.88 3.88a1 1 0 1 0 1.42 1.41l4.58-4.58a1 1 0 0 0 0-1.42L10.71 6.7a1 1 0 0 0-1.42 0Z"/>
+                    </svg>
                 </button>
             </div>
         </div>
@@ -90,7 +94,9 @@ defineProps<{
     transition: all 0.3s ease;
 
     .icon-arrow {
-        font-size: 1.2rem;
+        width: 22px;
+        height: 22px;
+        display: block;
     }
 
     &:hover {

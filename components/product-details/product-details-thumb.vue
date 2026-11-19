@@ -13,11 +13,15 @@
       <div class="tab-content m-img" id="productDetailsNavContent">
         <div class="tp-product-details-nav-main-thumb w-[calc(100vw-4rem)] lg:w-[calc(50vw-150px)]" style="background-color: #f5f6f8">
           <img :src="activeImage" alt="prd-image" />
-          <button class="nav-arrow prev" @click="handlePrevImage" v-if="product.gallery && product.gallery.length > 1">
-            <Icon name="mdi:chevron-left" class="icon" />
+          <button type="button" class="nav-arrow prev" aria-label="Previous photo" @click="handlePrevImage" v-if="product.gallery && product.gallery.length > 1">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M14.71 6.71a1 1 0 0 0-1.42 0L8.71 11.3a1 1 0 0 0 0 1.4l4.58 4.59a1 1 0 0 0 1.42-1.42L10.83 12l3.88-3.88a1 1 0 0 0 0-1.41Z"/>
+            </svg>
           </button>
-          <button class="nav-arrow next" @click="handleNextImage" v-if="product.gallery && product.gallery.length > 1">
-            <Icon name="mdi:chevron-right" class="icon" />
+          <button type="button" class="nav-arrow next" aria-label="Next photo" @click="handleNextImage" v-if="product.gallery && product.gallery.length > 1">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M9.29 6.71a1 1 0 0 0 0 1.42L13.17 12l-3.88 3.88a1 1 0 1 0 1.42 1.41l4.58-4.58a1 1 0 0 0 0-1.42L10.71 6.7a1 1 0 0 0-1.42 0Z"/>
+            </svg>
           </button>
         </div>
       </div>
@@ -96,7 +100,9 @@ const handleImageActive = (image_link: string) => {
 
   .icon {
     color: #80B500;
-    font-size: 1.5rem;
+    width: 22px;
+    height: 22px;
+    display: block;
   }
 
   &:hover {

@@ -13,7 +13,9 @@
         <div class="tp-product-details-quantity-custom mb-15 mr-15">
           <div class="block-quantity">
             <span class="quantity-minus" @click="cart--">
-              <Icon name="mdi:minus" />
+              <svg class="qty-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M5 11h14v2H5z" />
+              </svg>
             </span>
           </div>
 
@@ -21,7 +23,9 @@
 
           <div class="block-quantity">
             <span class="quantity-plus" @click="cart++">
-              <Icon name="mdi:plus" />
+              <svg class="qty-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
+              </svg>
             </span>
           </div>
         </div>
@@ -63,3 +67,11 @@ const props = withDefaults(defineProps<{
 const cart = ref<number>(1);
 let textMore = ref<boolean>(false)
 </script>
+
+<style scoped>
+.qty-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+</style>
