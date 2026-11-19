@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { type IProduct } from '@/types/product-d-t';
-import { useKeenSlider } from 'keen-slider/vue';
+import { useKeenSlider } from 'keen-slider/vue.es';
 
 const [container, slider] = useKeenSlider({
     loop: true,

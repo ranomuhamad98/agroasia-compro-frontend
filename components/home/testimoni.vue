@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { useKeenSlider } from 'keen-slider/vue'
+import { useKeenSlider } from 'keen-slider/vue.es'
 import { ref } from 'vue'
 
 const currentSlide = ref(0)

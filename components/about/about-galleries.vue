@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { useKeenSlider } from 'keen-slider/vue';
+import { useKeenSlider } from 'keen-slider/vue.es';
 
 const [container, slider] = useKeenSlider({
     slides: {
