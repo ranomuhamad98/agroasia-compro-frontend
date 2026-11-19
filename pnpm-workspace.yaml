@@ -1,3 +1,5 @@
+minimumReleaseAge: 0
+
 overrides:
   ipx: ^3.0.0
 

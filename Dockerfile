@@ -7,7 +7,7 @@ RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml ./
 
-RUN pnpm install --no-frozen-lockfile --prefer-offline --reporter=append-only
+RUN pnpm install --no-frozen-lockfile --prefer-offline --reporter=append-only --config.minimum-release-age=0
 
 # Salin seluruh file project
 COPY . .
