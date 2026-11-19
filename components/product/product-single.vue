@@ -106,7 +106,6 @@ function isItemInCart(product: IProduct) {
 .product-card__body {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
   padding: 16px 16px 0;
 }
 
@@ -132,8 +131,8 @@ function isItemInCart(product: IProduct) {
 }
 
 .product-card__action {
-  margin-top: auto;
-  padding: 16px 16px 4px;
+  margin-top: 12px;
+  padding: 0 16px 4px;
 }
 
 .product-card__action :deep(.tp-product-pesan-sekarang) {
