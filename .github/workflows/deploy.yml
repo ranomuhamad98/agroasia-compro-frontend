@@ -147,6 +147,7 @@ jobs:
               -e NUXT_HOST=0.0.0.0 \
               -e NUXT_PORT=3000 \
               -e HOST_PUBLIC_DIR=/srv/public \
+              -e API_UPSTREAM=http://172.17.0.1:3300/api \
               -v "${DEPLOY_PATH}/public:/srv/public" \
               -v "${UPLOADS_PATH}:/srv/public/uploads" \
               "${IMAGE_NAME}:${IMAGE_TAG}"
