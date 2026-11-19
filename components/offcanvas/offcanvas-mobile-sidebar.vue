@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div class="offcanvas__bottom">
+      <div v-if="showLanguageSelector" class="offcanvas__bottom">
         <div class="offcanvas__footer d-flex align-items-center justify-content-between">
           <div class="offcanvas__select language">
             <div class="offcanvas__lang d-flex align-items-center justify-content-md-end">
@@ -70,6 +70,7 @@
 <script setup lang="ts">
 import { useUtilityStore } from "@/pinia/useUtilityStore";
 const utilsStore = useUtilityStore();
+const showLanguageSelector = false;
 
 let isToggleActive = ref<string>("");
 // handle active

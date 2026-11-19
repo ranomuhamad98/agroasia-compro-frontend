@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <div v-if="header?.option_language_active" class="offcanvas__lang d-flex align-items-center">
+            <div v-if="showLanguageSelector && header?.option_language_active" class="offcanvas__lang d-flex align-items-center">
               <div class="offcanvas__lang-wrapper">
                 <div @click="handleToggleLanguage" class="tp-header-language-selector" style="cursor: pointer">
                   <Icon name="ph:globe-bold" />
@@ -92,6 +92,7 @@ const {
   header
 } = useHomeApi()
 
+const showLanguageSelector = false;
 const isLanguageOpen = ref(false);
 const selectedLanguage = ref('English');
 
