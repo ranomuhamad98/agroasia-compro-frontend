@@ -22,13 +22,13 @@
             decoding="async" class="shop-area__img" />
         </nuxt-link>
       </div>
-      <div class="tp-product-content-5 mt-4 mb-2">
-        <h3 class="tp-product-title-5 text-center font-weight-bold">
+      <div class="tp-product-content-5 product-card__body">
+        <h3 class="tp-product-title-5 product-card__title text-center font-weight-bold">
           <nuxt-link :href="`/product-details/${product.id}`" class="text-[#010F1C]">{{ product.name }}</nuxt-link>
         </h3>
-        <p class="text-center text-truncate px-4">{{ product.summary }}</p>
+        <p class="product-card__summary text-center">{{ product.summary }}</p>
       </div>
-      <div>
+      <div class="product-card__action">
         <a :href="waLink || '#'" class="tp-product-pesan-sekarang" target="_blank" rel="noopener noreferrer">
           <Icon name="ri:whatsapp-fill" style="font-size: 1.2rem;" />
           <span>Pesan Sekarang</span>
@@ -70,19 +70,74 @@ function isItemInCart(product: IProduct) {
 </script>
 
 <style scoped>
+.tp-product-item-5 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.tp-product-thumb-5 {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  margin-bottom: 0;
+}
+
 .shop-area__img-link {
   display: block;
+  position: relative;
   width: 100%;
   height: 100%;
-  min-height: 220px;
+  overflow: hidden;
   background-color: #f2f3f5;
+  border-radius: 8px;
 }
 
 .shop-area__img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+  color: transparent;
+}
+
+.product-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 16px 16px 0;
+}
+
+.product-card__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 3rem;
+  margin-bottom: 8px;
+  line-height: 1.5rem;
+}
+
+.product-card__summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.7rem;
+  margin-bottom: 0;
+  color: #55585b;
+  line-height: 1.35rem;
+}
+
+.product-card__action {
+  margin-top: auto;
+  padding: 16px 16px 4px;
+}
+
+.product-card__action :deep(.tp-product-pesan-sekarang) {
+  height: auto;
 }
 
 /* Loading skeleton styles */

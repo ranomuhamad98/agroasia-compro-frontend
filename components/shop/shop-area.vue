@@ -64,7 +64,7 @@
                 v-if="!productsPending"
                 class="row infinite-container">
                 <div v-for="item in productsData?.data.products" :key="item.id"
-                  class="col-xl-4 col-md-6 col-sm-6 infinite-item">
+                  class="col-xl-4 col-md-6 col-sm-6 infinite-item d-flex">
                   <product-single :product="item" :waLink="generateWaLink(item, productsData?.data.wa_text_interest)" />
                 </div>
               </div>
@@ -72,7 +72,7 @@
                 v-else
                 class="row infinite-container">
                 <div v-for="item in 2" :key="item"
-                  class="col-xl-4 col-md-6 col-sm-6 infinite-item">
+                  class="col-xl-4 col-md-6 col-sm-6 infinite-item d-flex">
                   <product-single :is-loading="true" />
                 </div>
               </div>
