@@ -93,8 +93,8 @@ jobs:
           command_timeout: 30m
           script: |
             set -e
-            DEPLOY_PATH="${HOME}/frontend"
-            ENV_PATH="${HOME}/.env.frontend"
+            DEPLOY_PATH="/home/admin/frontend"
+            ENV_PATH="/home/admin/.env.frontend"
             HOST_PORT="${{ secrets.HOST_PORT }}"
             HOST_PORT="${HOST_PORT:-3000}"
 
