@@ -24,7 +24,9 @@ export function useProductsApi(
   const internalParams = ref<ProductsApiParams>({
     page: unref(params).page || 1,
     limit: unref(params).limit || 12,
-    category: unref(params).category
+    category: unref(params).category,
+    search: unref(params).search || '',
+    top: unref(params).top || false
   });
 
   // Watch for external params changes and sync with internal params (initial sync only)
@@ -37,7 +39,9 @@ export function useProductsApi(
         const updatedParams = {
           page: newParams.page || 1,
           limit: newParams.limit || 12,
-          category: newParams.category
+          category: newParams.category,
+          search: newParams.search || '',
+          top: newParams.top || false
         };
         internalParams.value = updatedParams;
         hasInitialized = true;
@@ -50,12 +54,14 @@ export function useProductsApi(
   const reactiveParams = computed(() => ({
     page: internalParams.value.page || 1,
     limit: internalParams.value.limit || 12,
-    category: internalParams.value.category
+    category: internalParams.value.category,
+    search: internalParams.value.search || '',
+    top: internalParams.value.top || false
   }));
 
   // Build query string reactively
   const queryString = computed(() => {
-    const { page, limit, category } = reactiveParams.value;
+    const { page, limit, category, search, top } = reactiveParams.value;
     const queryParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString()
@@ -64,13 +70,19 @@ export function useProductsApi(
     if (category) {
       queryParams.append('category', category);
     }
+    if (search) {
+      queryParams.append('search', search);
+    }
+    if (top) {
+      queryParams.append('top', '1');
+    }
     
     return queryParams.toString();
   });
 
   // Cache key that updates when parameters change
   const cacheKey = computed(() => 
-    `products-api-data-${reactiveParams.value.page}-${reactiveParams.value.limit}-${reactiveParams.value.category || 'all'}`
+    `products-api-data-${reactiveParams.value.page}-${reactiveParams.value.limit}-${reactiveParams.value.category || 'all'}-${reactiveParams.value.search || ''}-${reactiveParams.value.top ? 'top' : 'any'}`
   );
 
   // Persistent cache key for localStorage

@@ -118,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useProductFilterStore } from "../../pinia/useProductFilterStore";
 import { useProductsApi } from "../../composables/useProductsApi";
 import { useRouter } from "vue-router";
@@ -146,9 +146,9 @@ const handlePerPageChange = (e: Event) => {
 const { 
   productsData,
   productsPending,
-  changeCategory,
   changeLimit,
   changePage,
+  updateParams,
 } = useProductsApi({
   page: 1,
   limit: 12,
@@ -179,31 +179,25 @@ const generateWaLink = (item: Product, message?: string) => {
   )
 }
 
-onMounted(() => {
-  const query = route.query;
-  if (query.tab) {
-    active_tab.value = query.tab as string;
-  }
-  if (query.category) {
-    active_category.value = query.category as string;
-  }
-});
+watch(
+  () => [route.query.category, route.query.q, route.query.top],
+  () => {
+    active_category.value = typeof route.query.category === 'string' ? route.query.category : '';
+    updateParams({
+      category: active_category.value || undefined,
+      search: typeof route.query.q === 'string' ? route.query.q : '',
+      top: route.query.top === '1',
+      page: 1,
+    });
+  },
+  { immediate: true }
+);
 
 watch(
-  () => route.query,
-  (newQuery) => {
-    if (!newQuery.category && active_category.value) {
-      changeCategory(undefined);
-    }
-    if (newQuery.category) {
-      active_category.value = newQuery.category as string;
-      changeCategory(active_category.value);
-    }
-    if (newQuery.tab) {
-      active_tab.value = newQuery.tab as string
-    } else {
-      active_tab.value = "grid";
-    }
-  }
+  () => route.query.tab,
+  (tab) => {
+    active_tab.value = typeof tab === 'string' ? tab : 'grid';
+  },
+  { immediate: true }
 );
 </script>

@@ -41,4 +41,6 @@ export interface ProductsApiParams {
     page?: number;
     limit?: number;
     category?: string;
+    search?: string;
+    top?: boolean;
 }
