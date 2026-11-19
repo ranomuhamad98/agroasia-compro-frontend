@@ -1,6 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({
+  alias: {
+    pinia: fileURLToPath(new URL('./node_modules/pinia/dist/pinia.mjs', import.meta.url)),
+  },
   devtools: { enabled: true },
   modules: [[
     '@pinia/nuxt',
