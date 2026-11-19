@@ -68,7 +68,7 @@ jobs:
       - name: Check production secrets
         run: |
           missing=0
-          for name in SSH_HOST SSH_USER SSH_PRIVATE_KEY; do
+          for name in SSH_HOST SSH_USER SSH_PRIVATE_KEY SSH_USER_PATH; do
             if [ -z "${!name}" ]; then
               echo "Missing production secret: $name"
               missing=1
@@ -82,6 +82,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER_PATH: ${{ secrets.SSH_USER_PATH }}
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
@@ -93,8 +94,10 @@ jobs:
           command_timeout: 30m
           script: |
             set -e
-            DEPLOY_PATH="/home/admin/frontend"
-            ENV_PATH="/home/admin/.env.frontend"
+            BASE_PATH="${{ secrets.SSH_USER_PATH }}"
+            BASE_PATH="${BASE_PATH%/}"
+            DEPLOY_PATH="${BASE_PATH}/frontend"
+            ENV_PATH="${BASE_PATH}/.env.frontend"
             HOST_PORT="${{ secrets.HOST_PORT }}"
             HOST_PORT="${HOST_PORT:-3000}"
 
