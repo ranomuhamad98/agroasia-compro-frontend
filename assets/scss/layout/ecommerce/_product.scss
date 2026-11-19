@@ -1,4 +1,5 @@
 @use '../../utils' as *;
+@use 'sass:map';
 
 /*----------------------------------------*/
 /*  8.9 Product Card CSS START
@@ -23,7 +24,7 @@
     }
     &-pesan-sekarang {
         background-color: #128C7E;
-        color: map-get($colors, 'white', 'pure');
+        color: map.get($colors, 'white', 'pure');
         border-radius: 8px;
         padding: .5rem 1rem;
         width: 80%;
@@ -38,7 +39,7 @@
 
         &:hover {
             background-color: #075E54;
-            color: map-get($colors, 'white', 'pure');
+            color: map.get($colors, 'white', 'pure');
         }
     }
     &-item{
@@ -404,6 +405,17 @@
         }
     }
     &-add-cart-btn-large{
+        font-size: 18px;
+        color: var(--tp-common-white);
+        background-color: var(--tp-common-black);
+        text-transform: capitalize;
+        font-size: 14px;
+        font-weight: 700;
+        @extend %tp-ff-roboto;
+        display: inline-block;
+        width: 100%;
+        padding: 8px 30px;
+
         &-wrapper{
             position: absolute;
             bottom: -40px;
@@ -415,17 +427,6 @@
             @extend %tp-transition;
         }
 
-        font-size: 18px;
-        color: var(--tp-common-white);
-        background-color: var(--tp-common-black);
-        text-transform: capitalize;
-        font-size: 14px;
-        font-weight: 700;
-        @extend %tp-ff-roboto;
-        display: inline-block;
-        width: 100%;
-        padding: 8px 30px;
-    
         & svg,
         & i{
             margin-right: 5px;

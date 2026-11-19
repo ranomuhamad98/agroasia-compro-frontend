@@ -3,7 +3,7 @@
     }`">
     <div class="offcanvas__wrapper">
       <div class="offcanvas__close">
-        <button @click="utilsStore.handleOpenMobileMenu()" class="offcanvas__close-btn offcanvas-close-btn">
+        <button @click="utilsStore.handleOpenMobileMenu()" class="offcanvas__close-btn offcanvas-close-btn !flex items-center justify-center rounded-full">
           <svg-close-2 />
         </button>
       </div>
@@ -22,7 +22,7 @@
           <!-- mobile menus end -->
         </div>
 
-        <nuxt-link to="/contact" class="tp-header-btn-cta">Contact Us</nuxt-link>
+        <nuxt-link :to="{ path: '/', hash: '#contact-us' }" @click.prevent="handleContactClick" class="tp-header-btn-cta">Contact Us</nuxt-link>
 
         <div class="offcanvas__contact align-items-center d-none">
           <div class="offcanvas__contact-icon mr-20">
@@ -39,19 +39,6 @@
       </div>
       <div class="offcanvas__bottom">
         <div class="offcanvas__footer d-flex align-items-center justify-content-between">
-          <div class="offcanvas__currency-wrapper currency">
-            <span @click="handleToggleActive('currency')"
-              class="offcanvas__currency-selected-currency tp-currency-toggle"
-              id="tp-offcanvas-currency-toggle">Currency : USD
-            </span>
-            <ul :class="`offcanvas__currency-list tp-currency-list ${isToggleActive === 'currency' ? 'tp-currency-list-open' : ''
-              }`">
-              <li>USD</li>
-              <li>ERU</li>
-              <li>BDT</li>
-              <li>INR</li>
-            </ul>
-          </div>
           <div class="offcanvas__select language">
             <div class="offcanvas__lang d-flex align-items-center justify-content-md-end">
               <div class="offcanvas__lang-img mr-15">
@@ -91,6 +78,28 @@ const handleToggleActive = (type: string) => {
     isToggleActive.value = "";
   } else {
     isToggleActive.value = type;
+  }
+};
+
+// Smoothly scroll to #contact-us and close the mobile menu
+const handleContactClick = async () => {
+  // Close the offcanvas first
+  utilsStore.handleOpenMobileMenu();
+
+  const router = useRouter();
+  const route = useRoute();
+
+  if (route.path === "/") {
+    await nextTick();
+    const el = document.getElementById("contact-us");
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else {
+    await router.push({ path: "/", hash: "#contact-us" });
+    // Wait for DOM to paint the target section
+    setTimeout(() => {
+      const el = document.getElementById("contact-us");
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 300);
   }
 };
 </script>

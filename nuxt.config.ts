@@ -10,7 +10,12 @@ export default defineNuxtConfig({
         ['defineStore', 'definePiniaStore'],
       ],
     },
-  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts"],
+  ], "@nuxt/icon", "@nuxt/image", "@nuxt/fonts", "@nuxtjs/tailwindcss"],
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || process.env.VITE_API_URL || "http://157.10.160.154:3300/api",
+    },
+  },
   app: {
     head: {
       title: "Agro Asia Berdikari",
@@ -30,4 +35,17 @@ export default defineNuxtConfig({
     "@/assets/css/flaticon_shofy.css",
     "@/assets/scss/main.scss",
   ],
+  vite: {
+    optimizeDeps: {
+      include: ["jspdf"],
+    },
+  },
+  nitro: {
+    compatibilityDate: "2025-07-16",
+  },
+  icon: {
+    clientBundle: {
+      scan: true,
+    },
+  },
 })

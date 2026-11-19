@@ -1,0 +1,115 @@
+import type { ApiError } from '../types/home-api-type'
+
+interface UseApiClientOptions {
+  baseURL?: string;
+  timeout?: number;
+  retries?: number;
+  retryDelay?: number;
+}
+
+interface ApiRequestOptions {
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  body?: any;
+  headers?: Record<string, string>;
+  timeout?: number;
+  retries?: number;
+}
+
+export function useApiClient(options: UseApiClientOptions = {}) {
+  const config = useRuntimeConfig();
+  
+  const defaultOptions = {
+    baseURL: config.public.apiBase || import.meta.env.VITE_API_URL || 'http://157.10.160.154:3300/api',
+    timeout: options.timeout || 10000,
+    retries: options.retries || 3,
+    retryDelay: options.retryDelay || 1000,
+  };
+
+  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  async function makeRequest<T>(
+    endpoint: string, 
+    requestOptions: ApiRequestOptions = {}
+  ): Promise<T> {
+    const {
+      method = 'GET',
+      body,
+      headers = {},
+      timeout = defaultOptions.timeout,
+      retries = defaultOptions.retries,
+    } = requestOptions;
+
+    const url = `${defaultOptions.baseURL}${endpoint}`;
+    
+    let lastError: any;
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const response = await $fetch<T>(url, {
+          method,
+          body,
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+          },
+          timeout,
+          onResponseError({ response }) {
+            throw createError({
+              statusCode: response.status,
+              statusMessage: response.statusText || 'API Error',
+              data: response._data,
+            });
+          },
+        });
+
+        return response as T;
+      } catch (error: any) {
+        lastError = error;
+        
+        // Don't retry on client errors (4xx)
+        if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
+          break;
+        }
+
+        // If this is the last attempt, don't wait
+        if (attempt === retries) {
+          break;
+        }
+
+        // Wait before retrying with exponential backoff
+        const delay = defaultOptions.retryDelay * Math.pow(2, attempt);
+        await sleep(delay);
+      }
+    }
+
+    // Create a standardized error response
+    const apiError: ApiError = {
+      status: lastError?.statusCode || 500,
+      message: lastError?.statusMessage || lastError?.message || 'Unknown API Error',
+      data: lastError?.data,
+    };
+
+    throw createError({
+      statusCode: apiError.status,
+      statusMessage: apiError.message,
+      data: apiError,
+    });
+  }
+
+  return {
+    get: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method' | 'body'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'GET' }),
+    
+    post: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'POST' }),
+    
+    put: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'PUT' }),
+    
+    delete: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method' | 'body'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'DELETE' }),
+    
+    patch: <T>(endpoint: string, options?: Omit<ApiRequestOptions, 'method'>) =>
+      makeRequest<T>(endpoint, { ...options, method: 'PATCH'}),
+  };
+} 

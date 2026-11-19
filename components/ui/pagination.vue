@@ -23,22 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted,watch } from "vue";
+import type { ProductPagination } from "@/types/products-api-type";
+import { computed, ref } from "vue";
 const emit = defineEmits(["handlePaginate"]);
-const route = useRoute();
 
-type ItemDataType<T> = {
-  data: T[];
+type ItemDataType = {
+  data: ProductPagination;
   itemsPerPage: number;
 };
-const props = defineProps<ItemDataType<any>>();
+const props = defineProps<ItemDataType>();
 const currentPage = ref<number>(1);
 
 const totalPages = computed(() =>
-  Math.ceil(props.data.length / props.itemsPerPage)
+  Math.ceil(props.data.total / props.itemsPerPage)
 );
-const startIndex = computed(() => (currentPage.value - 1) * props.itemsPerPage);
-const endIndex = computed(() => startIndex.value + props.itemsPerPage);
 
 const setPage = (idx: number) => {
   if (idx <= 0 || idx > totalPages.value) {
@@ -46,13 +44,6 @@ const setPage = (idx: number) => {
   }
   window.scrollTo(0, 0);
   currentPage.value = idx;
-  emit("handlePaginate", props.data, startIndex.value, endIndex.value);
+  emit("handlePaginate", idx);
 };
-
-onMounted(() => {
-  emit("handlePaginate", props.data, startIndex.value, endIndex.value);
-});
-watch(() => route.query || route.params, (newStatus) => {
-  currentPage.value = 1;
-});
 </script>

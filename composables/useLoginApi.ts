@@ -1,0 +1,110 @@
+import type { LoginRequest, LoginResponse, LoginError } from '@/types/login-api-type';
+import { toast } from 'vue3-toastify';
+
+export function useLoginApi() {
+    const apiClient = useApiClient();
+    
+    const isLoading = ref(false);
+    const error = ref<string | null>(null);
+    const user = ref<LoginResponse['data']['user'] | null>(null);
+    const token = ref<string | null>(null);
+
+    const login = async (credentials: LoginRequest): Promise<LoginResponse | null> => {
+        try {
+            isLoading.value = true;
+            error.value = null;
+
+            const response = await apiClient.post<LoginResponse>('/auth/login', { body: credentials });
+
+            if (!response || typeof response !== 'object') {
+                throw new Error('Invalid response format');
+            }
+
+            if (response.status !== 200) {
+                throw new Error(response.message || 'Login failed');
+            }
+
+            if (response.data) {
+                user.value = response.data.user;
+                token.value = response.data.token;
+                
+                const tokenCookie = useCookie<string | null>('auth-token', {
+                    default: () => null,
+                    maxAge: 60 * 60 * 24 * 7, // 7 days
+                    sameSite: 'strict',
+                    secure: true
+                });
+                tokenCookie.value = response.data.token;
+
+                const userCookie = useCookie<LoginResponse['data']['user'] | null>('auth-user', {
+                    default: () => null,
+                    maxAge: 60 * 60 * 24 * 7, // 7 days
+                    sameSite: 'strict',
+                    secure: true
+                });
+                userCookie.value = response.data.user;
+            }
+
+            toast.success('Login successful!');
+            return response;
+        } catch (err: any) {
+            let errorMessage = 'Login failed. Please check your credentials.';
+            
+            if (err.data?.message) {
+                errorMessage = err.data.message;
+            } else if (err.statusMessage) {
+                errorMessage = err.statusMessage;
+            }
+            
+            error.value = errorMessage;
+            toast.error(errorMessage);
+            
+            user.value = null;
+            token.value = null;
+            
+            return null;
+        } finally {
+            isLoading.value = false;
+        }
+    };
+
+    const logout = () => {
+        user.value = null;
+        token.value = null;
+        
+        const tokenCookie = useCookie<string | null>('auth-token');
+        const userCookie = useCookie<LoginResponse['data']['user'] | null>('auth-user');
+        tokenCookie.value = null;
+        userCookie.value = null;
+        
+        toast.success('Logout successful!');
+    };
+
+    const initializeAuth = () => {
+        const tokenCookie = useCookie<string | null>('auth-token');
+        const userCookie = useCookie<LoginResponse['data']['user'] | null>('auth-user');
+        
+        if (tokenCookie.value && userCookie.value) {
+            token.value = tokenCookie.value;
+            user.value = userCookie.value;
+        }
+    };
+
+    const isAuthenticated = computed(() => !!token.value && !!user.value);
+
+    initializeAuth();
+
+    return {
+        // State
+        isLoading: readonly(isLoading),
+        error: readonly(error),
+        user: readonly(user),
+        token: readonly(token),
+        isAuthenticated,
+        
+        // Methods
+        login,
+        logout,
+        initializeAuth
+    };
+}
