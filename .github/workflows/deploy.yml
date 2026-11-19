@@ -107,8 +107,11 @@ jobs:
             fi
 
             mkdir -p "${DEPLOY_PATH}/public"
+            UPLOADS_PATH="${BASE_PATH}/backend/public/uploads"
+            mkdir -p "${UPLOADS_PATH}"
             echo "Deploy path: ${DEPLOY_PATH}"
             echo "Public path: ${DEPLOY_PATH}/public"
+            echo "Uploads path: ${UPLOADS_PATH}"
             echo "Env file: ${ENV_PATH}"
 
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
@@ -145,6 +148,7 @@ jobs:
               -e NUXT_PORT=3000 \
               -e HOST_PUBLIC_DIR=/srv/public \
               -v "${DEPLOY_PATH}/public:/srv/public" \
+              -v "${UPLOADS_PATH}:/srv/public/uploads" \
               "${IMAGE_NAME}:${IMAGE_TAG}"
 
             docker image prune -f || true

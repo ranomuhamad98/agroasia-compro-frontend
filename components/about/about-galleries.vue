@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery-container mb-100 mt-100">
+    <div v-if="props.gallery.length > 0" class="gallery-container mb-100 mt-100">
         <div class="gallery-wrapper container">
             <div class="gallery-title">
                 <h2>Galleries</h2>
@@ -7,23 +7,43 @@
             </div>
             <div class="gallery-content">
                 <div ref="container" class="gallery-slider keen-slider">
-                    <div v-for="image in images" :key="image.img" class="gallery-item keen-slider__slide">
-                        <img :src="image.img" :alt="image.alt" />
+                    <div v-for="image in props.gallery" :key="image.image_link" class="gallery-item keen-slider__slide" @click="selectedImage = image">
+                        <img :src="image.image_link" :alt="image.alt" />
                     </div>
                 </div>
                 <button class="gallery-nav prev" @click="slider?.prev()">
-                    <Icon name="mynaui:arrow-left" class="icon-arrow" />
+                    <Icon name="ph:arrow-left-bold" class="icon-arrow" />
                 </button>
                 <button class="gallery-nav next" @click="slider?.next()">
-                    <Icon name="mynaui:arrow-right" class="icon-arrow" />
+                    <Icon name="ph:arrow-right-bold" class="icon-arrow" />
                 </button>
             </div>
+        </div>
+    </div>
+    <div v-if="selectedImage" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-[99]">
+        <div class="max-w-screen-lg mx-auto">
+            <div class="flex justify-end p-4">
+                <button class="text-white text-2xl" @click="selectedImage = null">
+                    <X class="w-6 h-6" />
+                </button>
+            </div>
+            <img :src="selectedImage.image_link" :alt="selectedImage.alt" class="w-full h-full object-contain" />
+            <p>{{ selectedImage.alt }}</p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import type { Gallery } from '@/types/about-api-type';
 import { useKeenSlider } from 'keen-slider/vue.es';
+import type { DeepReadonly } from 'vue';
+import { X } from 'lucide-vue-next';
+
+const props = defineProps<{
+    gallery: DeepReadonly<Gallery[]>
+}>()
+
+const selectedImage = ref<Gallery | null>(null)
 
 const [container, slider] = useKeenSlider({
     slides: {
