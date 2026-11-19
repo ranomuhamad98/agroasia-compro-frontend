@@ -148,6 +148,7 @@ jobs:
               -e NUXT_PORT=3000 \
               -e HOST_PUBLIC_DIR=/srv/public \
               -e API_UPSTREAM=http://172.17.0.1:3300/api \
+              -e NUXT_PUBLIC_API_BASE=https://agroasiaberdikari.id/api \
               -v "${DEPLOY_PATH}/public:/srv/public" \
               -v "${UPLOADS_PATH}:/srv/public/uploads" \
               "${IMAGE_NAME}:${IMAGE_TAG}"
