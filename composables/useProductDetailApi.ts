@@ -1,4 +1,5 @@
 import type { ProductDetailApiResponse } from "@/types/product-detail-api-types";
+import { productOrderMessage, whatsAppOrderLink } from "@/utils/whatsapp";
 
 export const useProductDetailApi = (productId: string) => {
   const apiClient = useApiClient();
@@ -29,8 +30,14 @@ export const useProductDetailApi = (productId: string) => {
   )
 
   const product = computed(() => productData.value?.data.product);
-  const waLink = computed(() => productData.value?.data.wa_text_interest.split('text=')[0] + 'text=' + product.value?.text_wa_product);
-  // const waLink = computed(() => productData.value?.data.wa_text_interest.replace('[1]', product.value?.name || ''));
+  const waLink = computed(() => whatsAppOrderLink(
+    productData.value?.data.footer?.whatsapp_number,
+    productOrderMessage(
+      product.value?.name || '',
+      product.value?.text_wa_product,
+      productData.value?.data.wa_text_interest
+    )
+  ));
 
   return {
     productData,

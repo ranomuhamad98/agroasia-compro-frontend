@@ -19,7 +19,7 @@
                         <div class="item__content">
                             <p class="item__title">{{ item.name }}</p>
                             <p class="item__description">{{ item.summary.slice(0, 100) }}...</p>
-                            <a :href="`https://wa.me?text=I'm interested in ${item.name}`" target="_blank"
+                            <a :href="orderLink(item.name)" target="_blank"
                                 rel="noopener" class="item__button">
                                 <icon name="mdi:whatsapp" class="item__button-icon" />
                                 <span>Pesan Sekarang!</span>
@@ -35,10 +35,17 @@
 <script setup lang="ts">
 import type { TopProductSection } from '../../types/home-api-type';
 
+import { productOrderMessage, whatsAppOrderLink } from '@/utils/whatsapp';
+
 const props = defineProps<{
     topProducts: readonly any[]
     topProductSection: Readonly<TopProductSection>
+    whatsappNumber?: string
 }>()
+
+const orderLink = (productName: string) => {
+    return whatsAppOrderLink(props.whatsappNumber, productOrderMessage(productName))
+}
 
 const services = [
     {

@@ -124,6 +124,7 @@ import { useProductsApi } from "../../composables/useProductsApi";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import type { Product } from "@/types/products-api-type";
+import { productOrderMessage, whatsAppOrderLink } from "@/utils/whatsapp";
 
 const router = useRouter();
 const route = useRoute();
@@ -172,8 +173,10 @@ function handleActiveTab(tab: string) {
 }
 
 const generateWaLink = (item: Product, message?: string) => {
-  if (!message) return '#';
-  return `${message.replace('[1]', item.name)}`
+  return whatsAppOrderLink(
+    productsData.value?.data.footer?.whatsapp_number,
+    productOrderMessage(item.name, item.text_wa_product, message)
+  )
 }
 
 onMounted(() => {

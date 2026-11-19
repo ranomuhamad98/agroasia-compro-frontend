@@ -36,6 +36,7 @@
       <home-top-product 
         :top-products="topProducts" 
         :top-product-section="topProductSection"
+        :whatsapp-number="footer?.whatsapp_number"
       ></home-top-product>
       <home-programs :program="program"></home-programs>
       <home-spotlight :featured="featured"></home-spotlight>

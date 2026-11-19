@@ -57,12 +57,7 @@ const props = defineProps<{
   waLink?: string;
 }>();
 
-const computedWaLink = computed(() => {
-  if (props.item.text_wa_product) {
-    return props.item.text_wa_product;
-  }
-  return props.waLink || "#";
-});
+const computedWaLink = computed(() => props.waLink || "#");
 </script>
 
 <style scoped>
