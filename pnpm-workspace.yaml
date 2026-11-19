@@ -1,0 +1,8 @@
+overrides:
+  ipx: ^3.0.0
+
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true
+  vue-demi: true

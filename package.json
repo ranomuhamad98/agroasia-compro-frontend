@@ -2,11 +2,6 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
-  "pnpm": {
-    "overrides": {
-      "ipx": "^3.0.0"
-    }
-  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
