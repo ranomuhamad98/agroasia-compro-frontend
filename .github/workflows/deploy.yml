@@ -106,8 +106,9 @@ jobs:
               exit 1
             fi
 
-            mkdir -p "${DEPLOY_PATH}"
+            mkdir -p "${DEPLOY_PATH}/public"
             echo "Deploy path: ${DEPLOY_PATH}"
+            echo "Public path: ${DEPLOY_PATH}/public"
             echo "Env file: ${ENV_PATH}"
 
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
@@ -142,6 +143,8 @@ jobs:
               -e NODE_ENV=production \
               -e NUXT_HOST=0.0.0.0 \
               -e NUXT_PORT=3000 \
+              -e HOST_PUBLIC_DIR=/srv/public \
+              -v "${DEPLOY_PATH}/public:/srv/public" \
               "${IMAGE_NAME}:${IMAGE_TAG}"
 
             docker image prune -f || true
