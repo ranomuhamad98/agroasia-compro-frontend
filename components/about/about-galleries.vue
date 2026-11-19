@@ -3,7 +3,7 @@
         <div class="gallery-wrapper container">
             <div class="gallery-title">
                 <h2>Galleries</h2>
-                <p>Take a look on our product documentation</p>
+                <p>A look at our people, farms, and partnerships</p>
             </div>
             <div class="gallery-content">
                 <div ref="container" class="gallery-slider keen-slider">
@@ -11,11 +11,15 @@
                         <img :src="image.image_link" :alt="image.alt" />
                     </div>
                 </div>
-                <button class="gallery-nav prev" @click="slider?.prev()">
-                    <Icon name="ph:arrow-left-bold" class="icon-arrow" />
+                <button type="button" class="gallery-nav prev" aria-label="Previous photos" @click="slider?.prev()">
+                    <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M14.71 6.71a1 1 0 0 0-1.42 0L8.71 11.3a1 1 0 0 0 0 1.4l4.58 4.59a1 1 0 0 0 1.42-1.42L10.83 12l3.88-3.88a1 1 0 0 0 0-1.41Z"/>
+                    </svg>
                 </button>
-                <button class="gallery-nav next" @click="slider?.next()">
-                    <Icon name="ph:arrow-right-bold" class="icon-arrow" />
+                <button type="button" class="gallery-nav next" aria-label="Next photos" @click="slider?.next()">
+                    <svg class="icon-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M9.29 6.71a1 1 0 0 0 0 1.42L13.17 12l-3.88 3.88a1 1 0 1 0 1.42 1.41l4.58-4.58a1 1 0 0 0 0-1.42L10.71 6.7a1 1 0 0 0-1.42 0Z"/>
+                    </svg>
                 </button>
             </div>
         </div>
@@ -119,9 +123,10 @@ const images = [
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: transparent;
+    background: #fff;
     border: 1px solid var(--tp-green-light);
     color: var(--tp-green-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -133,7 +138,9 @@ const images = [
     transition: all 0.3s ease;
 
     .icon-arrow {
-        font-size: 1.2rem;
+        width: 22px;
+        height: 22px;
+        display: block;
     }
 
     &:hover {
