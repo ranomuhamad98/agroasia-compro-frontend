@@ -65,6 +65,8 @@
             align-items: center;
             justify-content: center;
             padding: 2rem 3rem;
+            text-decoration: none;
+            color: inherit;
 
             &.color-green-medium {
                 background-color: var(--tp-green-medium);

@@ -26,6 +26,7 @@ export interface Product {
     summary: string;
     category: string;
     category_id: string;
+    category_slug: string;
     update_time: string;
     text_wa_product?: string;
 }

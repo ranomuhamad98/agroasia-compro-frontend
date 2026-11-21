@@ -95,6 +95,7 @@
                       summary: '',
                       category: '',
                       category_id: '',
+                      category_slug: '',
                       update_time: '',
                       text_wa_product: '',
                     }"

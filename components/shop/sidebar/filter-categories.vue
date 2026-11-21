@@ -13,7 +13,7 @@
           <li v-for="category in categoriesData" :key="category.id">
             <div class="filter-item checkbox">
               <input type="checkbox" :id="category.id" class="filter-checkbox-input"
-                :checked="isCategoryActive(category.id)" @change="(e) => handleCategoryRoute(category.id, e)" />
+                :checked="isCategoryActive(categorySlug(category))" @change="(e) => handleCategoryRoute(categorySlug(category), e)" />
               <label :for="category.id">
                 {{ category.name }}
                 <!-- <span>({{ category.products.length }})</span> -->
@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { watch, ref, onMounted } from "vue";
 import { useCategoriesApi } from "@/composables/useCategoriesApi";
+import { categorySlug as toCategorySlug } from "@/utils/categorySlug";
 // import category_data from "@/data/category-data";
 const router = useRouter();
 const route = useRoute();
@@ -36,19 +37,24 @@ const activeCategories = ref<string>("");
 const { categoriesData, error: errorCategories, pending: pendingCategories, hasData: hasCategoriesData, refreshData } = useCategoriesApi();
 
 // handle category route
+const categorySlug = (category: { slug?: string, name: string }) => category.slug || toCategorySlug(category.name)
+
 const handleCategoryRoute = (categoryId: string, e: Event) => {
   const target = e.target as HTMLInputElement;
   // Use actual category ID instead of slug
   const currentCategories = target.checked ? categoryId : '';
   activeCategories.value = currentCategories;
 
+  const query = { ...route.query, page: 1 } as Record<string, string | string[] | undefined>;
+  if (currentCategories) {
+    query.category = currentCategories;
+  } else {
+    delete query.category;
+  }
+
   router.push({
     path: '/products',
-    query: {
-      ...route.query,
-      category: currentCategories,
-      page: 1
-    }
+    query
   });
 };
 

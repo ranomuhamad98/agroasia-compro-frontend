@@ -7,6 +7,7 @@ export interface CategoriesApiResponse {
 export interface Category {
     id: string;
     name: string;
+    slug: string;
     image_link: string;
     input_time: string;
     update_time: string;

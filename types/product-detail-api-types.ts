@@ -24,6 +24,7 @@ export interface ProductDetail {
     summary: string;
     description: string;
     category_name: string;
+    category_slug: string;
     tags: string[];
     category_id: string;
     gallery: Gallery[]

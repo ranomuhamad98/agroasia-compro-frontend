@@ -35,7 +35,7 @@
       <div class="tp-product-details-action-category d-sm-flex align-items-center">
         <span style="font-weight: 400;">Category: </span>
         <div class="category-wrapper">
-          <nuxt-link :to="`/products?category=${product.category_id}&page=1`" class="text-[#55585B]">{{ product.category_name }}</nuxt-link>
+          <nuxt-link :to="`/products?category=${product.category_slug || categorySlug(product.category_name)}&page=1`" class="text-[#55585B]">{{ product.category_name }}</nuxt-link>
         </div>
       </div>
 
@@ -56,6 +56,7 @@
 <script setup lang="ts">
 import type { ProductDetail } from "@/types/product-detail-api-types";
 import type { DeepReadonly } from "vue";
+import { categorySlug } from "@/utils/categorySlug";
 
 const props = withDefaults(defineProps<{
   product: DeepReadonly<ProductDetail>;
