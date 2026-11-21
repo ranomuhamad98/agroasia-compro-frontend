@@ -42,8 +42,8 @@ const pickImage = () => {
 
 const activeImage = ref<string>(pickImage());
 
-watch(() => props.product.gallery, () => {
-  if (!activeImage.value) activeImage.value = pickImage()
+watch(() => props.product.id, () => {
+  activeImage.value = pickImage()
 });
 
 // const mainImage = computed(() => {

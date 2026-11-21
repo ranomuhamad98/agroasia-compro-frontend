@@ -26,7 +26,14 @@ import { computed } from 'vue'
 
 const route = useRoute()
 
-const productId = route.params.id as string;
+definePageMeta({
+  key: (route) => String(route.params.id || '')
+})
+
+const productId = computed(() => {
+  const id = route.params.id
+  return Array.isArray(id) ? id[0] : String(id || '')
+})
 
 const {
   product,
