@@ -1,7 +1,13 @@
 <template>
     <div v-if="video" class="mb-100">
+        <about-youtube-poster
+            v-if="isYouTubeVideo && videoId && hasThumbnail"
+            :video-id="videoId"
+            :second="video.thumbnail_second || 0"
+            class="tp-about-video"
+        />
         <iframe
-            v-if="isYouTubeVideo"
+            v-else-if="isYouTubeVideo"
             :src="video.video_link"
             frameborder="0"
             allowfullscreen
@@ -19,6 +25,7 @@
 
 <script setup lang="ts">
 import type { AboutVideo } from '@/types/about-api-type';
+import { youtubeVideoId } from '@/utils/youtubeTime';
 
 const props = defineProps<{
     video?: Readonly<AboutVideo>;
@@ -27,6 +34,9 @@ const props = defineProps<{
 const isYouTubeVideo = computed(() => {
     return props.video?.video_link.includes('youtube.com') || props.video?.video_link.includes('youtu.be');
 });
+
+const videoId = computed(() => youtubeVideoId(props.video?.video_link || ''))
+const hasThumbnail = computed(() => Number.isFinite(props.video?.thumbnail_second))
 </script>
 
 <style scoped>

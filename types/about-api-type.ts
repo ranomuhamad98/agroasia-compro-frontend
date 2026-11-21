@@ -13,6 +13,7 @@ export interface AboutMilestone {
 export interface AboutVideo {
   video_link: string;
   our_worker: string;
+  thumbnail_second?: number;
 }
 
 export interface AboutValue {
