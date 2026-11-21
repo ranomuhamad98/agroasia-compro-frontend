@@ -62,7 +62,7 @@
             <div v-if="active_tab === 'grid'">
               <div
                 v-if="!productsPending"
-                class="row infinite-container">
+                class="row product-grid infinite-container">
                 <div v-for="item in productsData?.data.products" :key="item.id"
                   class="col-xl-4 col-md-6 col-sm-6 infinite-item d-flex">
                   <product-single :product="item" :waLink="generateWaLink(item, productsData?.data.wa_text_interest)" />
@@ -70,7 +70,7 @@
               </div>
               <div
                 v-else
-                class="row infinite-container">
+                class="row product-grid infinite-container">
                 <div v-for="item in 2" :key="item"
                   class="col-xl-4 col-md-6 col-sm-6 infinite-item d-flex">
                   <product-single :is-loading="true" />
@@ -201,3 +201,17 @@ watch(
   { immediate: true }
 );
 </script>
+
+<style scoped lang="scss">
+.product-grid {
+  --bs-gutter-y: 1.25rem;
+}
+
+.product-grid :deep(.tp-product-item-5) {
+  margin-bottom: 0;
+}
+
+.product-grid :deep(.tp-product-thumb-5) {
+  aspect-ratio: 4 / 3;
+}
+</style>
