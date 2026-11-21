@@ -24,16 +24,14 @@
             </div>
         </div>
     </div>
-    <div v-if="selectedImage" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-[99]">
-        <div class="max-w-screen-lg mx-auto">
-            <div class="flex justify-end p-4">
-                <button class="text-white text-2xl" @click="selectedImage = null">
-                    <X class="w-6 h-6" />
-                </button>
-            </div>
-            <img :src="selectedImage.image_link" :alt="selectedImage.alt" class="w-full h-full object-contain" />
-            <p>{{ selectedImage.alt }}</p>
-        </div>
+    <div v-if="selectedImage" class="gallery-lightbox" @click.self="selectedImage = null">
+        <button type="button" class="gallery-lightbox__close" aria-label="Close photo" @click="selectedImage = null">
+            <X class="w-6 h-6" />
+        </button>
+        <figure class="gallery-lightbox__frame">
+            <img :src="selectedImage.image_link" :alt="selectedImage.alt || ''" />
+            <figcaption v-if="selectedImage.alt">{{ selectedImage.alt }}</figcaption>
+        </figure>
     </div>
 </template>
 
@@ -175,5 +173,60 @@ const images = [
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 4.5rem 1.25rem 1.5rem;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.gallery-lightbox__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: #111;
+    cursor: pointer;
+}
+
+.gallery-lightbox__frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    min-height: 0;
+}
+
+.gallery-lightbox__frame img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100vh - 7.5rem);
+    max-height: calc(100dvh - 7.5rem);
+    object-fit: contain;
+}
+
+.gallery-lightbox__frame figcaption {
+    margin-top: 0.75rem;
+    color: #fff;
+    text-align: center;
 }
 </style>
