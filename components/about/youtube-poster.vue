@@ -1,6 +1,6 @@
 <template>
     <div class="yt-poster">
-        <div ref="mount" class="yt-poster__player"></div>
+        <div ref="mount" class="yt-poster__player" :class="{ 'is-poster': playFromStart && !started }"></div>
         <button v-if="playFromStart && !started" type="button" class="yt-poster__play" aria-label="Play video" @click="startPlayback">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="currentColor" d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.2-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z"/>
@@ -22,6 +22,7 @@ const mount = ref<HTMLElement | null>(null)
 const started = ref(false)
 let player: any = null
 let posterReady = false
+let holdingFrame = false
 
 function createPlayer(options: Record<string, unknown>) {
     const win = window as any
@@ -53,9 +54,13 @@ function loadYouTubeApi() {
 
 function holdFrame(target = player) {
     if (!target || started.value) return
+    holdingFrame = true
     target.seekTo(props.second, true)
     target.pauseVideo()
     target.unMute?.()
+    window.setTimeout(() => {
+        holdingFrame = false
+    }, 700)
 }
 
 function mountPoster() {
@@ -74,23 +79,42 @@ function mountPoster() {
         },
         events: {
             onStateChange: (event: { data: number, target: any }) => {
-                if (started.value || posterReady || event.data !== win.YT.PlayerState.PLAYING) return
-                posterReady = true
-                holdFrame(event.target)
+                if (started.value || holdingFrame || event.data !== win.YT.PlayerState.PLAYING) return
+                if (!posterReady) {
+                    posterReady = true
+                    holdFrame(event.target)
+                    return
+                }
+                started.value = true
+                event.target.seekTo(0, true)
             },
         },
     })
 }
 
 function startPlayback() {
+    const win = window as any
     started.value = true
+    let rewound = false
     createPlayer({
         videoId: props.videoId,
         playerVars: {
+            start: 0,
             autoplay: 1,
             rel: 0,
             modestbranding: 1,
             playsinline: 1,
+        },
+        events: {
+            onReady: (event: { target: any }) => {
+                event.target.seekTo(0, true)
+                event.target.playVideo()
+            },
+            onStateChange: (event: { data: number, target: any }) => {
+                if (rewound || event.data !== win.YT.PlayerState.PLAYING) return
+                rewound = true
+                if (event.target.getCurrentTime() > 1) event.target.seekTo(0, true)
+            },
         },
     })
 }
@@ -125,9 +149,15 @@ onBeforeUnmount(() => {
     height: 100%;
 }
 
+.yt-poster__player.is-poster,
+.yt-poster__player.is-poster :deep(iframe) {
+    pointer-events: none;
+}
+
 .yt-poster__play {
     position: absolute;
     inset: 0;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
