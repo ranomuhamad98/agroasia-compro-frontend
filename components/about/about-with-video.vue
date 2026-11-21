@@ -4,7 +4,7 @@
             v-if="isYouTubeVideo && videoId && hasThumbnail"
             :video-id="videoId"
             :second="video.thumbnail_second || 0"
-            class="tp-about-video"
+            banner
         />
         <iframe
             v-else-if="isYouTubeVideo"
