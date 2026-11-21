@@ -5,9 +5,9 @@
                 <h2>Galleries</h2>
                 <p>A look at our people, farms, and partnerships</p>
             </div>
-            <div class="gallery-content">
-                <div ref="container" class="gallery-slider keen-slider">
-                    <div v-for="image in props.gallery" :key="image.image_link" class="gallery-item keen-slider__slide" @click="selectedImage = image">
+            <div class="gallery-content" @mouseenter="pauseForHover" @mouseleave="resumeAfterHover">
+                <div ref="container" class="gallery-slider keen-slider" @click="openGalleryImage">
+                    <div v-for="image in props.gallery" :key="image.image_link" class="gallery-item keen-slider__slide">
                         <img :src="image.image_link" :alt="image.alt" />
                     </div>
                 </div>
@@ -46,8 +46,13 @@ const props = defineProps<{
 }>()
 
 const selectedImage = ref<Gallery | null>(null)
+const hovered = ref(false)
+const AUTOPLAY_MS = 3000
+let stopAutoplay = () => {}
+let scheduleAutoplay = () => {}
 
 const [container, slider] = useKeenSlider({
+    loop: true,
     slides: {
         perView: 4,
         spacing: 15,
@@ -60,7 +65,54 @@ const [container, slider] = useKeenSlider({
             }
         }
     }
+}, [
+    (instance) => {
+        let autoplayTimer: ReturnType<typeof setTimeout> | undefined
+        stopAutoplay = () => clearTimeout(autoplayTimer)
+        scheduleAutoplay = () => {
+            clearTimeout(autoplayTimer)
+            if (hovered.value || selectedImage.value) return
+            if (import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+            if (props.gallery.length < 2) return
+            autoplayTimer = setTimeout(() => instance.next(), AUTOPLAY_MS)
+        }
+        instance.on('created', scheduleAutoplay)
+        instance.on('dragStarted', stopAutoplay)
+        instance.on('animationEnded', scheduleAutoplay)
+        instance.on('updated', scheduleAutoplay)
+    }
+])
+
+function pauseForHover() {
+    hovered.value = true
+    stopAutoplay()
+}
+
+function resumeAfterHover() {
+    hovered.value = false
+    scheduleAutoplay()
+}
+
+function openGalleryImage(event: MouseEvent) {
+    const target = event.target
+    if (!(target instanceof Element)) return
+    const src = target.closest('.gallery-item')?.querySelector('img')?.getAttribute('src')
+    if (!src) return
+    const match = props.gallery.find((item) => item.image_link === src)
+    if (match) selectedImage.value = match
+}
+
+watch(selectedImage, async (image) => {
+    if (image) {
+        stopAutoplay()
+        return
+    }
+    await nextTick()
+    hovered.value = !!container.value?.parentElement?.matches(':hover')
+    if (!hovered.value) scheduleAutoplay()
 })
+
+onBeforeUnmount(stopAutoplay)
 
 const images = [
     {
@@ -167,6 +219,7 @@ const images = [
 .gallery-item {
     height: 200px;
     border: 1rem solid var(--tp-grey-light);
+    cursor: pointer;
 }
 
 .gallery-item img {
